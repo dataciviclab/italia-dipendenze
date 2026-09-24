@@ -1,0 +1,75 @@
+root: "../../out"
+schema_version: 1
+
+dataset:
+  name: "comtrade_bilateral"
+  source_id: "un_comtrade"
+  tags: [commercio, bilaterale, hs6, importazioni, esportazioni, comtrade]
+  category: commercio
+  description: "Bilateral merchandise trade by HS6 product code — Italy (reporter 380)"
+  years: [2026]
+  time_coverage:
+    start_year: 2020
+    end_year: 2024
+
+raw:
+  output_policy: overwrite
+  sources:
+    - name: "comtrade_bilateral_csv"
+      type: "local_file"
+      args:
+        path: "../../out/raw/comtrade/comtrade_bilateral.csv"
+      primary: true
+
+clean:
+  sql: "sql/clean.sql"
+  read:
+    source: auto
+    mode: latest
+    delim: ","
+    encoding: utf-8
+    header: true
+  required_columns:
+    - year
+    - hs_code
+    - reporter_code
+    - partner_code
+    - flow
+    - net_wgt_kg
+    - primary_value_usd
+    - classification
+  validate:
+    min_rows: 10
+    not_null:
+      - year
+      - hs_code
+      - flow
+
+mart:
+  tables:
+    - name: "mart_trade_bilateral"
+      sql: "sql/mart_trade_bilateral.sql"
+    - name: "mart_trade_concentration"
+      sql: "sql/mart_trade_concentration.sql"
+  required_tables:
+    - "mart_trade_bilateral"
+    - "mart_trade_concentration"
+  validate:
+    table_rules:
+      mart_trade_bilateral:
+        required_columns: [year, hs_code, reporter_code, partner_code, flow, net_wgt_kg, primary_value_usd]
+        primary_key: [year, hs_code, partner_code, flow]
+        min_rows: 10
+      mart_trade_concentration:
+        required_columns: [year, resource, hhi, top1_supplier, top1_share_pct]
+        min_rows: 1
+
+validation:
+  fail_on_error: true
+
+registry:
+  dataflow: "BILATERAL_TRADE_HS6"
+  theme: "Trade / Bilateral merchandise"
+  nuts_level: 0
+  dimensions: ["year", "hs_code", "reporter", "partner", "flow"]
+  description: "Bilateral trade by HS6 product code from UN Comtrade"

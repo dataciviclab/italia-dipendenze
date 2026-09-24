@@ -1,0 +1,72 @@
+root: "../../out"
+schema_version: 1
+
+dataset:
+  name: "eurostat_nrg_bal_c"
+  source_id: "eurostat"
+  tags: [energia, gas, petrolio, carbone, bilancio-energetico, eurostat, italia]
+  category: energia
+  description: "Complete energy balances — Italy physical flows by SIEC product (imports, exports, production)"
+  years: [2026]
+  time_coverage:
+    start_year: 2020
+    end_year: 2024
+
+raw:
+  output_policy: overwrite
+  sources:
+    - name: "eurostat_nrg_bal_c_csv"
+      type: "local_file"
+      args:
+        path: "../../out/raw/eurostat/eurostat_energy_balance.csv"
+      primary: true
+
+clean:
+  sql: "sql/clean.sql"
+  read:
+    source: auto
+    mode: latest
+    delim: ","
+    encoding: utf-8
+    header: true
+  required_columns:
+    - year
+    - product
+    - product_label
+    - indicator
+    - indicator_name
+    - value_ktoe
+    - unit
+    - geo
+    - source
+    - method
+    - data_quality
+  validate:
+    min_rows: 10
+    not_null:
+      - year
+      - product
+      - indicator
+
+mart:
+  tables:
+    - name: "mart_energy_balance"
+      sql: "sql/mart_energy_balance.sql"
+  required_tables:
+    - "mart_energy_balance"
+  validate:
+    table_rules:
+      mart_energy_balance:
+        required_columns: [year, product, product_label, production_ktoe, imports_ktoe, exports_ktoe, apparent_consumption_ktoe, gross_import_dependency_pct, domestic_share_pct]
+        primary_key: [year, product]
+        min_rows: 10
+
+validation:
+  fail_on_error: true
+
+registry:
+  dataflow: "NRG_BAL_C"
+  theme: "Energy / Energy balances"
+  nuts_level: 0
+  dimensions: ["year", "product", "indicator", "geo"]
+  description: "Complete energy balances for Italy — imports, exports, production by SIEC product"

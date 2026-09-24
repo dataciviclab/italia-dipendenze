@@ -1,0 +1,27 @@
+# Runtime output (toolkit)
+out/data/
+out/smoke/
+
+# Raw intermediate files (fetched data)
+out/raw/comtrade/*.json
+out/raw/comtrade/*.csv
+out/raw/eurostat/*.csv
+out/raw/fao/*.csv
+out/mart/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Comtrade API key (never commit)
+.env

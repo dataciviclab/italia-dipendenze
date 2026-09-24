@@ -1,0 +1,69 @@
+root: "../../out"
+schema_version: 1
+
+dataset:
+  name: "fao_fertilizer_consumption"
+  source_id: "faostat"
+  tags: [agricoltura, fertilizzanti, consumo, fao, italia]
+  category: agricoltura
+  description: "Fertilizer consumption by nutrient — Italy (FAO RFN dataset via OWID)"
+  years: [2026]
+  time_coverage:
+    start_year: 2018
+    end_year: 2023
+
+raw:
+  output_policy: overwrite
+  sources:
+    - name: "fao_fertilizer_download"
+      type: "script"
+      args:
+        command: "python3 ../../scripts/download_fao_fertilizer.py --output-dir ."
+        output: "fao_fertilizer_consumption.csv"
+        filename: "fao_fertilizer_consumption.csv"
+      primary: true
+
+clean:
+  sql: "sql/clean.sql"
+  read:
+    source: auto
+    mode: latest
+    delim: ","
+    encoding: utf-8
+    header: true
+  required_columns:
+    - year
+    - country
+    - country_code
+    - total_consumption_tonnes
+    - source
+    - method
+    - data_quality
+  validate:
+    min_rows: 3
+    not_null:
+      - year
+      - total_fertilizer_consumption_tonnes
+
+mart:
+  tables:
+    - name: "mart_fertilizer_consumption"
+      sql: "sql/mart_fertilizer_consumption.sql"
+  required_tables:
+    - "mart_fertilizer_consumption"
+  validate:
+    table_rules:
+      mart_fertilizer_consumption:
+        required_columns: [year, country, total_consumption_tonnes, source, method, data_quality]
+        primary_key: [year]
+        min_rows: 3
+
+validation:
+  fail_on_error: true
+
+registry:
+  dataflow: "FAO_RFN"
+  theme: "Agriculture / Fertilizers"
+  nuts_level: 0
+  dimensions: ["year", "country"]
+  description: "Fertilizer consumption by nutrient for Italy from FAO"
