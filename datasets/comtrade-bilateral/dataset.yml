@@ -15,10 +15,12 @@ dataset:
 raw:
   output_policy: overwrite
   sources:
-    - name: "comtrade_bilateral_csv"
-      type: "local_file"
+    - name: "comtrade_bilateral_fetch"
+      type: "script"
       args:
-        path: "../../out/raw/comtrade/comtrade_bilateral.csv"
+        command: "python3 ../../scripts/fetch_comtrade.py --output-dir . --years 2020,2021,2022,2023,2024"
+        output: "comtrade_bilateral.csv"
+        filename: "comtrade_bilateral.csv"
       primary: true
 
 clean:

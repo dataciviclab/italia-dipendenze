@@ -15,10 +15,12 @@ dataset:
 raw:
   output_policy: overwrite
   sources:
-    - name: "eurostat_nrg_bal_c_csv"
-      type: "local_file"
+    - name: "eurostat_nrg_bal_c_fetch"
+      type: "script"
       args:
-        path: "../../out/raw/eurostat/eurostat_energy_balance.csv"
+        command: "python3 ../../scripts/fetch_eurostat_energy.py --output-dir . --start-year 2020 --end-year 2024"
+        output: "eurostat_energy_balance.csv"
+        filename: "eurostat_energy_balance.csv"
       primary: true
 
 clean:
@@ -34,7 +36,7 @@ clean:
     - product
     - product_label
     - indicator
-    - indicator_name
+    - indicator_label
     - value_ktoe
     - unit
     - geo

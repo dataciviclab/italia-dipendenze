@@ -27,7 +27,7 @@ check:
 	done
 	@echo "✅ All configs valid"
 
-# --- Pipeline completa: toolkit + test ---------------------------------------
+# --- Pipeline completa: fetch + toolkit + test --------------------------------
 
 .PHONY: all
 all: run-all test

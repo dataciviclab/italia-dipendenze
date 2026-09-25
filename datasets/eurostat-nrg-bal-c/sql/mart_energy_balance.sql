@@ -1,8 +1,4 @@
--- mart_energy_balance.sql: Italy energy balance pivoted by product × year.
--- Metric: gross_import_dependency = imports / (production + imports - exports)
--- NOTE: can exceed 100% when stocks are drawn down (e.g., gas 2022).
--- This is a TRADE dependency metric, not a physical self-sufficiency metric.
--- For physical self-sufficiency, stock change data (STK_CHG) is needed.
+-- mart_energy_balance.sql: Italy energy balance pivoted by product x year.
 
 WITH pivoted AS (
     SELECT
@@ -28,7 +24,6 @@ with_metrics AS (
         stock_change_ktoe,
         COALESCE(production_ktoe, 0) + COALESCE(imports_ktoe, 0) - COALESCE(exports_ktoe, 0)
             AS apparent_consumption_ktoe,
-        -- Gross import dependency: trade-based, can exceed 100% when stocks are drawn
         CASE
             WHEN COALESCE(production_ktoe, 0) + COALESCE(imports_ktoe, 0) - COALESCE(exports_ktoe, 0) > 0
             THEN ROUND(
@@ -37,7 +32,6 @@ with_metrics AS (
             )
             ELSE NULL
         END AS gross_import_dependency_pct,
-        -- Domestic share of apparent consumption
         CASE
             WHEN COALESCE(production_ktoe, 0) + COALESCE(imports_ktoe, 0) - COALESCE(exports_ktoe, 0) > 0
             THEN ROUND(
@@ -46,7 +40,6 @@ with_metrics AS (
             )
             ELSE NULL
         END AS domestic_share_pct,
-        -- Import coverage: how many years of imports does domestic production cover
         CASE
             WHEN imports_ktoe > 0
             THEN ROUND(production_ktoe / imports_ktoe, 2)

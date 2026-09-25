@@ -2,6 +2,11 @@
 out/data/
 out/smoke/
 
+# Intermediate CSV from script sources
+datasets/*/comtrade_bilateral.csv
+datasets/*/eurostat_energy_balance.csv
+datasets/*/fao_fertilizer_consumption.csv
+
 # Raw intermediate files (fetched data)
 out/raw/comtrade/*.json
 out/raw/comtrade/*.csv

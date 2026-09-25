@@ -1,12 +1,11 @@
--- clean.sql: NRG_BAL_C — Italy energy balance from local CSV.
--- Reads pre-fetched SDMX output.
+-- clean.sql: NRG_BAL_C — Italy energy balance from script-fetched CSV.
 
 SELECT
     cast_int(year) AS year,
     normalize_string(product) AS product,
     normalize_string(product_name) AS product_label,
     normalize_string(indicator) AS indicator,
-    normalize_string(indicator_name) AS indicator_name,
+    normalize_string(indicator_name) AS indicator_label,
     cast_double(value) AS value_ktoe,
     normalize_string(unit) AS unit,
     normalize_string(geo) AS geo,

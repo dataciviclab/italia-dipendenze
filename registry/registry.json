@@ -100,7 +100,7 @@
       ],
       "location": {
         "type": "gcs",
-        "path": "materie_prime/comtrade_bilateral/",
+        "path": "gs://dataciviclab-clean/materie_prime/comtrade_bilateral/2026/comtrade_bilateral_2026_clean.parquet",
         "multi_file": false
       },
       "stage": "incubating",
@@ -201,7 +201,7 @@
       ],
       "location": {
         "type": "gcs",
-        "path": "materie_prime/eurostat_nrg_bal_c/",
+        "path": "gs://dataciviclab-clean/materie_prime/eurostat_nrg_bal_c/2026/eurostat_nrg_bal_c_2026_clean.parquet",
         "multi_file": false
       },
       "stage": "incubating",
@@ -275,7 +275,7 @@
       ],
       "location": {
         "type": "gcs",
-        "path": "materie_prime/fao_fertilizer_consumption/",
+        "path": "gs://dataciviclab-clean/materie_prime/fao_fertilizer_consumption/2026/fao_fertilizer_consumption_2026_clean.parquet",
         "multi_file": false
       },
       "stage": "incubating",
@@ -291,7 +291,7 @@
       "table": "mart_trade_bilateral",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/materie_prime/comtrade_bilateral/mart_trade_bilateral.parquet",
+        "path": "gs://dataciviclab-mart/materie_prime/comtrade_bilateral/2026/mart_trade_bilateral.parquet",
         "multi_file": false
       }
     },
@@ -301,7 +301,7 @@
       "table": "mart_trade_concentration",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/materie_prime/comtrade_bilateral/mart_trade_concentration.parquet",
+        "path": "gs://dataciviclab-mart/materie_prime/comtrade_bilateral/2026/mart_trade_concentration.parquet",
         "multi_file": false
       }
     },
@@ -311,7 +311,7 @@
       "table": "mart_energy_balance",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/materie_prime/eurostat_nrg_bal_c/mart_energy_balance.parquet",
+        "path": "gs://dataciviclab-mart/materie_prime/eurostat_nrg_bal_c/2026/mart_energy_balance.parquet",
         "multi_file": false
       }
     },
@@ -321,7 +321,7 @@
       "table": "mart_fertilizer_consumption",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/materie_prime/fao_fertilizer_consumption/mart_fertilizer_consumption.parquet",
+        "path": "gs://dataciviclab-mart/materie_prime/fao_fertilizer_consumption/2026/mart_fertilizer_consumption.parquet",
         "multi_file": false
       }
     },
@@ -331,7 +331,7 @@
       "table": "mart_energy_vs_trade",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/materie_prime/resource_dependency_compose/mart_energy_vs_trade.parquet",
+        "path": "gs://dataciviclab-mart/materie_prime/resource_dependency_compose/2026/mart_energy_vs_trade.parquet",
         "multi_file": false
       }
     },
@@ -341,7 +341,7 @@
       "table": "mart_resource_dependency",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/materie_prime/resource_dependency_compose/mart_resource_dependency.parquet",
+        "path": "gs://dataciviclab-mart/materie_prime/resource_dependency_compose/2026/mart_resource_dependency.parquet",
         "multi_file": false
       }
     }
