@@ -3,7 +3,7 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "dipendenze-risorse"
+name = "dataciviclab-materie-prime"
 version = "0.1.0"
 description = "Italy Resource & Dependency Map — dati sulle dipendenze strategiche"
 readme = "README.md"
@@ -30,10 +30,10 @@ pipeline = [
 ]
 
 [project.urls]
-Home = "https://github.com/dataciviclab/dipendenze-risorse"
+Home = "https://github.com/dataciviclab/materie-prime"
 
 [tool.toolkit.extends]
-source_id = "dipendenze_risorse"
+source_id = "materie_prime"
 
 [tool.pytest.ini_options]
 markers = [

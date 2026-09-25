@@ -1,8 +1,10 @@
-# Italy Resource & Dependency Map — Makefile
+# Materie Prime — Makefile
 TOOLKIT = toolkit
+export TOOLKIT_ALLOW_SCRIPT_SOURCE = 1
 
 # --- Dataset del repo -------------------------------------------------------
 DATASETS := $(shell find datasets -name dataset.yml 2>/dev/null | sort)
+COMPOSES := $(shell find compose -name dataset.yml 2>/dev/null | sort)
 
 # --- Run toolkit ------------------------------------------------------------
 
@@ -12,37 +14,31 @@ run:
 
 .PHONY: run-all
 run-all:
-	@find datasets -name dataset.yml | sort > batch.txt; \
+	@find datasets compose -name dataset.yml 2>/dev/null | sort > batch.txt; \
 	$(TOOLKIT) run --batch batch.txt
 
 # --- Validazione config ------------------------------------------------------
 
 .PHONY: check
 check:
-	@for f in $(DATASETS); do \
+	@for f in $(DATASETS) $(COMPOSES); do \
 		echo "→ $$f"; \
 		$(TOOLKIT) run preflight --config "$$f" > /dev/null 2>&1 || exit 1; \
 	done
 	@echo "✅ All configs valid"
 
-# --- Script analitici -------------------------------------------------------
-
-.PHONY: fetch-comtrade
-fetch-comtrade:
-	python3 scripts/fetch_comtrade.py --output-dir out/raw/comtrade
-
-.PHONY: fetch-fao
-fetch-fao:
-	python3 scripts/download_fao_fertilizer.py --output-dir out/raw/fao
-
-.PHONY: concentration
-concentration:
-	python3 scripts/compute_concentration.py --input out/raw/comtrade/comtrade_bilateral.json --resource gas --output-dir out/mart
-
-# --- Pipeline completa: toolkit + analitici + test ----------------------------
+# --- Pipeline completa: toolkit + test ---------------------------------------
 
 .PHONY: all
 all: run-all test
+
+# --- Verify (dopo pipeline) -------------------------------------------------
+
+.PHONY: verify
+verify:
+	@echo "Verify: checking mart parquet files exist"
+	@test -d out/data/mart || (echo "❌ No mart output" && exit 1)
+	@echo "✅ Mart output present"
 
 # --- Test --------------------------------------------------------------------
 
@@ -54,7 +50,11 @@ test:
 
 .PHONY: registry
 registry:
-	$(TOOLKIT) registry build --prefix dipendenze_risorse --flat
+	$(TOOLKIT) registry build --prefix materie_prime --flat
+
+.PHONY: registry-write
+registry-write:
+	$(TOOLKIT) registry build --prefix materie_prime --flat --write
 
 # --- Pulizia -----------------------------------------------------------------
 

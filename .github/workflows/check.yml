@@ -1,0 +1,14 @@
+name: check
+on:
+  pull_request:
+    paths: ["**/*.py", "**/*.yml", "**/*.yaml", "**/*.sql", "**/Makefile"]
+  push:
+    branches: [main]
+    paths: ["**/*.py", "**/*.yml", "**/*.yaml", "**/*.sql", "**/Makefile"]
+
+jobs:
+  validate-config:
+    uses: dataciviclab/.github/.github/workflows/dataset-config-check-reusable.yml@main
+    with:
+      globs: "datasets compose"
+      years: "from-config"

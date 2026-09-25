@@ -11,13 +11,13 @@ dataset:
 
 support:
   - name: energy
-    config: "../eurostat-nrg-bal-c/dataset.yml"
+    config: ../../datasets/eurostat-nrg-bal-c/dataset.yml
     years: [2026]
   - name: trade
-    config: "../comtrade-bilateral/dataset.yml"
+    config: ../../datasets/comtrade-bilateral/dataset.yml
     years: [2026]
   - name: fertilizer
-    config: "../fao-fertilizer-consumption/dataset.yml"
+    config: ../../datasets/fao-fertilizer-consumption/dataset.yml
     years: [2026]
 
 mart:

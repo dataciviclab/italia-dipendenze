@@ -1,0 +1,18 @@
+name: pipeline
+on:
+  pull_request:
+    types: [closed]
+    paths: ["datasets/**", "compose/**", "scripts/**", ".github/workflows/pipeline.yml"]
+  schedule:
+    - cron: "0 6 1 * *"
+  workflow_dispatch:
+
+jobs:
+  pipeline:
+    uses: dataciviclab/.github/.github/workflows/pipeline-reusable.yml@main
+    with:
+      repo-slug: materie-prime
+      run-command: make run-all
+      verify-command: make verify
+      extra-env: "TOOLKIT_ALLOW_SCRIPT_SOURCE=1"
+    secrets: inherit
