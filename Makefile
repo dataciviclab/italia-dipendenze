@@ -14,7 +14,8 @@ run:
 
 .PHONY: run-all
 run-all:
-	@find datasets compose -name dataset.yml 2>/dev/null | sort > batch.txt; \
+	@find datasets -name dataset.yml 2>/dev/null | sort > batch.txt; \
+	find compose -name dataset.yml 2>/dev/null | sort >> batch.txt; \
 	$(TOOLKIT) run --batch batch.txt
 
 # --- Validazione config ------------------------------------------------------
