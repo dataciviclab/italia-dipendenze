@@ -1,0 +1,532 @@
+{
+  "schema_version": 1,
+  "repo": "materie-prime",
+  "source_repo": "materie-prime",
+  "updated_at": "2026-09-25",
+  "datasets": [
+    {
+      "slug": "comtrade_bilateral",
+      "name": "Comtrade Bilateral",
+      "description": "Bilateral merchandise trade by HS6 product code — Italy (reporter 380)",
+      "source": "",
+      "source_id": "un_comtrade",
+      "period": {
+        "start": 2020,
+        "end": 2024
+      },
+      "tags": [
+        "commercio",
+        "bilaterale",
+        "hs6",
+        "importazioni",
+        "esportazioni",
+        "comtrade"
+      ],
+      "category": "commercio",
+      "columns": [
+        {
+          "name": "year",
+          "type": "INTEGER",
+          "role": "dimension",
+          "description": "",
+          "semantic_type": "year"
+        },
+        {
+          "name": "hs_code",
+          "type": "VARCHAR",
+          "role": "dimension",
+          "description": ""
+        },
+        {
+          "name": "reporter_code",
+          "type": "INTEGER",
+          "role": "metric",
+          "description": ""
+        },
+        {
+          "name": "partner_code",
+          "type": "INTEGER",
+          "role": "metric",
+          "description": ""
+        },
+        {
+          "name": "flow",
+          "type": "VARCHAR",
+          "role": "dimension",
+          "description": ""
+        },
+        {
+          "name": "net_wgt_kg",
+          "type": "DOUBLE",
+          "role": "metric",
+          "description": ""
+        },
+        {
+          "name": "primary_value_usd",
+          "type": "DOUBLE",
+          "role": "metric",
+          "description": ""
+        },
+        {
+          "name": "classification",
+          "type": "VARCHAR",
+          "role": "dimension",
+          "description": ""
+        },
+        {
+          "name": "resource",
+          "type": "VARCHAR",
+          "role": "dimension",
+          "description": ""
+        },
+        {
+          "name": "hs_code_name",
+          "type": "VARCHAR",
+          "role": "dimension",
+          "description": ""
+        },
+        {
+          "name": "partner_name",
+          "type": "VARCHAR",
+          "role": "dimension",
+          "description": ""
+        },
+        {
+          "name": "flow_label",
+          "type": "VARCHAR",
+          "role": "dimension",
+          "description": ""
+        }
+      ],
+      "location": {
+        "type": "gcs",
+        "path": "materie_prime/comtrade_bilateral/",
+        "multi_file": false
+      },
+      "stage": "incubating",
+      "mart_refs": [
+        "comtrade_bilateral__mart_trade_bilateral",
+        "comtrade_bilateral__mart_trade_concentration"
+      ]
+    },
+    {
+      "slug": "eurostat_nrg_bal_c",
+      "name": "Eurostat Nrg Bal C",
+      "description": "Complete energy balances — Italy physical flows by SIEC product (imports, exports, production)",
+      "source": "",
+      "source_id": "eurostat",
+      "period": {
+        "start": 2020,
+        "end": 2024
+      },
+      "tags": [
+        "energia",
+        "gas",
+        "petrolio",
+        "carbone",
+        "bilancio-energetico",
+        "eurostat",
+        "italia"
+      ],
+      "category": "energia",
+      "columns": [
+        {
+          "name": "year",
+          "type": "INTEGER",
+          "role": "dimension",
+          "description": "",
+          "semantic_type": "year"
+        },
+        {
+          "name": "product",
+          "type": "VARCHAR",
+          "role": "dimension",
+          "description": ""
+        },
+        {
+          "name": "product_label",
+          "type": "VARCHAR",
+          "role": "dimension",
+          "description": ""
+        },
+        {
+          "name": "indicator",
+          "type": "VARCHAR",
+          "role": "dimension",
+          "description": ""
+        },
+        {
+          "name": "indicator_name",
+          "type": "VARCHAR",
+          "role": "dimension",
+          "description": ""
+        },
+        {
+          "name": "value_ktoe",
+          "type": "DOUBLE",
+          "role": "metric",
+          "description": ""
+        },
+        {
+          "name": "unit",
+          "type": "VARCHAR",
+          "role": "dimension",
+          "description": ""
+        },
+        {
+          "name": "geo",
+          "type": "VARCHAR",
+          "role": "dimension",
+          "description": "",
+          "semantic_type": "nuts_code"
+        },
+        {
+          "name": "source",
+          "type": "VARCHAR",
+          "role": "dimension",
+          "description": ""
+        },
+        {
+          "name": "method",
+          "type": "VARCHAR",
+          "role": "dimension",
+          "description": ""
+        },
+        {
+          "name": "data_quality",
+          "type": "VARCHAR",
+          "role": "dimension",
+          "description": ""
+        }
+      ],
+      "location": {
+        "type": "gcs",
+        "path": "materie_prime/eurostat_nrg_bal_c/",
+        "multi_file": false
+      },
+      "stage": "incubating",
+      "mart_refs": [
+        "eurostat_nrg_bal_c__mart_energy_balance"
+      ]
+    },
+    {
+      "slug": "fao_fertilizer_consumption",
+      "name": "Fao Fertilizer Consumption",
+      "description": "Fertilizer consumption by nutrient — Italy (FAO RFN dataset via OWID)",
+      "source": "",
+      "source_id": "faostat",
+      "period": {
+        "start": 2018,
+        "end": 2023
+      },
+      "tags": [
+        "agricoltura",
+        "fertilizzanti",
+        "consumo",
+        "fao",
+        "italia"
+      ],
+      "category": "agricoltura",
+      "columns": [
+        {
+          "name": "year",
+          "type": "INTEGER",
+          "role": "dimension",
+          "description": "",
+          "semantic_type": "year"
+        },
+        {
+          "name": "country",
+          "type": "VARCHAR",
+          "role": "dimension",
+          "description": "",
+          "semantic_type": "country_code"
+        },
+        {
+          "name": "country_code",
+          "type": "INTEGER",
+          "role": "metric",
+          "description": ""
+        },
+        {
+          "name": "total_consumption_tonnes",
+          "type": "DOUBLE",
+          "role": "metric",
+          "description": ""
+        },
+        {
+          "name": "source",
+          "type": "VARCHAR",
+          "role": "dimension",
+          "description": ""
+        },
+        {
+          "name": "method",
+          "type": "VARCHAR",
+          "role": "dimension",
+          "description": ""
+        },
+        {
+          "name": "data_quality",
+          "type": "VARCHAR",
+          "role": "dimension",
+          "description": ""
+        }
+      ],
+      "location": {
+        "type": "gcs",
+        "path": "materie_prime/fao_fertilizer_consumption/",
+        "multi_file": false
+      },
+      "stage": "incubating",
+      "mart_refs": [
+        "fao_fertilizer_consumption__mart_fertilizer_consumption"
+      ]
+    }
+  ],
+  "marts": [
+    {
+      "slug": "comtrade_bilateral__mart_trade_bilateral",
+      "dataset": "comtrade_bilateral",
+      "table": "mart_trade_bilateral",
+      "location": {
+        "type": "gcs",
+        "path": "gs://dataciviclab-mart/materie_prime/comtrade_bilateral/mart_trade_bilateral.parquet",
+        "multi_file": false
+      }
+    },
+    {
+      "slug": "comtrade_bilateral__mart_trade_concentration",
+      "dataset": "comtrade_bilateral",
+      "table": "mart_trade_concentration",
+      "location": {
+        "type": "gcs",
+        "path": "gs://dataciviclab-mart/materie_prime/comtrade_bilateral/mart_trade_concentration.parquet",
+        "multi_file": false
+      }
+    },
+    {
+      "slug": "eurostat_nrg_bal_c__mart_energy_balance",
+      "dataset": "eurostat_nrg_bal_c",
+      "table": "mart_energy_balance",
+      "location": {
+        "type": "gcs",
+        "path": "gs://dataciviclab-mart/materie_prime/eurostat_nrg_bal_c/mart_energy_balance.parquet",
+        "multi_file": false
+      }
+    },
+    {
+      "slug": "fao_fertilizer_consumption__mart_fertilizer_consumption",
+      "dataset": "fao_fertilizer_consumption",
+      "table": "mart_fertilizer_consumption",
+      "location": {
+        "type": "gcs",
+        "path": "gs://dataciviclab-mart/materie_prime/fao_fertilizer_consumption/mart_fertilizer_consumption.parquet",
+        "multi_file": false
+      }
+    },
+    {
+      "slug": "resource_dependency_compose__mart_energy_vs_trade",
+      "dataset": "resource_dependency_compose",
+      "table": "mart_energy_vs_trade",
+      "location": {
+        "type": "gcs",
+        "path": "gs://dataciviclab-mart/materie_prime/resource_dependency_compose/mart_energy_vs_trade.parquet",
+        "multi_file": false
+      }
+    },
+    {
+      "slug": "resource_dependency_compose__mart_resource_dependency",
+      "dataset": "resource_dependency_compose",
+      "table": "mart_resource_dependency",
+      "location": {
+        "type": "gcs",
+        "path": "gs://dataciviclab-mart/materie_prime/resource_dependency_compose/mart_resource_dependency.parquet",
+        "multi_file": false
+      }
+    }
+  ],
+  "signals": [
+    {
+      "id": "compose:resource_dependency_compose",
+      "source_id": "dataciviclab_composite",
+      "status": "ok",
+      "label": "resource_dependency_compose",
+      "detail": "anno 2026 — mart: si",
+      "action": "",
+      "run": {
+        "run_id": "20260924T163503Z_ef4abc0f",
+        "year": 2026,
+        "status": "SUCCESS",
+        "quality_score": {
+          "mart": 100
+        },
+        "output_rows": {
+          "mart": 62
+        },
+        "output_bytes": {
+          "mart": 9095
+        },
+        "started_at": "2026-09-24T16:35:03.213407+00:00",
+        "finished_at": "2026-09-24T16:35:03.399386+00:00",
+        "duration_seconds": 0.186
+      }
+    },
+    {
+      "id": "comtrade_bilateral",
+      "source_id": "un_comtrade",
+      "status": "ok",
+      "label": "comtrade_bilateral",
+      "detail": "anno 2026 — mart: si",
+      "action": "",
+      "run": {
+        "run_id": "20260924T163453Z_d752358d",
+        "year": 2026,
+        "status": "SUCCESS",
+        "quality_score": {
+          "raw": 100,
+          "clean": 100,
+          "mart": 100
+        },
+        "output_rows": {
+          "raw": 599,
+          "clean": 599,
+          "mart": 639
+        },
+        "output_bytes": {
+          "raw": 81598,
+          "clean": 11469,
+          "mart": 15981
+        },
+        "started_at": "2026-09-24T16:34:53.687890+00:00",
+        "finished_at": "2026-09-24T16:34:55.230557+00:00",
+        "duration_seconds": 1.543
+      }
+    },
+    {
+      "id": "eurostat_nrg_bal_c",
+      "source_id": "eurostat",
+      "status": "ok",
+      "label": "eurostat_nrg_bal_c",
+      "detail": "anno 2026 — mart: si",
+      "action": "",
+      "run": {
+        "run_id": "20260924T155043Z_c1dc6aeb",
+        "year": 2026,
+        "status": "SUCCESS",
+        "quality_score": {
+          "raw": 100,
+          "clean": 95,
+          "mart": 100
+        },
+        "output_rows": {
+          "raw": 45,
+          "clean": 40,
+          "mart": 15
+        },
+        "output_bytes": {
+          "raw": 9290,
+          "clean": 2976,
+          "mart": 3675
+        },
+        "started_at": "2026-09-24T15:50:43.583363+00:00",
+        "finished_at": "2026-09-24T15:50:44.866548+00:00",
+        "duration_seconds": 1.283
+      }
+    },
+    {
+      "id": "fao_fertilizer_consumption",
+      "source_id": "faostat",
+      "status": "ok",
+      "label": "fao_fertilizer_consumption",
+      "detail": "anno 2026 — mart: si",
+      "action": "",
+      "run": {
+        "run_id": "20260924T110851Z_6bc8c4f7",
+        "year": 2026,
+        "status": "SUCCESS",
+        "quality_score": {
+          "raw": 100,
+          "clean": 95,
+          "mart": 100
+        },
+        "output_rows": {
+          "raw": 6,
+          "clean": 6,
+          "mart": 6
+        },
+        "output_bytes": {
+          "raw": 415,
+          "clean": 1542,
+          "mart": 1334
+        },
+        "started_at": "2026-09-24T11:08:51.125123+00:00",
+        "finished_at": "2026-09-24T11:08:53.958987+00:00",
+        "duration_seconds": 2.834
+      }
+    }
+  ],
+  "codelists": [],
+  "entities": {
+    "entities": {
+      "Nazione": {
+        "entity": "Nazione",
+        "label": "Nazione",
+        "datasets": [
+          {
+            "slug": "fao_fertilizer_consumption",
+            "name": "Fao Fertilizer Consumption",
+            "column": "country",
+            "semantic_type": "country_code"
+          }
+        ],
+        "types": {
+          "country_code": 1
+        }
+      },
+      "Provincia (tramite NUTS3)": {
+        "entity": "Provincia (tramite NUTS3)",
+        "label": "Provincia (tramite NUTS3)",
+        "datasets": [
+          {
+            "slug": "eurostat_nrg_bal_c",
+            "name": "Eurostat Nrg Bal C",
+            "column": "geo",
+            "semantic_type": "nuts_code"
+          }
+        ],
+        "types": {
+          "nuts_code": 1
+        }
+      },
+      "Tempo": {
+        "entity": "Tempo",
+        "label": "Tempo / data",
+        "datasets": [
+          {
+            "slug": "comtrade_bilateral",
+            "name": "Comtrade Bilateral",
+            "column": "year",
+            "semantic_type": "year"
+          },
+          {
+            "slug": "eurostat_nrg_bal_c",
+            "name": "Eurostat Nrg Bal C",
+            "column": "year",
+            "semantic_type": "year"
+          },
+          {
+            "slug": "fao_fertilizer_consumption",
+            "name": "Fao Fertilizer Consumption",
+            "column": "year",
+            "semantic_type": "year"
+          }
+        ],
+        "types": {
+          "year": 3
+        }
+      }
+    },
+    "bridges": []
+  }
+}
