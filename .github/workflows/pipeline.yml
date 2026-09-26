@@ -49,11 +49,7 @@ jobs:
           workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
 
-      - uses: dataciviclab/.github/actions/gcs-auth@main
-        id: gcs
-
       - name: GCS sync
-        if: steps.gcs.outputs.ready == 'true'
         run: |
           gsutil -m rsync -r out/data/clean/ gs://dataciviclab-clean/italia_dipendenze/
           gsutil -m rsync -r out/data/mart/ gs://dataciviclab-mart/italia_dipendenze/
