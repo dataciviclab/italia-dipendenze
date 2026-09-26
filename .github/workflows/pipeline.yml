@@ -49,6 +49,8 @@ jobs:
           workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
 
+      - uses: google-github-actions/setup-gcloud@v3
+
       - name: GCS sync
         run: |
           gsutil -m rsync -r out/data/clean/ gs://dataciviclab-clean/italia_dipendenze/
