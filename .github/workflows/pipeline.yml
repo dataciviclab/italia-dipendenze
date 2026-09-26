@@ -59,6 +59,5 @@ jobs:
       - uses: dataciviclab/.github/actions/registry-update-pr@main
         with:
           prefix: "italia_dipendenze"
-          flat: "true"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
