@@ -1,24 +1,76 @@
 # Materie Prime
 
-Pipeline dati sulle dipendenze strategiche dell'Italia.
+**Quanto dipende l'Italia dall'estero per le risorse che tiene in funzione?**
 
-## Quick start
+La Italy Resource & Dependency Map è un sistema aperto che misura le principali risorse strategiche italiane: quanto ne importiamo, da chi dipendiamo, quanto è concentrata la fornitura.
 
+| Risorse coperte | Periodo | Fonti dati | Aggiornamento |
+|:---:|:---:|:---:|:---:|
+| 9 | 2020–2024 | Eurostat, UN Comtrade, FAO | Pipeline automatica |
+
+---
+
+## Perché questi dati
+
+L'Italia dipende per oltre il 95% dall'estero per gas, rame, ferro, alluminio e terre rare. Capire **da chi** dipendiamo e **quanto è concentrata** quella dipendenza è il primo passo per valutare la resilienza del sistema paese.
+
+Questi dati rendono visibili le catene di dipendenza materiale dell'Italia.
+
+---
+
+## Cosa contengono
+
+| Area | Dati | Righe | Metriche |
+|------|------|:---:|----------|
+| Gas naturale | Bilancio fisico (produzione, import, export, stock) | 15 | Gross Import Dependency, domestic share |
+| Commercio bilaterale | Import/export per HS6 × paese × anno | 599 | HHI, Top-1/3/5 share |
+| Fertilizzanti | Consumo Italia + concentrazione fornitori | 6 | Consumo totale, HHI |
+| Compose | Matrice unica: ID + concentrazione per risorsa | 47 | Risk profile |
+
+### 9 risorse monitorate
+
+| Risorsa | Import 2024 | Concentrazione (HHI) | Top fornitore |
+|---------|---:|:---:|---|
+| Gas naturale | $22,5B | 2945 | Algeria (48%) |
+| Rame | $1,3B | 3192 | Perù (34%) |
+| Ferro/acciaio | $868M | 3998 | Russia (46%) |
+| Fertilizzanti | $334M | 2070 | Russia (32%) |
+| Alluminio | $328M | 2666 | Russia (40%) |
+| Cobalto | $23M | 4172 | Germania (46%) |
+| Terre rare | $2,4M | 3651 | Cina (54%) |
+| Litio | $1M | 9320 | Germania (96%) |
+
+---
+
+## Esempi di domande
+
+- Da quali paesi dipende l'Italia per il gas naturale?
+- Quanto è concentrata la fornitura di rame?
+- Quali risorse hanno concentrazione >2500 HHI (alto rischio)?
+- Come è cambiata la dipendenza dal gas dopo il 2022?
+- Quali metalli critici ha l'Italia e da chi li compra?
+
+---
+
+## Come accedere
+
+**Pipeline locale:**
 ```bash
-# Prima run (fetch + pipeline + test)
 COMTRADE_SUBSCRIPTION_KEY=xxx make all
-
-# Solo pipeline (dati già fetchati)
-make run-all
-
-# Solo test
-make test
-
-# Pulizia
-make clean
 ```
 
-## Pipeline
+**Dati:**
+- Parquet in `out/data/mart/` dopo il pipeline
+- Registry in `registry/registry.json`
+
+**Fonti:**
+- Eurostat NRG_BAL_C (SDMX API, no key)
+- UN Comtrade (API con key gratuita)
+- FAO (dati cached)
+
+---
+
+## Come funziona
 
 ```
 comtrade (script) ────────┐
@@ -26,68 +78,26 @@ eurostat (script) ─────────┼──→ compose
 fao (script) ──────────────┘
 ```
 
-| Dataset | Source | Mart | Test |
-|---------|--------|:---:|:---:|
-| `eurostat-nrg-bal-c` | Eurostat SDMX API | 1 | ✅ |
-| `comtrade-bilateral` | UN Comtrade API | 2 | ✅ |
-| `fao-fertilizer-consumption` | FAO cached | 1 | ✅ |
-| `resource-dependency-compose` | Compose (join) | 2 | ✅ |
+Lo script fetcha i dati freschi dalle API, il toolkit li processa (clean → mart), il compose li unisce in una matrice unica.
 
-## Dati
+---
 
-### Matrice dipendenza 2024
+## Approfondimenti
 
-| Risorsa | Import ($) | HHI | Top supplier | Concentrazione |
-|---------|---:|:---:|---|:---:|
-| Gas | $22.5B | 2945 | Algeria 48% | high |
-| Rame | $1.3B | 3192 | Peru 34% | high |
-| Ferro/acciaio | $868M | 3998 | Russia 46% | high |
-| Fertilizzanti | $334M | 2070 | Russia 32% | medium |
-| Alluminio | $328M | 2666 | Russia 40% | high |
-| Cobalto | $23M | 4172 | Germany 46% | high |
-| Terre rare | $2.4M | 3651 | China 54% | high |
-| Litio | $1M | 9320 | Germany 96% | high |
+- [Discussion](https://github.com/dataciviclab/materie-prime/discussions) — domande, idee, contribuzioni
+- [STATUS.md](STATUS.md) — stato dettagliato e da farsi
 
-### Metriche
+---
 
-| Metrica | Formula | Stato |
-|---------|---------|:---:|
-| Gross Import Dependency | Imports / (P + I - X) | ✅ Gas |
-| HHI | Σ(share_i²) | ✅ 9 risorse |
-| Top-N Share | Quota primi N fornitori | ✅ 9 risorse |
-| Risk Profile | ID + HHI | ✅ |
+## Partecipa
 
-## Struttura
+- Apri una [Discussion](https://github.com/dataciviclab/materie-prime/discussions) per segnalare fonti, suggerire risorse, o chiedere analisi
+- Leggi [CONTRIBUTING.md](CONTRIBUTING.md) per contribuire al codice
 
-```
-materie-prime/
-├── datasets/
-│   ├── eurostat-nrg-bal-c/          script → clean → mart
-│   ├── comtrade-bilateral/          script → clean → mart + concentration
-│   └── fao-fertilizer-consumption/  script → clean → mart
-├── compose/
-│   └── resource-dependency-compose/ join dei 3 upstream
-├── scripts/
-│   ├── fetch_eurostat_energy.py     Eurostat SDMX → CSV
-│   ├── fetch_comtrade.py            Comtrade API → CSV
-│   └── download_fao_fertilizer.py   FAO cached data
-├── tests/test_smoke.py
-├── conftest.py
-├── Makefile
-├── pyproject.toml
-├── .github/workflows/
-│   ├── check.yml                    config validation
-│   ├── pipeline.yml                 run + GCS sync + registry
-│   └── test-audit.yml               marker audit
-└── registry/registry.json
-```
-
-## Dipendenze
-
-| Secret | Per |
-|--------|-----|
-| `COMTRADE_SUBSCRIPTION_KEY` | Fetch dati Comtrade (gratuita con registrazione) |
+---
 
 ## License
 
-MIT
+[MIT](LICENSE)
+
+[![check](https://github.com/dataciviclab/materie-prime/actions/workflows/check.yml/badge.svg)](https://github.com/dataciviclab/materie-prime/actions/workflows/check.yml)
