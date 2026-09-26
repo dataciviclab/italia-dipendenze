@@ -9,10 +9,40 @@ on:
 
 jobs:
   pipeline:
-    uses: dataciviclab/.github/.github/workflows/pipeline-reusable.yml@main
-    with:
-      repo-slug: italia-dipendenze
-      run-command: make run-all
-      verify-command: make verify
-      extra-env: TOOLKIT_ALLOW_SCRIPT_SOURCE=1
-    secrets: inherit
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      id-token: write
+
+    env:
+      TOOLKIT_ALLOW_SCRIPT_SOURCE: "1"
+      COMTRADE_SUBSCRIPTION_KEY: ${{ secrets.COMTRADE_SUBSCRIPTION_KEY }}
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: dataciviclab/.github/actions/python-setup@main
+        with:
+          install-extras: "-e .[pipeline]"
+
+      - name: Run datasets
+        run: make run-all
+
+      - name: Verify output
+        run: make verify
+
+      - uses: dataciviclab/.github/actions/gcs-auth@main
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: GCS sync
+        run: |
+          gsutil -m rsync -r out/data/clean/ gs://dataciviclab-clean/italia_dipendenze/
+          gsutil -m rsync -r out/data/mart/ gs://dataciviclab-mart/italia_dipendenze/
+
+      - uses: dataciviclab/.github/actions/registry-update-pr@main
+        with:
+          prefix: "italia_dipendenze"
+          flat: "true"
