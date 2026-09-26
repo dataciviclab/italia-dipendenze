@@ -14,7 +14,5 @@ jobs:
       repo-slug: italia-dipendenze
       run-command: make run-all
       verify-command: make verify
-      extra-env: |
-        TOOLKIT_ALLOW_SCRIPT_SOURCE=1
-        COMTRADE_SUBSCRIPTION_KEY=${{ secrets.COMTRADE_SUBSCRIPTION_KEY }}
+      extra-env: TOOLKIT_ALLOW_SCRIPT_SOURCE=1
     secrets: inherit
