@@ -50,6 +50,7 @@ jobs:
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
 
       - uses: dataciviclab/.github/actions/gcs-auth@main
+        id: gcs
 
       - name: GCS sync
         if: steps.gcs.outputs.ready == 'true'
@@ -61,3 +62,5 @@ jobs:
         with:
           prefix: "italia_dipendenze"
           flat: "true"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
