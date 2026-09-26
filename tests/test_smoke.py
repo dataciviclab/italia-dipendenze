@@ -1,5 +1,5 @@
 """
-test_smoke.py — Smoke test per dipendenze-risorse
+test_smoke.py — Smoke test per italia-dipendenze
 
 Verifica:
 - Esistenza e integrita' dei mart parquet

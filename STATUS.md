@@ -1,7 +1,7 @@
 # Materie Prime — Stato e Da Farsi
 
 **Data**: 2026-09-26
-**Repo**: `esperimenti-locali/materie-prime` (git, commit 2a9092b)
+**Repo**: `esperimenti-locali/italia-dipendenze` (git, commit 2a9092b)
 
 ---
 
@@ -49,7 +49,7 @@ comtrade (52s) → eurostat (15s) → fao (2s) → compose (0.5s)
 |---|------|--------|------|
 | 1 | **Aggiornare README** con dati aggiornati e istruzioni `make all` | Basso | |
 | 2 | **Aggiornare STATUS.md** (questo file) | Basso | |
-| 3 | **Creare repo GitHub** `dataciviclab/materie-prime` | Basso | |
+| 3 | **Creare repo GitHub** `dataciviclab/italia-dipendenze` | Basso | |
 
 ### Dopo il push
 

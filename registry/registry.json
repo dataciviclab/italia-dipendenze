@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "repo": "materie-prime",
-  "source_repo": "materie-prime",
-  "updated_at": "2026-09-25",
+  "repo": "italia-dipendenze",
+  "source_repo": "italia-dipendenze",
+  "updated_at": "2026-09-26",
   "datasets": [
     {
       "slug": "comtrade_bilateral",
@@ -100,7 +100,7 @@
       ],
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-clean/materie_prime/comtrade_bilateral/2026/comtrade_bilateral_2026_clean.parquet",
+        "path": "gs://dataciviclab-clean/italia_dipendenze/comtrade_bilateral/2026/comtrade_bilateral_2026_clean.parquet",
         "multi_file": false
       },
       "stage": "incubating",
@@ -156,7 +156,7 @@
           "description": ""
         },
         {
-          "name": "indicator_name",
+          "name": "indicator_label",
           "type": "VARCHAR",
           "role": "dimension",
           "description": ""
@@ -201,7 +201,7 @@
       ],
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-clean/materie_prime/eurostat_nrg_bal_c/2026/eurostat_nrg_bal_c_2026_clean.parquet",
+        "path": "gs://dataciviclab-clean/italia_dipendenze/eurostat_nrg_bal_c/2026/eurostat_nrg_bal_c_2026_clean.parquet",
         "multi_file": false
       },
       "stage": "incubating",
@@ -275,7 +275,7 @@
       ],
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-clean/materie_prime/fao_fertilizer_consumption/2026/fao_fertilizer_consumption_2026_clean.parquet",
+        "path": "gs://dataciviclab-clean/italia_dipendenze/fao_fertilizer_consumption/2026/fao_fertilizer_consumption_2026_clean.parquet",
         "multi_file": false
       },
       "stage": "incubating",
@@ -291,7 +291,7 @@
       "table": "mart_trade_bilateral",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/materie_prime/comtrade_bilateral/2026/mart_trade_bilateral.parquet",
+        "path": "gs://dataciviclab-mart/italia_dipendenze/comtrade_bilateral/2026/mart_trade_bilateral.parquet",
         "multi_file": false
       }
     },
@@ -301,7 +301,7 @@
       "table": "mart_trade_concentration",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/materie_prime/comtrade_bilateral/2026/mart_trade_concentration.parquet",
+        "path": "gs://dataciviclab-mart/italia_dipendenze/comtrade_bilateral/2026/mart_trade_concentration.parquet",
         "multi_file": false
       }
     },
@@ -311,7 +311,7 @@
       "table": "mart_energy_balance",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/materie_prime/eurostat_nrg_bal_c/2026/mart_energy_balance.parquet",
+        "path": "gs://dataciviclab-mart/italia_dipendenze/eurostat_nrg_bal_c/2026/mart_energy_balance.parquet",
         "multi_file": false
       }
     },
@@ -321,7 +321,7 @@
       "table": "mart_fertilizer_consumption",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/materie_prime/fao_fertilizer_consumption/2026/mart_fertilizer_consumption.parquet",
+        "path": "gs://dataciviclab-mart/italia_dipendenze/fao_fertilizer_consumption/2026/mart_fertilizer_consumption.parquet",
         "multi_file": false
       }
     },
@@ -331,7 +331,7 @@
       "table": "mart_energy_vs_trade",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/materie_prime/resource_dependency_compose/2026/mart_energy_vs_trade.parquet",
+        "path": "gs://dataciviclab-mart/italia_dipendenze/resource_dependency_compose/2026/mart_energy_vs_trade.parquet",
         "multi_file": false
       }
     },
@@ -341,7 +341,7 @@
       "table": "mart_resource_dependency",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/materie_prime/resource_dependency_compose/2026/mart_resource_dependency.parquet",
+        "path": "gs://dataciviclab-mart/italia_dipendenze/resource_dependency_compose/2026/mart_resource_dependency.parquet",
         "multi_file": false
       }
     }
@@ -355,21 +355,21 @@
       "detail": "anno 2026 — mart: si",
       "action": "",
       "run": {
-        "run_id": "20260924T163503Z_ef4abc0f",
+        "run_id": "20260925T234844Z_2961bcd0",
         "year": 2026,
         "status": "SUCCESS",
         "quality_score": {
           "mart": 100
         },
         "output_rows": {
-          "mart": 62
+          "mart": 64
         },
         "output_bytes": {
-          "mart": 9095
+          "mart": 9170
         },
-        "started_at": "2026-09-24T16:35:03.213407+00:00",
-        "finished_at": "2026-09-24T16:35:03.399386+00:00",
-        "duration_seconds": 0.186
+        "started_at": "2026-09-25T23:48:44.957331+00:00",
+        "finished_at": "2026-09-25T23:48:45.411171+00:00",
+        "duration_seconds": 0.454
       }
     },
     {
@@ -380,7 +380,7 @@
       "detail": "anno 2026 — mart: si",
       "action": "",
       "run": {
-        "run_id": "20260924T163453Z_d752358d",
+        "run_id": "20260925T234822Z_75051715",
         "year": 2026,
         "status": "SUCCESS",
         "quality_score": {
@@ -389,18 +389,18 @@
           "mart": 100
         },
         "output_rows": {
-          "raw": 599,
-          "clean": 599,
-          "mart": 639
+          "raw": 682,
+          "clean": 682,
+          "mart": 724
         },
         "output_bytes": {
-          "raw": 81598,
-          "clean": 11469,
-          "mart": 15981
+          "raw": 96189,
+          "clean": 12318,
+          "mart": 17016
         },
-        "started_at": "2026-09-24T16:34:53.687890+00:00",
-        "finished_at": "2026-09-24T16:34:55.230557+00:00",
-        "duration_seconds": 1.543
+        "started_at": "2026-09-25T23:48:22.311284+00:00",
+        "finished_at": "2026-09-25T23:48:27.734776+00:00",
+        "duration_seconds": 5.423
       }
     },
     {
@@ -411,27 +411,27 @@
       "detail": "anno 2026 — mart: si",
       "action": "",
       "run": {
-        "run_id": "20260924T155043Z_c1dc6aeb",
+        "run_id": "20260925T234827Z_60a7fd64",
         "year": 2026,
         "status": "SUCCESS",
         "quality_score": {
           "raw": 100,
-          "clean": 95,
+          "clean": 100,
           "mart": 100
         },
         "output_rows": {
-          "raw": 45,
-          "clean": 40,
+          "raw": 60,
+          "clean": 55,
           "mart": 15
         },
         "output_bytes": {
-          "raw": 9290,
-          "clean": 2976,
-          "mart": 3675
+          "raw": 6332,
+          "clean": 3143,
+          "mart": 3856
         },
-        "started_at": "2026-09-24T15:50:43.583363+00:00",
-        "finished_at": "2026-09-24T15:50:44.866548+00:00",
-        "duration_seconds": 1.283
+        "started_at": "2026-09-25T23:48:27.954776+00:00",
+        "finished_at": "2026-09-25T23:48:42.295203+00:00",
+        "duration_seconds": 14.34
       }
     },
     {
@@ -442,7 +442,7 @@
       "detail": "anno 2026 — mart: si",
       "action": "",
       "run": {
-        "run_id": "20260924T110851Z_6bc8c4f7",
+        "run_id": "20260925T234842Z_4d9985cb",
         "year": 2026,
         "status": "SUCCESS",
         "quality_score": {
@@ -460,9 +460,9 @@
           "clean": 1542,
           "mart": 1334
         },
-        "started_at": "2026-09-24T11:08:51.125123+00:00",
-        "finished_at": "2026-09-24T11:08:53.958987+00:00",
-        "duration_seconds": 2.834
+        "started_at": "2026-09-25T23:48:42.480130+00:00",
+        "finished_at": "2026-09-25T23:48:44.739206+00:00",
+        "duration_seconds": 2.259
       }
     }
   ],

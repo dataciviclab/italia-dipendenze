@@ -84,14 +84,14 @@ Lo script fetcha i dati freschi dalle API, il toolkit li processa (clean → mar
 
 ## Approfondimenti
 
-- [Discussion](https://github.com/dataciviclab/materie-prime/discussions) — domande, idee, contribuzioni
+- [Discussion](https://github.com/dataciviclab/italia-dipendenze/discussions) — domande, idee, contribuzioni
 - [STATUS.md](STATUS.md) — stato dettagliato e da farsi
 
 ---
 
 ## Partecipa
 
-- Apri una [Discussion](https://github.com/dataciviclab/materie-prime/discussions) per segnalare fonti, suggerire risorse, o chiedere analisi
+- Apri una [Discussion](https://github.com/dataciviclab/italia-dipendenze/discussions) per segnalare fonti, suggerire risorse, o chiedere analisi
 - Leggi [CONTRIBUTING.md](CONTRIBUTING.md) per contribuire al codice
 
 ---
@@ -100,4 +100,4 @@ Lo script fetcha i dati freschi dalle API, il toolkit li processa (clean → mar
 
 [MIT](LICENSE)
 
-[![check](https://github.com/dataciviclab/materie-prime/actions/workflows/check.yml/badge.svg)](https://github.com/dataciviclab/materie-prime/actions/workflows/check.yml)
+[![check](https://github.com/dataciviclab/italia-dipendenze/actions/workflows/check.yml/badge.svg)](https://github.com/dataciviclab/italia-dipendenze/actions/workflows/check.yml)

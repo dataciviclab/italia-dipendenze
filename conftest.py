@@ -1,4 +1,4 @@
-"""Config pytest per materie-prime (pipeline)."""
+"""Config pytest per italia-dipendenze (pipeline)."""
 from __future__ import annotations
 
 import pytest

@@ -51,11 +51,11 @@ test:
 
 .PHONY: registry
 registry:
-	$(TOOLKIT) registry build --prefix materie_prime --flat
+	$(TOOLKIT) registry build --prefix italia_dipendenze
 
 .PHONY: registry-write
 registry-write:
-	$(TOOLKIT) registry build --prefix materie_prime --flat --write
+	$(TOOLKIT) registry build --prefix italia_dipendenze --write
 
 # --- Pulizia -----------------------------------------------------------------
 

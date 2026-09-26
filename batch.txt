@@ -1,4 +1,4 @@
-compose/resource-dependency-compose/dataset.yml
 datasets/comtrade-bilateral/dataset.yml
 datasets/eurostat-nrg-bal-c/dataset.yml
 datasets/fao-fertilizer-consumption/dataset.yml
+compose/resource-dependency-compose/dataset.yml
