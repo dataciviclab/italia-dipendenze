@@ -35,7 +35,7 @@ jobs:
 
       - uses: dataciviclab/.github/actions/python-setup@main
         with:
-          install-extras: "-e .[pipeline]"
+          install-extras: "pipeline"
 
       - name: Run datasets
         run: make run-all
