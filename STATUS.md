@@ -1,33 +1,34 @@
-# Italy Resource & Dependency Map — Stato e Da Farsi
+# Materie Prime — Stato e Da Farsi
 
-**Data**: 2026-09-25
-**Repo**: `esperimenti-locali/dipendenze-risorse` (git, commit d963c6f)
+**Data**: 2026-09-26
+**Repo**: `esperimenti-locali/materie-prime` (git, commit 2a9092b)
 
 ---
 
-## Cosa c'è adesso
+## Stato attuale
 
-Pipeline completa con toolkit, 4 dataset, 9 risorse, dati reali 2020-2024.
+Pipeline funzionante: `make clean && make run-all && make test`
+- 4/4 dataset SUCCESS, 8/8 test passano
+- Fetch dati da API (Eurostat SDMX, Comtrade comtradeapicall, FAO cached)
+- Zero CSV committati, tutto script-based
 
-### Architettura
+### Ordine esecuzione
 
 ```
-eurostat-nrg-bal-c ─────┐
-comtrade-bilateral ──────┼──→ resource-dependency-compose
-fao-fertilizer-consumption┘
+comtrade (52s) → eurostat (15s) → fao (2s) → compose (0.5s)
 ```
 
 ### Fonti dati
 
-| Fonte | Accesso | Dati |
-|-------|---------|------|
-| Eurostat NRG_BAL_C | local_file (pre-fetched) | Bilancio fisico Italia, 2020-2024 |
-| UN Comtrade API | `comtradeapicall` + key | Commercio bilaterale HS6, 2020-2024, 9 risorse |
-| FAO | script (cached data) | Consumo fertilizzanti, 2018-2023 |
+| Fonte | Tipo | Key | Dati |
+|-------|------|-----|------|
+| Eurostat NRG_BAL_C | script (SDMX API) | No | Bilancio fisico Italia, 2020-2024 |
+| UN Comtrade | script (comtradeapicall) | Sì | Commercio bilaterale HS6, 2020-2024, 9 risorse |
+| FAO | script (cached) | No | Consumo fertilizzanti, 2018-2023 |
 
-### Risorse coperte
+### Matrice dipendenza 2024
 
-| Risorsa | Import ($) 2024 | HHI | Top supplier | Concentrazione |
+| Risorsa | Import ($) | HHI | Top supplier | Concentrazione |
 |---------|---:|:---:|---|:---:|
 | Gas | $22.5B | 2945 | Algeria 48% | high |
 | Rame | $1.3B | 3192 | Peru 34% | high |
@@ -37,95 +38,59 @@ fao-fertilizer-consumption┘
 | Cobalto | $23M | 4172 | Germany 46% | high |
 | Terre rare | $2.4M | 3651 | China 54% | high |
 | Litio | $1M | 9320 | Germany 96% | high |
-| Carbone | — | — | — | — |
-
-### Metriche calcolate
-
-| Metrica | Formula | Stato |
-|---------|---------|:---:|
-| Gross Import Dependency | Imports / (P + I - X) | ✅ Gas |
-| HHI (Herfindahl) | Σ(share_i²) | ✅ 9 risorse |
-| Top-N Share | Quota primi N fornitori | ✅ 9 risorse |
-| Risk Profile | ID + HHI → critical/moderate/low | ✅ |
-| Import Coverage Ratio | Production / Imports | ✅ Gas |
-
-### Qualità dati
-
-| Risorsa | Physical ID | Concentrazione | Data Quality |
-|---------|:---:|:---:|---|
-| Gas | ✅ Eurostat | ✅ Comtrade | A (verified) |
-| Fertilizzanti | — | ✅ Comtrade | B (constructed) |
-| Rame | — | ✅ Comtrade | B (constructed) |
-| Alluminio | — | ✅ Comtrade | B (constructed) |
-| Ferro/acciaio | — | ✅ Comtrade | B (constructed) |
-| Cobalto | — | ✅ Comtrade | B (constructed) |
-| Terre rare | — | ✅ Comtrade | B (constructed) |
-| Litio | — | ✅ Comtrade | B (constructed) |
-| Elettricità | — | ⚠️ 4 righe | C (incomplete) |
-
-### Infrastruttura
-
-- ✅ Toolkit pipeline (4 dataset, clean/mart SQL)
-- ✅ 8/8 smoke test (marker @pytest.mark.smoke)
-- ✅ Makefile (run, check, test, clean)
-- ✅ CI workflow (.github/workflows/ci.yml)
-- ✅ pyproject.toml (template 2 Data+SQL)
-- ✅ LICENSE (MIT), CONTRIBUTING.md, PR template
-- ✅ .gitignore
 
 ---
 
 ## Cosa manca
 
-### Priorità alta
-
-| # | Cosa | Sforzo | Bloccato da |
-|---|------|--------|-------------|
-| 1 | **Metrica gas corretta** — documentare che `gross_import_dependency` può >100% per stock changes | Basso | Niente |
-| 2 | **Estendere serie gas/fertilizzanti a 2020-2024** — gas 2020-2021 ha solo physical ID, non ha concentrazione | Basso | Niente |
-| 3 | **Aggiungere export al Comtrade** — calcolare trade balance (import - export) | Basso | Niente |
-| 4 | **Fix elettricità** — HS 2716 restituisce pochi dati, probabilmente non è la fonte giusta (ENTSO-G o Eurostat meglio) | Medio | Scelta fonte |
-
-### Priorità media
+### Prima di pushare su GitHub
 
 | # | Cosa | Sforzo | Note |
 |---|------|--------|------|
-| 5 | **OECD TiVA** — aggiungere FVA/DVA per decomposizione valore | Medio | Dataset gratuito, bulk download |
-| 6 | **USGS Minerali** — dati production per metalli critici | Basso | PDF, non API — va parsato |
-| 7 | **Physical ID per tutte le risorse** — aggiungere produzione/consumo da fonti nazionali o stime | Alto | Dati frammentati |
-| 8 | **Dashboard Streamlit** — visualizzazione interattiva | Medio | Dopo consolidatezza dati |
+| 1 | **Aggiornare README** con dati aggiornati e istruzioni `make all` | Basso | |
+| 2 | **Aggiornare STATUS.md** (questo file) | Basso | |
+| 3 | **Creare repo GitHub** `dataciviclab/materie-prime` | Basso | |
 
-### Priorità bassa
+### Dopo il push
 
 | # | Cosa | Sforzo | Note |
 |---|------|--------|------|
-| 9 | **Ownership analysis** — ISTAT Multinazionali per dipendenza proprietaria | Medio | Lag 2-3 anni |
-| 10 | **Upstream dependency** — IO tables per FID/UD | Alto | Richiede FIGARO, lag 2-5 anni |
-| 11 | **Farmaci/API** — dati frammentati, supply chain complessa | Alto | Ricerca manuale |
-| 12 | **Semiconduttori** — dati frammentati, supply chain estrema | Alto | Ricerca manuale |
+| 4 | **Estendere gas/fertilizzanti a 2020-2024 con concentrazione** | Basso | Già nel Comtrade, basta verificare |
+| 5 | **Aggiungere export data** per trade balance | Basso | Le query Comtrade già chiedono M+X |
+| 6 | **OECD TiVA** — FVA/DVA per decomposizione valore | Medio | Bulk download gratuito |
+| 7 | **USGS Minerali** — production data per metalli critici | Basso | PDF parsing |
+| 8 | **Dashboard Streamlit** | Medio | Dopo consolidatezza |
+
+### backlog
+
+| # | Cosa | Sforzo |
+|---|------|--------|
+| 9 | Ownership analysis (ISTAT Multinazionali) | Medio |
+| 10 | Upstream dependency (IO tables) | Alto |
+| 11 | Farmaci/API | Alto |
+| 12 | Semiconduttori | Alto |
 
 ---
 
-## Problema aperto: Comtrade API
+## Come funziona il pipeline
 
-Il nostro `comtradeapicall` funziona, ma il fetch delle 6 nuove risorse ha prodotto solo dati 2020-2024 (non 2022-2024 come il gas iniziale). Il dataset `comtrade_bilateral.csv` ha ora 599 righe su 9 risorse × 5 anni.
+```
+make all
+  ├── make run-all
+  │     ├── batch.txt: datasets prima, compose dopo
+  │     ├── toolkit run --batch batch.txt
+  │     │     ├── raw: script fetch dati da API
+  │     │     ├── clean: SQL normalizzazione
+  │     │     └── mart: SQL aggregazione + metriche
+  │     └── compose: read_parquet dagli upstream
+  └── make test
+        └── pytest tests/ (8 smoke test)
+```
 
-**Da verificare**: il fetch del gas e fertilizzanti con il nuovo metodo (`comtradeapicall.getFinalData`) ha sovrascritto i dati precedenti. I dati 2020-2021 per gas e fertilizzanti ora hanno anche exports, ma la concentrazione (HHI) si calcola solo sulle imports.
+### Dipendenze CI
 
----
-
-## Decisioni aperte
-
-1. **Repository GitHub**: creare `dataciviclab/dipendenze-risorse` o tenere locale?
-2. **Comtrade key**: salvare in `.env` (già in .gitignore) o usare variabile d'ambiente CI?
-3. **Fisical ID per metalli**: da fonti nazionali (USGS, ISTAT) o da trade balance calcolato?
-4. **Dashboard**: quandola costruiamo?
-
----
-
-## Prossimo passo concreto
-
-Il più utile adesso è:
-1. Verificare che il pipeline completo funzioni da zero (`make clean && make run-all && make test`)
-2. Aggiungere export al dataset comtrade
-3. Estendere gas/fertilizzanti a 2020-2024 con concentrazione
+| Secret | Servizio | Necessario per |
+|--------|----------|----------------|
+| `COMTRADE_SUBSCRIPTION_KEY` | UN Comtrade API | Fetch dati bilateral |
+| `GCP_WORKLOAD_IDENTITY_PROVIDER` | GCS | Sync parquet su GCS |
+| `GCP_SERVICE_ACCOUNT` | GCS | Auth per sync |
