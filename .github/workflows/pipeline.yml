@@ -2,13 +2,22 @@ name: pipeline
 on:
   pull_request:
     types: [closed]
-    paths: ["datasets/**", "compose/**", "scripts/**", ".github/workflows/pipeline.yml"]
+    paths:
+      - "datasets/**"
+      - "compose/**"
+      - "scripts/**"
+      - ".github/workflows/pipeline.yml"
   schedule:
     - cron: "0 6 1 * *"
   workflow_dispatch:
 
+concurrency:
+  group: dipendenze-pipeline-${{ github.event.pull_request.number || github.ref || 'schedule' }}
+  cancel-in-progress: false
+
 jobs:
   pipeline:
+    if: github.event.pull_request.merged == true || github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -21,6 +30,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
 
       - uses: dataciviclab/.github/actions/python-setup@main
         with:
@@ -32,12 +43,16 @@ jobs:
       - name: Verify output
         run: make verify
 
-      - uses: dataciviclab/.github/actions/gcs-auth@main
+      - uses: google-github-actions/auth@v3
+        id: gcp-auth
         with:
           workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
 
+      - uses: dataciviclab/.github/actions/gcs-auth@main
+
       - name: GCS sync
+        if: steps.gcs.outputs.ready == 'true'
         run: |
           gsutil -m rsync -r out/data/clean/ gs://dataciviclab-clean/italia_dipendenze/
           gsutil -m rsync -r out/data/mart/ gs://dataciviclab-mart/italia_dipendenze/
