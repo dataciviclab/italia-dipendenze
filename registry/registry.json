@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "repo": "italia-dipendenze",
-  "source_repo": "italia-dipendenze",
+  "source_repo": "dataciviclab/italia-dipendenze",
   "updated_at": "2026-09-26",
   "datasets": [
     {
@@ -100,7 +100,7 @@
       ],
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-clean/italia_dipendenze/comtrade_bilateral/2026/comtrade_bilateral_2026_clean.parquet",
+        "path": "gs://dataciviclab-clean/italia_dipendenze/comtrade_bilateral/comtrade_bilateral_clean.parquet",
         "multi_file": false
       },
       "stage": "incubating",
@@ -201,7 +201,7 @@
       ],
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-clean/italia_dipendenze/eurostat_nrg_bal_c/2026/eurostat_nrg_bal_c_2026_clean.parquet",
+        "path": "gs://dataciviclab-clean/italia_dipendenze/eurostat_nrg_bal_c/eurostat_nrg_bal_c_clean.parquet",
         "multi_file": false
       },
       "stage": "incubating",
@@ -275,7 +275,7 @@
       ],
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-clean/italia_dipendenze/fao_fertilizer_consumption/2026/fao_fertilizer_consumption_2026_clean.parquet",
+        "path": "gs://dataciviclab-clean/italia_dipendenze/fao_fertilizer_consumption/fao_fertilizer_consumption_clean.parquet",
         "multi_file": false
       },
       "stage": "incubating",
@@ -291,7 +291,7 @@
       "table": "mart_trade_bilateral",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/italia_dipendenze/comtrade_bilateral/2026/mart_trade_bilateral.parquet",
+        "path": "gs://dataciviclab-mart/italia_dipendenze/comtrade_bilateral/mart_trade_bilateral.parquet",
         "multi_file": false
       }
     },
@@ -301,7 +301,7 @@
       "table": "mart_trade_concentration",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/italia_dipendenze/comtrade_bilateral/2026/mart_trade_concentration.parquet",
+        "path": "gs://dataciviclab-mart/italia_dipendenze/comtrade_bilateral/mart_trade_concentration.parquet",
         "multi_file": false
       }
     },
@@ -311,7 +311,7 @@
       "table": "mart_energy_balance",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/italia_dipendenze/eurostat_nrg_bal_c/2026/mart_energy_balance.parquet",
+        "path": "gs://dataciviclab-mart/italia_dipendenze/eurostat_nrg_bal_c/mart_energy_balance.parquet",
         "multi_file": false
       }
     },
@@ -321,7 +321,7 @@
       "table": "mart_fertilizer_consumption",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/italia_dipendenze/fao_fertilizer_consumption/2026/mart_fertilizer_consumption.parquet",
+        "path": "gs://dataciviclab-mart/italia_dipendenze/fao_fertilizer_consumption/mart_fertilizer_consumption.parquet",
         "multi_file": false
       }
     },
@@ -331,7 +331,7 @@
       "table": "mart_energy_vs_trade",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/italia_dipendenze/resource_dependency_compose/2026/mart_energy_vs_trade.parquet",
+        "path": "gs://dataciviclab-mart/italia_dipendenze/resource_dependency_compose/mart_energy_vs_trade.parquet",
         "multi_file": false
       }
     },
@@ -341,7 +341,7 @@
       "table": "mart_resource_dependency",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/italia_dipendenze/resource_dependency_compose/2026/mart_resource_dependency.parquet",
+        "path": "gs://dataciviclab-mart/italia_dipendenze/resource_dependency_compose/mart_resource_dependency.parquet",
         "multi_file": false
       }
     }
@@ -355,7 +355,7 @@
       "detail": "anno 2026 — mart: si",
       "action": "",
       "run": {
-        "run_id": "20260925T234844Z_2961bcd0",
+        "run_id": "20260926T105550Z_395c05fa",
         "year": 2026,
         "status": "SUCCESS",
         "quality_score": {
@@ -367,9 +367,9 @@
         "output_bytes": {
           "mart": 9170
         },
-        "started_at": "2026-09-25T23:48:44.957331+00:00",
-        "finished_at": "2026-09-25T23:48:45.411171+00:00",
-        "duration_seconds": 0.454
+        "started_at": "2026-09-26T10:55:50.778357+00:00",
+        "finished_at": "2026-09-26T10:55:50.830655+00:00",
+        "duration_seconds": 0.052
       }
     },
     {
@@ -380,7 +380,7 @@
       "detail": "anno 2026 — mart: si",
       "action": "",
       "run": {
-        "run_id": "20260925T234822Z_75051715",
+        "run_id": "20260926T105507Z_c9dd3659",
         "year": 2026,
         "status": "SUCCESS",
         "quality_score": {
@@ -398,9 +398,9 @@
           "clean": 12318,
           "mart": 17016
         },
-        "started_at": "2026-09-25T23:48:22.311284+00:00",
-        "finished_at": "2026-09-25T23:48:27.734776+00:00",
-        "duration_seconds": 5.423
+        "started_at": "2026-09-26T10:55:07.714038+00:00",
+        "finished_at": "2026-09-26T10:55:37.760428+00:00",
+        "duration_seconds": 30.046
       }
     },
     {
@@ -411,7 +411,7 @@
       "detail": "anno 2026 — mart: si",
       "action": "",
       "run": {
-        "run_id": "20260925T234827Z_60a7fd64",
+        "run_id": "20260926T105537Z_5b8f1039",
         "year": 2026,
         "status": "SUCCESS",
         "quality_score": {
@@ -429,9 +429,9 @@
           "clean": 3143,
           "mart": 3856
         },
-        "started_at": "2026-09-25T23:48:27.954776+00:00",
-        "finished_at": "2026-09-25T23:48:42.295203+00:00",
-        "duration_seconds": 14.34
+        "started_at": "2026-09-26T10:55:37.814165+00:00",
+        "finished_at": "2026-09-26T10:55:50.311435+00:00",
+        "duration_seconds": 12.497
       }
     },
     {
@@ -442,7 +442,7 @@
       "detail": "anno 2026 — mart: si",
       "action": "",
       "run": {
-        "run_id": "20260925T234842Z_4d9985cb",
+        "run_id": "20260926T105550Z_c2cba106",
         "year": 2026,
         "status": "SUCCESS",
         "quality_score": {
@@ -460,9 +460,9 @@
           "clean": 1542,
           "mart": 1334
         },
-        "started_at": "2026-09-25T23:48:42.480130+00:00",
-        "finished_at": "2026-09-25T23:48:44.739206+00:00",
-        "duration_seconds": 2.259
+        "started_at": "2026-09-26T10:55:50.354177+00:00",
+        "finished_at": "2026-09-26T10:55:50.723681+00:00",
+        "duration_seconds": 0.37
       }
     }
   ],
