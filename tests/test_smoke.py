@@ -40,11 +40,19 @@ MART_CONTRACTS = {
             "min_rows": 1,
             "required_columns": ["year", "resource", "hhi", "top1_supplier"],
         },
+        "mart_trade_balance": {
+            "min_rows": 1,
+            "required_columns": ["year", "resource", "import_value_usd", "export_value_usd", "balance_usd", "trade_position"],
+        },
+        "mart_concentration_trend": {
+            "min_rows": 1,
+            "required_columns": ["year", "resource", "hhi", "hhi_change", "trend_status"],
+        },
     },
     "resource_dependency_compose": {
         "mart_resource_dependency": {
             "min_rows": 10,
-            "required_columns": ["year", "resource", "physical_id_pct", "hhi", "top1_supplier"],
+            "required_columns": ["year", "resource", "physical_id_pct", "hhi", "top1_supplier", "data_source"],
         },
         "mart_energy_vs_trade": {
             "min_rows": 5,

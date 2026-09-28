@@ -6,13 +6,13 @@ La Italy Resource & Dependency Map è un sistema aperto che misura le principali
 
 | Risorse coperte | Periodo | Fonti dati | Aggiornamento |
 |:---:|:---:|:---:|:---:|
-| 9 | 2020–2024 | Eurostat, UN Comtrade, FAO | Pipeline automatica |
+| 23 prodotti energetici + 9 risorse commerciali | 2020–2024 | Eurostat, UN Comtrade, FAO | Pipeline automatica |
 
 ---
 
 ## Perché questi dati
 
-L'Italia dipende per oltre il 95% dall'estero per gas, rame, ferro, alluminio e terre rare. Capire **da chi** dipendiamo e **quanto è concentrata** quella dipendenza è il primo passo per valutare la resilienza del sistema paese.
+L'Italia dipende per oltre il 95% dall'estero per gas, petrolio, carbone e metalli critici. Capire **da chi** dipendiamo e **quanto è concentrata** quella dipendenza è il primo passo per valutare la resilienza del sistema paese.
 
 Questi dati rendono visibili le catene di dipendenza materiale dell'Italia.
 
@@ -22,23 +22,36 @@ Questi dati rendono visibili le catene di dipendenza materiale dell'Italia.
 
 | Area | Dati | Righe | Metriche |
 |------|------|:---:|----------|
-| Gas naturale | Bilancio fisico (produzione, import, export, stock) | 15 | Gross Import Dependency, domestic share |
-| Commercio bilaterale | Import/export per HS6 × paese × anno | 599 | HHI, Top-1/3/5 share |
-| Fertilizzanti | Consumo Italia + concentrazione fornitori | 6 | Consumo totale, HHI |
-| Compose | Matrice unica: ID + concentrazione per risorsa | 47 | Risk profile |
+| Bilancio energetico | 23 prodotti SIEC × 4 indicatori (produzione, import, export, stocks) | 115 | Gross Import Dependency, domestic share |
+| Commercio bilaterale | Import/export per HS6 × paese × anno | 682 | HHI, Top-1/3/5 share |
+| Trade balance | Balance = export - import per risorsa × anno | 45 | trade_position, export_coverage |
+| Concentration trend | HHI trend + YoY change | 45 | trend_status, hhi_change |
+| Fertilizzanti | Consumo Italia | 6 | Consumo totale |
+| Compose | Matrice unica: ID + concentrazione per risorsa | 104 | data_source, risk_profile |
 
-### 9 risorse monitorate
+### Risorse monitorate
 
 | Risorsa | Import 2024 | Concentrazione (HHI) | Top fornitore |
 |---------|---:|:---:|---|
-| Gas naturale | $22,5B | 2945 | Algeria (48%) |
-| Rame | $1,3B | 3192 | Perù (34%) |
+| Gas naturale | $22.5B | 2945 | Algeria (48%) |
+| Rame | $1.3B | 3292 | Perù (34%) |
 | Ferro/acciaio | $868M | 3998 | Russia (46%) |
-| Fertilizzanti | $334M | 2070 | Russia (32%) |
+| Fertilizzanti | $334M | 2770 | Russia (32%) |
 | Alluminio | $328M | 2666 | Russia (40%) |
-| Cobalto | $23M | 4172 | Germania (46%) |
-| Terre rare | $2,4M | 3651 | Cina (54%) |
-| Litio | $1M | 9320 | Germania (96%) |
+| Elettricita | $2.0B | 10000 | — |
+| Cobalto | $23M | 4172 | Germany (46%) |
+| Terre rare | $2.4M | 3651 | China (54%) |
+| Litio | $1M | 9320 | Germany (96%) |
+
+### Bilancio energetico (2024)
+
+| Prodotto | Import dep % | Import (KTOE) |
+|----------|:---:|---:|
+| Petrolio (excl. biofuel) | 143% | 73,674 |
+| Gas naturale | 102% | 48,699 |
+| Carbone | 111% | 2,481 |
+| Rinnovabili | 8% | 2,233 |
+| Coke | 100% | 105 |
 
 ---
 
@@ -49,6 +62,8 @@ Questi dati rendono visibili le catene di dipendenza materiale dell'Italia.
 - Quali risorse hanno concentrazione >2500 HHI (alto rischio)?
 - Come è cambiata la dipendenza dal gas dopo il 2022?
 - Quali metalli critici ha l'Italia e da chi li compra?
+- L'Italia è net exportatrice o importatrice di alluminio?
+- La concentrazione del litio è in aumento?
 
 ---
 

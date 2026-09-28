@@ -1,4 +1,5 @@
 -- mart_energy_vs_trade.sql: Compare physical ID with supplier concentration.
+-- Only includes products that have BOTH energy balance AND bilateral trade data.
 
 WITH energy AS (
     SELECT
@@ -10,7 +11,7 @@ WITH energy AS (
         production_ktoe,
         imports_ktoe
     FROM read_parquet('{support.energy.mart.mart_energy_balance}')
-    WHERE product IN ('G3000', 'C0000X0350-0370', 'O4630')
+    WHERE product IN ('G3000', 'C0000X0350-0370', 'O4630', 'E7000')
 ),
 trade AS (
     SELECT
@@ -28,6 +29,7 @@ resource_map AS (
     SELECT 'G3000' AS product, 'gas' AS resource
     UNION ALL SELECT 'C0000X0350-0370', 'carbone'
     UNION ALL SELECT 'O4630', 'prodotti_petroliferi'
+    UNION ALL SELECT 'E7000', 'elettricita'
 )
 SELECT
     e.year,
