@@ -1,5 +1,5 @@
 -- mart_trade_concentration.sql: Supplier concentration metrics per resource × year.
--- Computes HHI, top-1/3/5 shares from import bilateral data.
+-- Computes HHI, top-1/3/5 shares from import bilateral data, plus YoY trend.
 
 WITH imports AS (
     SELECT year, resource, hs_code, partner_name, primary_value_usd
@@ -67,6 +67,14 @@ concentration AS (
          WHERE r4.year = r.year AND r4.resource = r.resource) AS num_suppliers
     FROM ranked r
     GROUP BY year, resource, total_import_value_usd
+),
+lagged AS (
+    SELECT
+        *,
+        LAG(ROUND(hhi, 1)) OVER (PARTITION BY resource ORDER BY year) AS hhi_prev,
+        LAG(ROUND(top1_share_pct, 1)) OVER (PARTITION BY resource ORDER BY year) AS top1_prev,
+        LAG(ROUND(total_import_value_usd, 0)) OVER (PARTITION BY resource ORDER BY year) AS import_prev
+    FROM concentration
 )
 SELECT
     year,
@@ -83,8 +91,25 @@ SELECT
     ROUND(top3_share_pct, 1) AS top3_share_pct,
     ROUND(top5_share_pct, 1) AS top5_share_pct,
     num_suppliers,
+    -- Trend columns
+    ROUND(hhi - hhi_prev, 1) AS hhi_change,
+    ROUND(
+        CASE WHEN hhi_prev > 0 THEN (hhi - hhi_prev) / hhi_prev * 100 ELSE NULL END,
+        1
+    ) AS hhi_change_pct,
+    ROUND(top1_share_pct - top1_prev, 1) AS top1_share_change,
+    ROUND(total_import_value_usd - import_prev, 0) AS import_value_change,
+    CASE
+        WHEN hhi > 2500 AND hhi_prev <= 2500 THEN 'newly_concentrated'
+        WHEN hhi <= 2500 AND hhi_prev > 2500 THEN 'newly_diversified'
+        WHEN hhi > 2500 AND (hhi - hhi_prev) > 100 THEN 'concentration_increasing'
+        WHEN hhi > 2500 AND (hhi - hhi_prev) < -100 THEN 'concentration_decreasing'
+        WHEN hhi <= 2500 AND (hhi - hhi_prev) > 100 THEN 'diversification_reversing'
+        WHEN hhi <= 2500 AND (hhi - hhi_prev) < -100 THEN 'diversification_improving'
+        ELSE 'stable'
+    END AS trend_status,
     'un_comtrade_derived' AS source,
     'derived' AS method,
     'verified' AS data_quality
-FROM concentration
+FROM lagged
 ORDER BY year, resource

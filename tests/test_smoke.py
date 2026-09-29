@@ -38,15 +38,11 @@ MART_CONTRACTS = {
         },
         "mart_trade_concentration": {
             "min_rows": 1,
-            "required_columns": ["year", "resource", "hhi", "top1_supplier"],
+            "required_columns": ["year", "resource", "hhi", "top1_supplier", "top1_share_pct", "hhi_change", "trend_status"],
         },
         "mart_trade_balance": {
             "min_rows": 1,
             "required_columns": ["year", "resource", "import_value_usd", "export_value_usd", "balance_usd", "trade_position"],
-        },
-        "mart_concentration_trend": {
-            "min_rows": 1,
-            "required_columns": ["year", "resource", "hhi", "hhi_change", "trend_status"],
         },
     },
     "resource_dependency_compose": {

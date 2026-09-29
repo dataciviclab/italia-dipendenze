@@ -55,13 +55,10 @@ mart:
       sql: "sql/mart_trade_concentration.sql"
     - name: "mart_trade_balance"
       sql: "sql/mart_trade_balance.sql"
-    - name: "mart_concentration_trend"
-      sql: "sql/mart_concentration_trend.sql"
   required_tables:
     - "mart_trade_bilateral"
     - "mart_trade_concentration"
     - "mart_trade_balance"
-    - "mart_concentration_trend"
   validate:
     table_rules:
       mart_trade_bilateral:
@@ -69,7 +66,7 @@ mart:
         primary_key: [year, hs_code, partner_code, flow]
         min_rows: 10
       mart_trade_concentration:
-        required_columns: [year, resource, hhi, top1_supplier, top1_share_pct]
+        required_columns: [year, resource, hhi, top1_supplier, top1_share_pct, hhi_change, trend_status]
         min_rows: 1
       mart_trade_balance:
         required_columns: [year, resource, import_value_usd, export_value_usd, balance_usd, trade_position]
