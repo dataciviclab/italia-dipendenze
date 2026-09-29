@@ -32,7 +32,7 @@ mart:
   validate:
     table_rules:
       mart_resource_dependency:
-        required_columns: [year, resource, physical_id_pct, hhi, top1_supplier, top1_share_pct, data_quality]
+        required_columns: [year, resource, physical_id_pct, hhi, top1_supplier, top1_share_pct, data_quality, data_source]
         primary_key: [year, resource]
         min_rows: 1
       mart_energy_vs_trade:

@@ -19,7 +19,38 @@ SDMX_BASE = "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data"
 DATASET = "NRG_BAL_C"
 GEO = "IT"
 INDICATORS = ["IMP", "EXP", "PPRD", "STK_CHG"]
-PRODUCTS = ["G3000", "C0000X0350-0370", "O4630"]
+PRODUCTS = [
+    # ── Fossil fuels ──────────────────────────────────────────────
+    "G3000",              # Natural gas
+    "C0000X0350-0370",    # Coal and other solid fossil fuels
+    "C0110",              # Coke oven coke
+    "O4000XBIO",          # Oil & petroleum products (excl. biofuel portion)
+    "O4100_TOT",          # Crude oil, NGL, feedstocks
+    "O4630",              # Oil products
+    "O4640",              # Gas/diesel oil
+    "O4671XR5220B",       # Kerosene-type jet fuel
+    "O4300",              # Primary solid biofuels
+    "O4652XR5210B",       # Heavy fuel oil
+    # ── Electricity & heat ────────────────────────────────────────
+    "E7000",              # Electricity
+    "E4000",              # Heat
+    # ── Renewables ────────────────────────────────────────────────
+    "RA000",              # Total renewables and biofuels
+    "RA100",              # Hydro
+    "RA200",              # Wind
+    "RA300",              # Solar thermal
+    "RA410",              # Geothermal
+    "RA420",              # Solar photovoltaic
+    "RA600",              # Liquid biofuels
+    # ── Nuclear ───────────────────────────────────────────────────
+    "P1000",              # Nuclear
+    # ── Bioenergy ─────────────────────────────────────────────────
+    "BIOE",               # Total bioenergy
+    "R5110-5150_W6000RI", # Non-renewable waste
+    "R5220P",             # Renewable waste
+    # ── Aggregates ────────────────────────────────────────────────
+    "TOTAL",              # Total final energy consumption
+]
 
 INDICATOR_NAMES = {
     "IMP": "Imports",
@@ -31,7 +62,28 @@ INDICATOR_NAMES = {
 PRODUCT_NAMES = {
     "G3000": "Natural gas",
     "C0000X0350-0370": "Coal and other solid fossil fuels",
+    "C0110": "Coke oven coke",
+    "O4000XBIO": "Oil & petroleum products (excl. biofuel)",
+    "O4100_TOT": "Crude oil, NGL, feedstocks",
     "O4630": "Oil products",
+    "O4640": "Gas/diesel oil",
+    "O4671XR5220B": "Kerosene-type jet fuel",
+    "O4300": "Primary solid biofuels",
+    "O4652XR5210B": "Heavy fuel oil",
+    "E7000": "Electricity",
+    "E4000": "Heat",
+    "RA000": "Total renewables and biofuels",
+    "RA100": "Hydro",
+    "RA200": "Wind",
+    "RA300": "Solar thermal",
+    "RA410": "Geothermal",
+    "RA420": "Solar photovoltaic",
+    "RA600": "Liquid biofuels",
+    "P1000": "Nuclear",
+    "BIOE": "Total bioenergy",
+    "R5110-5150_W6000RI": "Non-renewable waste",
+    "R5220P": "Renewable waste",
+    "TOTAL": "Total final energy consumption",
 }
 
 

@@ -1,65 +1,114 @@
 # Materie Prime — Stato e Da Farsi
 
-**Data**: 2026-09-26
-**Repo**: `esperimenti-locali/italia-dipendenze` (git, commit 2a9092b)
+**Data**: 2026-09-28
+**Repo**: `dataciviclab/italia-dipendenze` (git)
 
 ---
 
 ## Stato attuale
 
 Pipeline funzionante: `make clean && make run-all && make test`
-- 4/4 dataset SUCCESS, 8/8 test passano
+- 4/4 dataset SUCCESS, 10/10 test passano
 - Fetch dati da API (Eurostat SDMX, Comtrade comtradeapicall, FAO cached)
 - Zero CSV committati, tutto script-based
 
 ### Ordine esecuzione
 
 ```
-comtrade (52s) → eurostat (15s) → fao (2s) → compose (0.5s)
+comtrade (4s) → eurostat (84s) → fao (2s) → compose (0.6s)
 ```
 
 ### Fonti dati
 
 | Fonte | Tipo | Key | Dati |
 |-------|------|-----|------|
-| Eurostat NRG_BAL_C | script (SDMX API) | No | Bilancio fisico Italia, 2020-2024 |
+| Eurostat NRG_BAL_C | script (SDMX API) | No | Bilancio fisico Italia, 23 prodotti SIEC, 2020-2024 |
 | UN Comtrade | script (comtradeapicall) | Sì | Commercio bilaterale HS6, 2020-2024, 9 risorse |
 | FAO | script (cached) | No | Consumo fertilizzanti, 2018-2023 |
 
-### Matrice dipendenza 2024
+### Output
 
-| Risorsa | Import ($) | HHI | Top supplier | Concentrazione |
-|---------|---:|:---:|---|:---:|
-| Gas | $22.5B | 2945 | Algeria 48% | high |
-| Rame | $1.3B | 3192 | Peru 34% | high |
-| Ferro/acciaio | $868M | 3998 | Russia 46% | high |
-| Fertilizzanti | $334M | 2070 | Russia 32% | medium |
-| Alluminio | $328M | 2666 | Russia 40% | high |
-| Cobalto | $23M | 4172 | Germany 46% | high |
-| Terre rare | $2.4M | 3651 | China 54% | high |
-| Litio | $1M | 9320 | Germany 96% | high |
+| Dataset | Righe clean | Mart tabelle | Righe mart |
+|---------|:-----------:|:------------:|:----------:|
+| comtrade_bilateral | 682 | 4 | 808 |
+| eurostat_nrg_bal_c | 355 | 1 | 115 |
+| fao_fertilizer_consumption | 6 | 1 | 6 |
+| resource_dependency_compose | — | 2 | 104 |
+
+### Mart disponibili
+
+**comtrade_bilateral:**
+- `mart_trade_bilateral` — bilateral trade by HS6 × partner × flow
+- `mart_trade_concentration` — HHI, top-1/3/5 share per risorsa × anno
+- `mart_trade_balance` — balance (export - import), trade_position, export_coverage
+- `mart_concentration_trend` — HHI trend, YoY change, trend_status
+
+**eurostat_nrg_bal_c:**
+- `mart_energy_balance` — production, imports, exports, dependency % per prodotto × anno
+
+**resource_dependency_compose:**
+- `mart_resource_dependency` — matrice unica: physical ID + HHI + data_source
+- `mart_energy_vs_trade` — risk_profile per prodotti con both energy + trade data
+
+### Dipendenza 2024 — Risorse con energy + trade
+
+| Risorsa | Import ($) | HHI | Top supplier | Conc. | Physical ID % |
+|---------|---:|:---:|---|:---:|:---:|
+| Gas | $22.5B | 2945 | Algeria 48% | high | 95-102% |
+| Rame | $1.3B | 3292 | Peru 34% | high | — |
+| Ferro/acciaio | $868M | 3998 | Russia 46% | high | — |
+| Fertilizzanti | $334M | 2770 | Russia 32% | medium | — |
+| Alluminio | $328M | 2666 | Russia 40% | high | — |
+| Elettricita | $2.0B | 10000 | — | high | — |
+| Cobalto | $23M | 4172 | Germany 46% | high | — |
+| Terre rare | $2.4M | 3651 | China 54% | high | — |
+| Litio | $1M | 9320 | Germany 96% | high | — |
+
+### Nuovi energy-only products (2024)
+
+| Prodotto | Production (KTOE) | Import (KTOE) | Import Dep % |
+|----------|---:|---:|:---:|
+| Petrolio greggio | 5,228 | 71,977 | 95% |
+| Gasolio | — | — | — |
+| Coke | 0 | 105 | 100% |
+| Rinnovabili total | — | — | 8-10% |
+| Geotermico | — | — | 0% |
+| Eolico | — | — | 0% |
+
+### Trade balance — net exporter/importer
+
+- **Net importer**: gas (-$59B), elettricita (-$1.8B), rame (-$1.2B), ferro (-$976M)
+- **Net exporter**: terre rare (+$1.5M), alluminio (variabile)
+
+### Concentration trend (2024 vs 2023)
+
+- **Litio**: +3154 HHI (concentration_increasing)
+- **Terre rare**: +856 HHI (concentration_increasing)
+- **Rame**: +630 HHI (concentration_increasing)
+- **Fertilizzanti**: +340 HHI (newly_concentrated)
+- **Cobalto**: -453 HHI (concentration_decreasing)
 
 ---
 
 ## Cosa manca
 
-### Prima di pushare su GitHub
+### Fatto oggi
+
+| # | Cosa | Stato |
+|---|------|-------|
+| 1 | Espansione Eurostat: 3 → 23 prodotti SIEC | ✅ |
+| 2 | Trade balance mart (export - import) | ✅ |
+| 3 | Concentration trend (YoY HHI change) | ✅ |
+| 4 | Compose aggiornato con data_source + energy-only | ✅ |
+
+### Prossimi passi
 
 | # | Cosa | Sforzo | Note |
 |---|------|--------|------|
-| 1 | **Aggiornare README** con dati aggiornati e istruzioni `make all` | Basso | |
-| 2 | **Aggiornare STATUS.md** (questo file) | Basso | |
-| 3 | **Creare repo GitHub** `dataciviclab/italia-dipendenze` | Basso | |
-
-### Dopo il push
-
-| # | Cosa | Sforzo | Note |
-|---|------|--------|------|
-| 4 | **Estendere gas/fertilizzanti a 2020-2024 con concentrazione** | Basso | Già nel Comtrade, basta verificare |
-| 5 | **Aggiungere export data** per trade balance | Basso | Le query Comtrade già chiedono M+X |
-| 6 | **OECD TiVA** — FVA/DVA per decomposizione valore | Medio | Bulk download gratuito |
-| 7 | **USGS Minerali** — production data per metalli critici | Basso | PDF parsing |
-| 8 | **Dashboard Streamlit** | Medio | Dopo consolidatezza |
+| 5 | **OECD TiVA** — FVA/DVA per decomposizione valore | Medio | Bulk download gratuito |
+| 6 | **USGS Minerali** — production data per metalli critici | Basso | PDF parsing |
+| 7 | **FAO live API** — sostituire hardcoded con dati freschi + breakdown | Medio | API fenixservices attualmente giù (521) |
+| 8 | **Dashboard Streamlit** — aggiornare con nuove tabelle | Medio | Esistente, da aggiornare |
 
 ### backlog
 
@@ -84,7 +133,7 @@ make all
   │     │     └── mart: SQL aggregazione + metriche
   │     └── compose: read_parquet dagli upstream
   └── make test
-        └── pytest tests/ (8 smoke test)
+        └── pytest tests/ (10 smoke test)
 ```
 
 ### Dipendenze CI

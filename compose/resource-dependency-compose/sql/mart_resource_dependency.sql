@@ -6,6 +6,22 @@ WITH energy AS (
         CASE
             WHEN product = 'G3000' THEN 'gas'
             WHEN product = 'C0000X0350-0370' THEN 'carbone'
+            WHEN product = 'E7000' THEN 'elettricita'
+            WHEN product = 'O4100_TOT' THEN 'petrolio_greggio'
+            WHEN product = 'O4630' THEN 'prodotti_petroliferi'
+            WHEN product = 'O4640' THEN 'gasolio'
+            WHEN product = 'O4671XR5220B' THEN 'cherosene'
+            WHEN product = 'O4652XR5210B' THEN 'olio_pesante'
+            WHEN product = 'C0110' THEN 'coke'
+            WHEN product = 'RA000' THEN 'rinnovabili_total'
+            WHEN product = 'RA100' THEN 'idroelettrico'
+            WHEN product = 'RA200' THEN 'eolico'
+            WHEN product = 'RA300' THEN 'solare_termico'
+            WHEN product = 'RA410' THEN 'geotermico'
+            WHEN product = 'RA420' THEN 'solare_fotovoltaico'
+            WHEN product = 'RA600' THEN 'biocarburanti_liquidi'
+            WHEN product = 'P1000' THEN 'nucleare'
+            WHEN product = 'O4300' THEN 'biocombustibili_solidi'
             ELSE product
         END AS resource,
         product,
@@ -13,8 +29,13 @@ WITH energy AS (
         gross_import_dependency_pct,
         domestic_share_pct,
         apparent_consumption_ktoe,
+        production_ktoe,
+        imports_ktoe,
+        exports_ktoe,
         data_quality AS energy_data_quality
     FROM read_parquet('{support.energy.mart.mart_energy_balance}')
+    -- Exclude aggregate SIEC codes to avoid double-counting
+    WHERE product NOT IN ('TOTAL', 'FE', 'BIOE', 'O4000XBIO', 'S2000', 'H8000')
 ),
 trade AS (
     SELECT
@@ -100,6 +121,11 @@ SELECT
     top3_share_pct,
     top5_share_pct,
     num_suppliers,
+    CASE
+        WHEN total_import_value_usd IS NOT NULL AND physical_id_pct IS NOT NULL THEN 'energy_and_trade'
+        WHEN total_import_value_usd IS NOT NULL THEN 'trade_only'
+        ELSE 'energy_only'
+    END AS data_source,
     data_quality,
     'compose' AS source,
     'derived' AS method
