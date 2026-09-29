@@ -2,7 +2,7 @@
   "schema_version": 1,
   "repo": "italia-dipendenze",
   "source_repo": "dataciviclab/italia-dipendenze",
-  "updated_at": "2026-09-26",
+  "updated_at": "2026-09-29",
   "datasets": [
     {
       "slug": "comtrade_bilateral",
@@ -106,7 +106,8 @@
       "stage": "incubating",
       "mart_refs": [
         "comtrade_bilateral__mart_trade_bilateral",
-        "comtrade_bilateral__mart_trade_concentration"
+        "comtrade_bilateral__mart_trade_concentration",
+        "comtrade_bilateral__mart_trade_balance"
       ]
     },
     {
@@ -286,6 +287,16 @@
   ],
   "marts": [
     {
+      "slug": "comtrade_bilateral__mart_trade_balance",
+      "dataset": "comtrade_bilateral",
+      "table": "mart_trade_balance",
+      "location": {
+        "type": "gcs",
+        "path": "gs://dataciviclab-mart/italia_dipendenze/comtrade_bilateral/2026/mart_trade_balance.parquet",
+        "multi_file": false
+      }
+    },
+    {
       "slug": "comtrade_bilateral__mart_trade_bilateral",
       "dataset": "comtrade_bilateral",
       "table": "mart_trade_bilateral",
@@ -355,21 +366,21 @@
       "detail": "anno 2026 — mart: si",
       "action": "",
       "run": {
-        "run_id": "20260926T110520Z_68bb2d32",
+        "run_id": "20260929T094342Z_6d5ed4c2",
         "year": 2026,
         "status": "SUCCESS",
         "quality_score": {
           "mart": 100
         },
         "output_rows": {
-          "mart": 64
+          "mart": 104
         },
         "output_bytes": {
-          "mart": 9170
+          "mart": 10069
         },
-        "started_at": "2026-09-26T11:05:20.457518+00:00",
-        "finished_at": "2026-09-26T11:05:20.524346+00:00",
-        "duration_seconds": 0.067
+        "started_at": "2026-09-29T09:43:42.530519+00:00",
+        "finished_at": "2026-09-29T09:43:42.598791+00:00",
+        "duration_seconds": 0.068
       }
     },
     {
@@ -380,27 +391,27 @@
       "detail": "anno 2026 — mart: si",
       "action": "",
       "run": {
-        "run_id": "20260926T110438Z_88d82878",
+        "run_id": "20260929T094144Z_e88fa804",
         "year": 2026,
         "status": "SUCCESS",
         "quality_score": {
           "raw": 100,
           "clean": 100,
-          "mart": 100
+          "mart": 95
         },
         "output_rows": {
           "raw": 682,
           "clean": 682,
-          "mart": 724
+          "mart": 766
         },
         "output_bytes": {
           "raw": 96189,
           "clean": 12318,
-          "mart": 17016
+          "mart": 21761
         },
-        "started_at": "2026-09-26T11:04:38.000074+00:00",
-        "finished_at": "2026-09-26T11:05:07.061124+00:00",
-        "duration_seconds": 29.061
+        "started_at": "2026-09-29T09:41:44.428616+00:00",
+        "finished_at": "2026-09-29T09:42:20.441118+00:00",
+        "duration_seconds": 36.013
       }
     },
     {
@@ -411,7 +422,7 @@
       "detail": "anno 2026 — mart: si",
       "action": "",
       "run": {
-        "run_id": "20260926T110507Z_7a6425f7",
+        "run_id": "20260929T094220Z_41efa9cf",
         "year": 2026,
         "status": "SUCCESS",
         "quality_score": {
@@ -420,18 +431,18 @@
           "mart": 100
         },
         "output_rows": {
-          "raw": 60,
-          "clean": 55,
-          "mart": 15
+          "raw": 460,
+          "clean": 355,
+          "mart": 115
         },
         "output_bytes": {
-          "raw": 6332,
-          "clean": 3143,
-          "mart": 3856
+          "raw": 46151,
+          "clean": 5025,
+          "mart": 7504
         },
-        "started_at": "2026-09-26T11:05:07.135208+00:00",
-        "finished_at": "2026-09-26T11:05:19.870753+00:00",
-        "duration_seconds": 12.736
+        "started_at": "2026-09-29T09:42:20.524872+00:00",
+        "finished_at": "2026-09-29T09:43:41.932977+00:00",
+        "duration_seconds": 81.408
       }
     },
     {
@@ -442,7 +453,7 @@
       "detail": "anno 2026 — mart: si",
       "action": "",
       "run": {
-        "run_id": "20260926T110519Z_b10ba797",
+        "run_id": "20260929T094341Z_333f10f0",
         "year": 2026,
         "status": "SUCCESS",
         "quality_score": {
@@ -460,9 +471,9 @@
           "clean": 1542,
           "mart": 1334
         },
-        "started_at": "2026-09-26T11:05:19.928474+00:00",
-        "finished_at": "2026-09-26T11:05:20.384083+00:00",
-        "duration_seconds": 0.456
+        "started_at": "2026-09-29T09:43:41.990578+00:00",
+        "finished_at": "2026-09-29T09:43:42.457218+00:00",
+        "duration_seconds": 0.467
       }
     }
   ],
