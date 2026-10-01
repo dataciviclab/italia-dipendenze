@@ -2,7 +2,7 @@
   "schema_version": 1,
   "repo": "italia-dipendenze",
   "source_repo": "dataciviclab/italia-dipendenze",
-  "updated_at": "2026-09-29",
+  "updated_at": "2026-10-01",
   "datasets": [
     {
       "slug": "comtrade_bilateral",
@@ -366,7 +366,7 @@
       "detail": "anno 2026 — mart: si",
       "action": "",
       "run": {
-        "run_id": "20260929T094342Z_6d5ed4c2",
+        "run_id": "20261001T123417Z_ca702e11",
         "year": 2026,
         "status": "SUCCESS",
         "quality_score": {
@@ -378,9 +378,9 @@
         "output_bytes": {
           "mart": 10069
         },
-        "started_at": "2026-09-29T09:43:42.530519+00:00",
-        "finished_at": "2026-09-29T09:43:42.598791+00:00",
-        "duration_seconds": 0.068
+        "started_at": "2026-10-01T12:34:17.541467+00:00",
+        "finished_at": "2026-10-01T12:34:17.611703+00:00",
+        "duration_seconds": 0.07
       }
     },
     {
@@ -391,7 +391,7 @@
       "detail": "anno 2026 — mart: si",
       "action": "",
       "run": {
-        "run_id": "20260929T094144Z_e88fa804",
+        "run_id": "20261001T123202Z_f62c66f9",
         "year": 2026,
         "status": "SUCCESS",
         "quality_score": {
@@ -406,12 +406,12 @@
         },
         "output_bytes": {
           "raw": 96189,
-          "clean": 12318,
+          "clean": 12339,
           "mart": 21761
         },
-        "started_at": "2026-09-29T09:41:44.428616+00:00",
-        "finished_at": "2026-09-29T09:42:20.441118+00:00",
-        "duration_seconds": 36.013
+        "started_at": "2026-10-01T12:32:02.602502+00:00",
+        "finished_at": "2026-10-01T12:32:34.585850+00:00",
+        "duration_seconds": 31.983
       }
     },
     {
@@ -422,7 +422,7 @@
       "detail": "anno 2026 — mart: si",
       "action": "",
       "run": {
-        "run_id": "20260929T094220Z_41efa9cf",
+        "run_id": "20261001T123234Z_10c83cf0",
         "year": 2026,
         "status": "SUCCESS",
         "quality_score": {
@@ -440,9 +440,9 @@
           "clean": 5025,
           "mart": 7504
         },
-        "started_at": "2026-09-29T09:42:20.524872+00:00",
-        "finished_at": "2026-09-29T09:43:41.932977+00:00",
-        "duration_seconds": 81.408
+        "started_at": "2026-10-01T12:32:34.679216+00:00",
+        "finished_at": "2026-10-01T12:34:16.935202+00:00",
+        "duration_seconds": 102.256
       }
     },
     {
@@ -453,7 +453,7 @@
       "detail": "anno 2026 — mart: si",
       "action": "",
       "run": {
-        "run_id": "20260929T094341Z_333f10f0",
+        "run_id": "20261001T123416Z_7c5f2a7a",
         "year": 2026,
         "status": "SUCCESS",
         "quality_score": {
@@ -471,8 +471,8 @@
           "clean": 1542,
           "mart": 1334
         },
-        "started_at": "2026-09-29T09:43:41.990578+00:00",
-        "finished_at": "2026-09-29T09:43:42.457218+00:00",
+        "started_at": "2026-10-01T12:34:16.999346+00:00",
+        "finished_at": "2026-10-01T12:34:17.466470+00:00",
         "duration_seconds": 0.467
       }
     }
