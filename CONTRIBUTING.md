@@ -11,8 +11,10 @@
 
 ```
 datasets/           Config e SQL per ogni dataset
+compose/            Join multi-source (resource_dependency_compose)
 scripts/            Script di fetch dati
-tests/              Test smoke
+dashboard/          Dashboard Streamlit (Lab standard)
+tests/              Test smoke pipeline
 out/                Output pipeline (gitignored)
 ```
 

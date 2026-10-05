@@ -46,11 +46,17 @@ SELECT
     t.top1_share_pct,
     t.top3_share_pct,
     t.num_suppliers,
+    -- NULL HHI ≠ bassa dipendenza: se manca un lato, lo dichiariamo.
     CASE
         WHEN e.physical_id_pct > 90 AND t.hhi > 2500 THEN 'critical_high_concentration'
         WHEN e.physical_id_pct > 90 AND t.hhi <= 2500 THEN 'critical_diversified'
         WHEN e.physical_id_pct BETWEEN 50 AND 90 AND t.hhi > 2500 THEN 'moderate_high_concentration'
-        WHEN e.physical_id_pct BETWEEN 50 AND 90 THEN 'moderate_diversified'
+        WHEN e.physical_id_pct BETWEEN 50 AND 90 AND t.hhi <= 2500 THEN 'moderate_diversified'
+        WHEN e.physical_id_pct > 90 AND t.hhi IS NULL THEN 'high_dependency_trade_missing'
+        WHEN e.physical_id_pct BETWEEN 50 AND 90 AND t.hhi IS NULL THEN 'moderate_dependency_trade_missing'
+        WHEN e.physical_id_pct < 50 AND t.hhi IS NULL THEN 'low_dependency_trade_missing'
+        WHEN e.physical_id_pct IS NULL AND t.hhi > 2500 THEN 'trade_high_concentration_only'
+        WHEN e.physical_id_pct IS NULL AND t.hhi IS NOT NULL THEN 'trade_only'
         ELSE 'low_dependency'
     END AS risk_profile,
     'compose' AS source,

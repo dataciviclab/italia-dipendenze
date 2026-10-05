@@ -108,7 +108,7 @@ comtrade (4s) → eurostat (84s) → fao (2s) → compose (0.6s)
 | 5 | **OECD TiVA** — FVA/DVA per decomposizione valore | Medio | Bulk download gratuito |
 | 6 | **USGS Minerali** — production data per metalli critici | Basso | PDF parsing |
 | 7 | **FAO live API** — sostituire hardcoded con dati freschi + breakdown | Medio | API fenixservices attualmente giù (521) |
-| 8 | **Dashboard Streamlit** — aggiornare con nuove tabelle | Medio | Esistente, da aggiornare |
+| 8 | **Dashboard Streamlit** | ✅ v1 | `dashboard/` su branch `feat/dashboard-v1` — 5 pagine, GCS + fallback locale |
 
 ### backlog
 
@@ -118,6 +118,24 @@ comtrade (4s) → eurostat (84s) → fao (2s) → compose (0.6s)
 | 10 | Upstream dependency (IO tables) | Alto |
 | 11 | Farmaci/API | Alto |
 | 12 | Semiconduttori | Alto |
+
+---
+
+## Dashboard
+
+Stato: **v1 implementata** su `feat/dashboard-v1` (locale, non ancora PR).
+
+| Voce | Dettaglio |
+|------|-----------|
+| Path | `dashboard/` |
+| Standard | Streamlit + lab-connectors (`infra/lab-ops/standards/dashboard.md`) |
+| Pagine | Panoramica · Dipendenze · Commercio · Energia · Query SQL |
+| Dati | GCS `italia_dipendenze/` + fallback `out/data/` |
+| Anno path | toolkit `2026/` · anni dati 2020–2024 |
+| Test | `dashboard/tests/test_dashboard_smoke.py` (py_compile) |
+| Avvio | `streamlit run dashboard/app.py` (extra `dashboard` nel pyproject) |
+
+Caveat esposti in UI: `physical_id_pct` solo su prodotti energetici; valori Comtrade in USD; `risk_profile` distingue esplicitamente "HHI non disponibile" da "bassa dipendenza" (fix 2026-10-05 sul SQL compose + rebuild mart locale).
 
 ---
 

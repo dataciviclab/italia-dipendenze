@@ -45,7 +45,11 @@ verify:
 
 .PHONY: test
 test:
-	python3 -m pytest tests/ -v
+	python3 -m pytest tests/ dashboard/tests/ -v
+
+.PHONY: dashboard
+dashboard:
+	streamlit run dashboard/app.py
 
 # --- Registry ----------------------------------------------------------------
 
