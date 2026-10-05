@@ -139,7 +139,7 @@ view = filtered[[c for c in show_cols if c in filtered.columns]].sort_values(
     "imports_ktoe", ascending=False
 )
 view = view.rename(columns={"label_it": "Prodotto"})
-st.dataframe(view, use_container_width=True, hide_index=True)
+st.dataframe(view, width="stretch", hide_index=True)
 
 # ── Trend dipendenza gas ──────────────────────────────────────────────────────
 st.subheader("Trend dipendenza — prodotti chiave")

@@ -122,7 +122,7 @@ view = pd.DataFrame(
         "Copertura dati": tbl["copertura"],
     }
 )
-st.dataframe(view, use_container_width=True, hide_index=True)
+st.dataframe(view, width="stretch", hide_index=True)
 
 # ── Grafico HHI ───────────────────────────────────────────────────────────────
 hhi_df = tbl[tbl["hhi"].notna()].sort_values("hhi", ascending=True) if "hhi" in tbl.columns else pd.DataFrame()

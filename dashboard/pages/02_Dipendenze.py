@@ -158,7 +158,7 @@ display = pd.DataFrame(
         "Qualità": [cell(v) for v in numeric_sort.get("data_quality", pd.Series(dtype=object))],
     }
 )
-st.dataframe(display, use_container_width=True, hide_index=True)
+st.dataframe(display, width="stretch", hide_index=True)
 
 # ── Risk profile ──────────────────────────────────────────────────────────────
 st.subheader("Risk profile (bilancio energetico)")
@@ -184,7 +184,7 @@ else:
             "Profilo": evt["profilo"],
         }
     )
-    st.dataframe(risk_display, use_container_width=True, hide_index=True)
+    st.dataframe(risk_display, width="stretch", hide_index=True)
     with st.expander("Legenda profili", expanded=False):
         for key, label in RISK_LABELS.items():
             st.markdown(f"- `{key}` → {label}")

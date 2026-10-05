@@ -111,7 +111,7 @@ else:
 
     st.dataframe(
         partners.rename(columns={"partner_name": "Fornitore", "primary_value_usd": "Import USD"}),
-        use_container_width=True,
+        width="stretch",
         hide_index=True,
         column_config={"Import USD": st.column_config.NumberColumn(format="$ %.0f")},
     )
@@ -221,7 +221,7 @@ else:
             "Export coverage %": [cell(v, kind="pct") for v in bal_tbl.get("export_coverage_pct", pd.Series(dtype=float))],
         }
     )
-    st.dataframe(bal_display, use_container_width=True, hide_index=True)
+    st.dataframe(bal_display, width="stretch", hide_index=True)
 
 st.caption(
     "Nota: elettricità e alcune risorse possono avere HHI=10000 con un solo partner osservato — "
