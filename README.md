@@ -69,6 +69,14 @@ Questi dati rendono visibili le catene di dipendenza materiale dell'Italia.
 
 ## Come accedere
 
+**Dashboard:**
+```bash
+pip install -e ".[dashboard]"
+streamlit run dashboard/app.py
+# oppure: make dashboard
+```
+Pagine: Panoramica, Dipendenze, Commercio, Energia, Query SQL. Dati da GCS (`italia_dipendenze/`) con fallback su `out/data/`.
+
 **Pipeline locale:**
 ```bash
 COMTRADE_SUBSCRIPTION_KEY=xxx make all
@@ -77,6 +85,7 @@ COMTRADE_SUBSCRIPTION_KEY=xxx make all
 **Dati:**
 - Parquet in `out/data/mart/` dopo il pipeline
 - Registry in `registry/registry.json`
+- GCS: `gs://dataciviclab-mart/italia_dipendenze/` e `gs://dataciviclab-clean/italia_dipendenze/`
 
 **Fonti:**
 - Eurostat NRG_BAL_C (SDMX API, no key)

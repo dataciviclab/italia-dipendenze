@@ -43,7 +43,15 @@ Home = "https://github.com/dataciviclab/italia-dipendenze"
 [tool.toolkit.extends]
 source_id = "italia_dipendenze"
 
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I", "W"]
+
 [tool.pytest.ini_options]
 markers = [
     "smoke: end-to-end minimum, golden path only",
+    "regression: protects a bug already seen (not a generic contract)",
 ]
