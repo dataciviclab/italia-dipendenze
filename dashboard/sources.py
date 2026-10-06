@@ -66,6 +66,7 @@ RISK_LABELS = {
     "low_dependency_trade_missing": "Dipendenza bassa · HHI non disponibile",
     "trade_high_concentration_only": "Solo HHI · concentrazione alta (ID% n/d)",
     "trade_only": "Solo HHI commerciale (ID% n/d)",
+    "insufficient_data": "Dati insufficienti (ID% e HHI n/d)",
     "low_dependency": "Bassa dipendenza",
 }
 

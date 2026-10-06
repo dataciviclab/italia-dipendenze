@@ -108,7 +108,7 @@ comtrade (4s) → eurostat (84s) → fao (2s) → compose (0.6s)
 | 5 | **OECD TiVA** — FVA/DVA per decomposizione valore | Medio | Bulk download gratuito |
 | 6 | **USGS Minerali** — production data per metalli critici | Basso | PDF parsing |
 | 7 | **FAO live API** — sostituire hardcoded con dati freschi + breakdown | Medio | API fenixservices attualmente giù (521) |
-| 8 | **Dashboard Streamlit** | ✅ v1 | `dashboard/` su branch `feat/dashboard-v1` — 5 pagine, GCS + fallback locale |
+| 8 | **Dashboard Streamlit** | ✅ v1 | `dashboard/` — PR #6 in review |
 
 ### backlog
 
@@ -123,7 +123,7 @@ comtrade (4s) → eurostat (84s) → fao (2s) → compose (0.6s)
 
 ## Dashboard
 
-Stato: **v1 implementata** su `feat/dashboard-v1` (locale, non ancora PR).
+Stato: **v1 su PR #6** (`feat/dashboard-v1`). Dopo il merge la pipeline pubblica GCS/registry.
 
 | Voce | Dettaglio |
 |------|-----------|
@@ -132,10 +132,13 @@ Stato: **v1 implementata** su `feat/dashboard-v1` (locale, non ancora PR).
 | Pagine | Panoramica · Dipendenze · Commercio · Energia · Query SQL |
 | Dati | GCS `italia_dipendenze/` + fallback `out/data/` |
 | Anno path | toolkit `2026/` · anni dati 2020–2024 |
-| Test | `dashboard/tests/test_dashboard_smoke.py` (py_compile) |
+| Test | `dashboard/tests/` + `tests/test_risk_profile.py` (regression) |
+| CI | `check.yml`: pytest tests + dashboard smoke + dataset-config-check |
 | Avvio | `streamlit run dashboard/app.py` (extra `dashboard` nel pyproject) |
 
-Caveat esposti in UI: `physical_id_pct` solo su prodotti energetici; valori Comtrade in USD; `risk_profile` distingue esplicitamente "HHI non disponibile" da "bassa dipendenza" (fix 2026-10-05 sul SQL compose + rebuild mart locale).
+Caveat esposti in UI: `physical_id_pct` solo su prodotti energetici; valori Comtrade in USD; `risk_profile` distingue "HHI non disponibile", "dati insufficienti" e "bassa dipendenza".
+
+**Post-merge**: pipeline deve allineare GCS al mart compose aggiornato e completare registry (compose solo nei `marts`, non nei `datasets`).
 
 ---
 

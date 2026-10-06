@@ -46,8 +46,9 @@ SELECT
     t.top1_share_pct,
     t.top3_share_pct,
     t.num_suppliers,
-    -- NULL HHI ≠ bassa dipendenza: se manca un lato, lo dichiariamo.
+    -- NULL ≠ bassa dipendenza: se manca un lato (o entrambi), lo dichiariamo.
     CASE
+        WHEN e.physical_id_pct IS NULL AND t.hhi IS NULL THEN 'insufficient_data'
         WHEN e.physical_id_pct > 90 AND t.hhi > 2500 THEN 'critical_high_concentration'
         WHEN e.physical_id_pct > 90 AND t.hhi <= 2500 THEN 'critical_diversified'
         WHEN e.physical_id_pct BETWEEN 50 AND 90 AND t.hhi > 2500 THEN 'moderate_high_concentration'

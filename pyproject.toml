@@ -46,4 +46,5 @@ source_id = "italia_dipendenze"
 [tool.pytest.ini_options]
 markers = [
     "smoke: end-to-end minimum, golden path only",
+    "regression: protects a bug already seen (not a generic contract)",
 ]

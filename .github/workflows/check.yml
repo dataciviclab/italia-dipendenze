@@ -7,6 +7,30 @@ on:
     paths: ["**/*.py", "**/*.yml", "**/*.yaml", "**/*.sql", "**/Makefile"]
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.12"]
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: dataciviclab/.github/actions/python-setup@main
+        with:
+          python-version: ${{ matrix.python-version }}
+          install-extras: "dev,pipeline,dashboard"
+
+      - uses: dataciviclab/.github/actions/python-ci@main
+        with:
+          lint_paths: "tests/ dashboard/"
+          mypy_paths: ""
+          test_dir: "tests"
+          pytest_args: "-v --tb=short"
+
+      - name: Dashboard smoke
+        run: python -m pytest dashboard/tests -v --tb=short
+
   validate-config:
     uses: dataciviclab/.github/.github/workflows/dataset-config-check-reusable.yml@main
     with:

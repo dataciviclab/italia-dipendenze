@@ -69,10 +69,11 @@ Questi dati rendono visibili le catene di dipendenza materiale dell'Italia.
 
 ## Come accedere
 
-**Dashboard (branch `feat/dashboard-v1`):**
+**Dashboard:**
 ```bash
 pip install -e ".[dashboard]"
 streamlit run dashboard/app.py
+# oppure: make dashboard
 ```
 Pagine: Panoramica, Dipendenze, Commercio, Energia, Query SQL. Dati da GCS (`italia_dipendenze/`) con fallback su `out/data/`.
 
