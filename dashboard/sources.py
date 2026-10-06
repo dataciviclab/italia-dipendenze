@@ -12,7 +12,11 @@ import pandas as pd
 import streamlit as st
 from lab_connectors.duckdb.queries import (
     detect_local_root,
+)
+from lab_connectors.duckdb.queries import (
     load_mart_table as _load_mart_table,
+)
+from lab_connectors.duckdb.queries import (
     query_clean as _query_clean,
 )
 from lab_connectors.formatters import fmt_num, fmt_pct
@@ -139,7 +143,7 @@ def risk_label(profile: str | None) -> str:
     return RISK_LABELS.get(str(profile), str(profile))
 
 
-def fmt_usd(value: float | int | None, *, compact: bool = True) -> str:
+def fmt_usd(value: float | None, *, compact: bool = True) -> str:
     """Valore in USD (Comtrade) con formattazione italiana."""
     if value is None or (isinstance(value, float) and pd.isna(value)):
         return "—"

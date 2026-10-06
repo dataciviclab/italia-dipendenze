@@ -63,11 +63,10 @@ def _find_mart_files(dataset: str, mart_name: str) -> list[Path]:
     pattern = MART_DIR / f"{dataset}"
     if not pattern.exists():
         return []
-    files = []
+    files: list[Path] = []
     for year_dir in pattern.iterdir():
         if year_dir.is_dir():
-            for f in year_dir.glob(f"{mart_name}*.parquet"):
-                files.append(f)
+            files.extend(year_dir.glob(f"{mart_name}*.parquet"))
     return files
 
 

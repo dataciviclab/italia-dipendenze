@@ -5,8 +5,8 @@ import plotly.graph_objects as go
 import streamlit as st
 from lab_connectors.formatters import fmt_num, fmt_pct
 from sources import (
-    DATA_YEARS,
     DATA_SOURCE_LABELS,
+    DATA_YEARS,
     cell,
     conc_label,
     fmt_usd,

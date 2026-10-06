@@ -139,7 +139,7 @@ else:
         fig2.update_layout(
             height=320,
             margin={"t": 20, "b": 40},
-            xaxis=dict(dtick=1),
+            xaxis={"dtick": 1},
             yaxis_title="HHI",
             showlegend=False,
         )
@@ -169,7 +169,7 @@ else:
         fig3.update_layout(
             height=320,
             margin={"t": 20, "b": 40},
-            xaxis=dict(dtick=1),
+            xaxis={"dtick": 1},
             yaxis_title="Quota import %",
             legend_title="Share",
         )

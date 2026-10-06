@@ -223,7 +223,7 @@ else:
     fig2.update_layout(
         height=400,
         margin={"t": 20, "b": 40},
-        xaxis=dict(dtick=1),
+        xaxis={"dtick": 1},
         yaxis_title="HHI",
         legend_title="Risorsa",
         hovermode="x unified",

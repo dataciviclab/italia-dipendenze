@@ -173,7 +173,7 @@ else:
     fig3.update_layout(
         height=400,
         margin={"t": 20, "b": 40},
-        xaxis=dict(dtick=1),
+        xaxis={"dtick": 1},
         yaxis_title="Gross import dependency %",
         hovermode="x unified",
         legend_title="Prodotto",
@@ -198,7 +198,7 @@ else:
     fig4.update_layout(
         height=280,
         margin={"t": 20, "b": 40},
-        xaxis=dict(dtick=1),
+        xaxis={"dtick": 1},
         yaxis_title="Tonnes",
         showlegend=False,
     )
