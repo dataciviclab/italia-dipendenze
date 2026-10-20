@@ -71,9 +71,6 @@ mart:
       mart_trade_balance:
         required_columns: [year, resource, import_value_usd, export_value_usd, balance_usd, trade_position]
         min_rows: 1
-      mart_concentration_trend:
-        required_columns: [year, resource, hhi, hhi_change, trend_status]
-        min_rows: 1
 
 validation:
   fail_on_error: true

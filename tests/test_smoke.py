@@ -28,7 +28,26 @@ MART_CONTRACTS = {
     "eurostat_nrg_bal_c": {
         "mart_energy_balance": {
             "min_rows": 10,
-            "required_columns": ["year", "product", "gross_import_dependency_pct"],
+            "required_columns": [
+                "year",
+                "product",
+                "product_kind",
+                "gross_import_dependency_pct",
+                "net_import_dependency_pct",
+                "gic_ktoe",
+                "supply_ktoe",
+            ],
+        },
+        "mart_energy_final_consumption": {
+            "min_rows": 10,
+            "required_columns": [
+                "year",
+                "product",
+                "final_consumption_total_ktoe",
+                "final_consumption_industry_ktoe",
+                "final_consumption_transport_ktoe",
+                "final_consumption_households_ktoe",
+            ],
         },
     },
     "comtrade_bilateral": {

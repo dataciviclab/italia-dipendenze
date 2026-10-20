@@ -1,4 +1,8 @@
 -- mart_resource_dependency.sql: Joins physical balance + bilateral concentration.
+--
+-- physical_id_pct is the NET import dependency: (imports - exports) / GIC.
+-- The old gross ratio (imports / GIC) overstates oil dependency because Italy
+-- imports crude and exports refined products.
 
 WITH energy AS (
     SELECT
@@ -6,36 +10,41 @@ WITH energy AS (
         CASE
             WHEN product = 'G3000' THEN 'gas'
             WHEN product = 'C0000X0350-0370' THEN 'carbone'
+            WHEN product = 'C0311' THEN 'coke'
             WHEN product = 'E7000' THEN 'elettricita'
+            WHEN product = 'H8000' THEN 'calore'
             WHEN product = 'O4100_TOT' THEN 'petrolio_greggio'
-            WHEN product = 'O4630' THEN 'prodotti_petroliferi'
-            WHEN product = 'O4640' THEN 'gasolio'
-            WHEN product = 'O4671XR5220B' THEN 'cherosene'
-            WHEN product = 'O4652XR5210B' THEN 'olio_pesante'
-            WHEN product = 'C0110' THEN 'coke'
+            WHEN product = 'O4000XBIO' THEN 'prodotti_petroliferi'
+            WHEN product = 'O4630' THEN 'gpl'
+            WHEN product = 'O4640' THEN 'nafta'
+            WHEN product = 'O4652XR5210B' THEN 'benzina'
+            WHEN product = 'O4671XR5220B' THEN 'gasolio'
+            WHEN product = 'O4661XR5230B' THEN 'cherosene'
+            WHEN product = 'O4680' THEN 'olio_combustibile'
             WHEN product = 'RA000' THEN 'rinnovabili_total'
             WHEN product = 'RA100' THEN 'idroelettrico'
-            WHEN product = 'RA200' THEN 'eolico'
-            WHEN product = 'RA300' THEN 'solare_termico'
-            WHEN product = 'RA410' THEN 'geotermico'
+            WHEN product = 'RA200' THEN 'geotermico'
+            WHEN product = 'RA300' THEN 'eolico'
+            WHEN product = 'RA410' THEN 'solare_termico'
             WHEN product = 'RA420' THEN 'solare_fotovoltaico'
-            WHEN product = 'RA600' THEN 'biocarburanti_liquidi'
-            WHEN product = 'P1000' THEN 'nucleare'
-            WHEN product = 'O4300' THEN 'biocombustibili_solidi'
+            WHEN product = 'R5110-5150_W6000RI' THEN 'biocombustibili_solidi'
+            WHEN product = 'RA600' THEN 'calore_ambiente'
+            WHEN product = 'W6100_6220' THEN 'rifiuti_non_rinnovabili'
+            WHEN product = 'W6210' THEN 'rifiuti_rinnovabili'
             ELSE product
         END AS resource,
         product,
         product_label,
-        gross_import_dependency_pct,
+        net_import_dependency_pct,
         domestic_share_pct,
-        apparent_consumption_ktoe,
+        supply_ktoe,
         production_ktoe,
         imports_ktoe,
         exports_ktoe,
         data_quality AS energy_data_quality
     FROM read_parquet('{support.energy.mart.mart_energy_balance}')
-    -- Exclude aggregate SIEC codes to avoid double-counting
-    WHERE product NOT IN ('TOTAL', 'FE', 'BIOE', 'O4000XBIO', 'S2000', 'H8000')
+    -- Exclude aggregates to avoid double-counting in the resource matrix.
+    WHERE product NOT IN ('TOTAL', 'BIOE')
 ),
 trade AS (
     SELECT
@@ -62,19 +71,21 @@ fertilizer AS (
 ),
 all_resources AS (
     SELECT
-        year, resource,
-        gross_import_dependency_pct AS physical_id_pct,
+        year,
+        resource,
+        net_import_dependency_pct AS physical_id_pct,
         domestic_share_pct,
-        apparent_consumption_ktoe AS physical_volume,
+        supply_ktoe AS physical_volume,
         'KTOE' AS physical_unit,
         energy_data_quality
     FROM energy
-    WHERE gross_import_dependency_pct IS NOT NULL
+    WHERE net_import_dependency_pct IS NOT NULL
 
     UNION ALL
 
     SELECT
-        year, resource,
+        year,
+        resource,
         NULL AS physical_id_pct,
         NULL AS domestic_share_pct,
         total_consumption_tonnes AS physical_volume,

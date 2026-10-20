@@ -230,8 +230,8 @@ else:
     )
     st.plotly_chart(fig2, width="stretch")
     st.caption(
-        "Esempio di lettura: il litio sale verso ~9k nel 2024 = dipendenza da un fornitore "
-        "quasi unico (Germania). Il gas scende nel 2022 (diversificazione di crisi) e poi risale."
+        "Esempio di lettura: il litio sale verso ~3,6k nel 2024 = forte dipendenza dalla "
+        "Germania (54%). Il gas scende nel 2022 (diversificazione di crisi) e poi risale."
     )
 
 st.caption(f"Compose `resource_dependency_compose` · anno toolkit 2026 · anno dati {year}")

@@ -6,13 +6,13 @@ La Italy Resource & Dependency Map è un sistema aperto che misura le principali
 
 | Risorse coperte | Periodo | Fonti dati | Aggiornamento |
 |:---:|:---:|:---:|:---:|
-| 23 prodotti energetici + 9 risorse commerciali | 2020–2024 | Eurostat, UN Comtrade, FAO | Pipeline automatica |
+| 25 prodotti energetici + 11 risorse commerciali | energia 1990–2024 · commercio 2020–2024 | Eurostat, UN Comtrade, FAO | Pipeline automatica |
 
 ---
 
 ## Perché questi dati
 
-L'Italia dipende per oltre il 95% dall'estero per gas, petrolio, carbone e metalli critici. Capire **da chi** dipendiamo e **quanto è concentrata** quella dipendenza è il primo passo per valutare la resilienza del sistema paese.
+L'Italia dipende dall'estero per oltre il 90% di gas e petrolio e per circa il 100% del carbone. Capire **da chi** dipendiamo e **quanto è concentrata** quella dipendenza è il primo passo per valutare la resilienza del sistema paese.
 
 Questi dati rendono visibili le catene di dipendenza materiale dell'Italia.
 
@@ -22,36 +22,43 @@ Questi dati rendono visibili le catene di dipendenza materiale dell'Italia.
 
 | Area | Dati | Righe | Metriche |
 |------|------|:---:|----------|
-| Bilancio energetico | 23 prodotti SIEC × 4 indicatori (produzione, import, export, stocks) | 115 | Gross Import Dependency, domestic share |
-| Commercio bilaterale | Import/export per HS6 × paese × anno | 682 | HHI, Top-1/3/5 share |
-| Trade balance | Balance = export - import per risorsa × anno | 45 | trade_position, export_coverage |
-| Concentration trend | HHI trend + YoY change | 45 | trend_status, hhi_change |
+| Bilancio energetico | 25 prodotti SIEC × 16 indicatori (flussi, GIC, TO, consumi finali) | 875 | dipendenza netta/lorda, disponibilità interna, quota domestica |
+| Consumi finali | 25 prodotti × 10 settori (industria, trasporti, famiglie, …) | 770 | consumi finali per prodotto e settore |
+| Commercio bilaterale | Import/export per HS6 × paese × anno | 7389 | HHI, Top-1/3/5 share |
+| Trade balance | Balance = export - import per risorsa × anno | 55 | trade_position, export_coverage |
+| Concentration trend | HHI trend + YoY change | 55 | trend_status, hhi_change |
 | Fertilizzanti | Consumo Italia | 6 | Consumo totale |
-| Compose | Matrice unica: ID + concentrazione per risorsa | 104 | data_source, risk_profile |
+| Compose | Matrice unica: ID + concentrazione per risorsa | 801 + 210 | data_source, risk_profile |
 
 ### Risorse monitorate
 
 | Risorsa | Import 2024 | Concentrazione (HHI) | Top fornitore |
 |---------|---:|:---:|---|
-| Gas naturale | $22.5B | 2945 | Algeria (48%) |
-| Rame | $1.3B | 3292 | Perù (34%) |
-| Ferro/acciaio | $868M | 3998 | Russia (46%) |
-| Fertilizzanti | $334M | 2770 | Russia (32%) |
-| Alluminio | $328M | 2666 | Russia (40%) |
-| Elettricita | $2.0B | 10000 | — |
-| Cobalto | $23M | 4172 | Germany (46%) |
-| Terre rare | $2.4M | 3651 | China (54%) |
-| Litio | $1M | 9320 | Germany (96%) |
+| Petrolio greggio | $33.6B | 1215 | Libia (21%) |
+| Gas naturale | $25.3B | 2397 | Algeria (43%) |
+| Prodotti petroliferi | $11.9B | 843 | Arabia Saudita (23%) |
+| Rame | $6.2B | 874 | Bulgaria (15%) |
+| Elettricità | $5.6B | 3198 | Svizzera (41%) |
+| Alluminio | $3.4B | 562 | Mozambico (11%) |
+| Ferro/acciaio | $1.6B | 1463 | Russia (25%) |
+| Fertilizzanti | $1.1B | 853 | Egitto (19%) |
+| Cobalto | $44M | 1595 | Germania (24%) |
+| Terre rare | $6.1M | 1247 | Cina (21%) |
+| Litio | $1.9M | 3561 | Germania (54%) |
+
+**Nota HHI.** Il calcolo usa tutti i partner Comtrade (47 per il gas, 36 per il greggio, 73 per i raffinati): il denominatore è il totale import italiano, non un paniere pre-selezionato.
 
 ### Bilancio energetico (2024)
 
-| Prodotto | Import dep % | Import (KTOE) |
-|----------|:---:|---:|
-| Petrolio (excl. biofuel) | 143% | 73,674 |
-| Gas naturale | 102% | 48,699 |
-| Carbone | 111% | 2,481 |
-| Rinnovabili | 8% | 2,233 |
-| Coke | 100% | 105 |
+| Prodotto | Dip. netta % | Dip. lorda % | Import (KTOE) |
+|----------|:---:|:---:|---:|
+| Petrolio e prodotti (excl. biofuel) | 92,7 | 141,1 | 73,674 |
+| Gas naturale | 96,4 | 97,4 | 48,699 |
+| Carbone e solidi fossili | 103,7 | 115,7 | 2,481 |
+| Rinnovabili e biocarburanti | 6,1 | 7,5 | 2,233 |
+| Coke | -27,1 | 11,5 | 70 |
+
+**Come si legge.** Dipendenza netta = (import − export) / disponibilità interna. La disponibilità include la produzione primaria e, per i prodotti secondari (elettricità, gasolio, benzina, GPL, cherosene, olio combustibile, coke), la produzione delle trasformazioni (`TO`). La dipendenza lorda = import / disponibilità è solo diagnostica: sul petrolio somma greggio importato e prodotti raffinati esportati, quindi non è una misura di dipendenza. Il 102,1% del gas 2022 della versione precedente era un artefatto della formula senza scorte: il valore corretto è **92,3% netto** (98,5% lordo). Totale energia 2024: **75,2% netto**.
 
 ---
 
@@ -98,11 +105,11 @@ COMTRADE_SUBSCRIPTION_KEY=xxx make all
 
 ```
 comtrade (script) ────────┐
-eurostat (script) ─────────┼──→ compose
+eurostat (sdmx) ──────────┼──→ compose
 fao (script) ──────────────┘
 ```
 
-Lo script fetcha i dati freschi dalle API, il toolkit li processa (clean → mart), il compose li unisce in una matrice unica.
+Il toolkit fetcha i dati freschi dalle API (Eurostat via `type: sdmx`, con codelist SIEC/NRG_BAL), li processa (clean → mart), il compose li unisce in una matrice unica.
 
 ---
 

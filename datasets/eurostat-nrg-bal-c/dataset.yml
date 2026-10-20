@@ -6,28 +6,162 @@ dataset:
   source_id: "eurostat"
   tags: [energia, gas, petrolio, carbone, bilancio-energetico, eurostat, italia]
   category: energia
-  description: "Complete energy balances — Italy physical flows by SIEC product (imports, exports, production)"
+  description: "Complete energy balances — Italy physical flows and final consumption by SIEC product"
   years: [2026]
   time_coverage:
-    start_year: 2020
+    start_year: 1990
     end_year: 2024
 
 raw:
   output_policy: overwrite
   sources:
-    - name: "eurostat_nrg_bal_c_fetch"
-      type: "script"
+    # Eurostat limita il numero di serie per richiesta: split per gruppi di
+    # prodotti, stessa lista di indicatori. CLEAN legge tutti i file (mode: all).
+    - name: "eurostat_nrg_bal_c_fossil"
+      type: "sdmx"
       args:
-        command: "python3 ../../scripts/fetch_eurostat_energy.py --output-dir . --start-year 2020 --end-year 2024"
-        output: "eurostat_energy_balance.csv"
-        filename: "eurostat_energy_balance.csv"
+        agency: "ESTAT"
+        flow: "NRG_BAL_C"
+        filename: "eurostat_nrg_bal_c_fossil.csv"
+        filters:
+          freq: A
+          nrg_bal:
+            - PPRD
+            - IMP
+            - EXP
+            - STK_CHG
+            - GIC
+            - TO
+            - FC_E
+            - FC_IND_E
+            - FC_TRA_E
+            - FC_TRA_ROAD_E
+            - FC_OTH_HH_E
+            - FC_OTH_CP_E
+            - FC_OTH_AF_E
+            - FC_OTH_FISH_E
+            - FC_OTH_NSP_E
+            - FC_NE
+          siec:
+            - G3000
+            - C0000X0350-0370
+            - C0311
+            - O4000XBIO
+            - O4100_TOT
+            - O4630
+            - O4640
+            - O4652XR5210B
+            - O4671XR5220B
+            - O4661XR5230B
+            - O4680
+          unit: KTOE
+          geo: IT
       primary: true
+
+    - name: "eurostat_nrg_bal_c_power_renewables"
+      type: "sdmx"
+      args:
+        agency: "ESTAT"
+        flow: "NRG_BAL_C"
+        filename: "eurostat_nrg_bal_c_power_renewables.csv"
+        filters:
+          freq: A
+          nrg_bal:
+            - PPRD
+            - IMP
+            - EXP
+            - STK_CHG
+            - GIC
+            - TO
+            - FC_E
+            - FC_IND_E
+            - FC_TRA_E
+            - FC_TRA_ROAD_E
+            - FC_OTH_HH_E
+            - FC_OTH_CP_E
+            - FC_OTH_AF_E
+            - FC_OTH_FISH_E
+            - FC_OTH_NSP_E
+            - FC_NE
+          siec:
+            - E7000
+            - H8000
+            - RA000
+            - RA100
+            - RA200
+            - RA300
+            - RA410
+            - RA420
+            - R5110-5150_W6000RI
+            - RA600
+          unit: KTOE
+          geo: IT
+
+    - name: "eurostat_nrg_bal_c_other"
+      type: "sdmx"
+      args:
+        agency: "ESTAT"
+        flow: "NRG_BAL_C"
+        filename: "eurostat_nrg_bal_c_other.csv"
+        filters:
+          freq: A
+          nrg_bal:
+            - PPRD
+            - IMP
+            - EXP
+            - STK_CHG
+            - GIC
+            - TO
+            - FC_E
+            - FC_IND_E
+            - FC_TRA_E
+            - FC_TRA_ROAD_E
+            - FC_OTH_HH_E
+            - FC_OTH_CP_E
+            - FC_OTH_AF_E
+            - FC_OTH_FISH_E
+            - FC_OTH_NSP_E
+            - FC_NE
+          siec:
+            - W6100_6220
+            - W6210
+            - BIOE
+            - TOTAL
+          unit: KTOE
+          geo: IT
+
+support:
+  - name: freq
+    type: codelist
+    provider: sdmx
+    agency: ESTAT
+    id: FREQ
+  - name: unit
+    type: codelist
+    provider: sdmx
+    agency: ESTAT
+    id: UNIT
+  - name: siec
+    type: codelist
+    provider: sdmx
+    agency: ESTAT
+    id: SIEC
+  - name: nrg_bal
+    type: codelist
+    provider: sdmx
+    agency: ESTAT
+    id: NRG_BAL
+  - name: flag
+    type: codelist
+    provider: sdmx
+    agency: ESTAT
+    id: OBS_FLAG
 
 clean:
   sql: "sql/clean.sql"
   read:
     source: auto
-    mode: latest
+    mode: all
     delim: ","
     encoding: utf-8
     header: true
@@ -40,11 +174,13 @@ clean:
     - value_ktoe
     - unit
     - geo
+    - freq
+    - flag
     - source
     - method
     - data_quality
   validate:
-    min_rows: 10
+    min_rows: 1000
     not_null:
       - year
       - product
@@ -54,14 +190,43 @@ mart:
   tables:
     - name: "mart_energy_balance"
       sql: "sql/mart_energy_balance.sql"
+    - name: "mart_energy_final_consumption"
+      sql: "sql/mart_energy_final_consumption.sql"
   required_tables:
     - "mart_energy_balance"
+    - "mart_energy_final_consumption"
   validate:
     table_rules:
       mart_energy_balance:
-        required_columns: [year, product, product_label, production_ktoe, imports_ktoe, exports_ktoe, apparent_consumption_ktoe, gross_import_dependency_pct, domestic_share_pct]
+        required_columns:
+          - year
+          - product
+          - product_label
+          - product_kind
+          - production_ktoe
+          - imports_ktoe
+          - exports_ktoe
+          - stock_change_ktoe
+          - domestic_output_ktoe
+          - apparent_consumption_ktoe
+          - gic_ktoe
+          - supply_ktoe
+          - gross_import_dependency_pct
+          - net_import_dependency_pct
+          - domestic_share_pct
         primary_key: [year, product]
-        min_rows: 10
+        min_rows: 500
+      mart_energy_final_consumption:
+        required_columns:
+          - year
+          - product
+          - product_label
+          - final_consumption_total_ktoe
+          - final_consumption_industry_ktoe
+          - final_consumption_transport_ktoe
+          - final_consumption_households_ktoe
+        primary_key: [year, product]
+        min_rows: 500
 
 validation:
   fail_on_error: true
@@ -71,4 +236,4 @@ registry:
   theme: "Energy / Energy balances"
   nuts_level: 0
   dimensions: ["year", "product", "indicator", "geo"]
-  description: "Complete energy balances for Italy — imports, exports, production by SIEC product"
+  description: "Complete energy balances for Italy — imports, exports, production, GIC and final consumption by SIEC product"

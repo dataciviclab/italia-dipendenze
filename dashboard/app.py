@@ -36,7 +36,7 @@ pages = {
 pg = st.navigation(pages, position="sidebar")
 
 st.sidebar.markdown("---")
-st.sidebar.caption("Fonti: Eurostat NRG_BAL_C · UN Comtrade · FAO — 2020–2024")
+st.sidebar.caption("Fonti: Eurostat NRG_BAL_C · UN Comtrade · FAO — energia 1990–2024 · commercio 2020–2024")
 st.sidebar.caption(
     "Caveat: valori commerciali in USD · dipendenza fisica solo su prodotti energetici"
 )

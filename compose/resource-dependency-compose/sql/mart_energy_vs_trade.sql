@@ -1,17 +1,23 @@
 -- mart_energy_vs_trade.sql: Compare physical ID with supplier concentration.
--- Only includes products that have BOTH energy balance AND bilateral trade data.
+--
+-- physical_id_pct is the NET import dependency from mart_energy_balance.
+-- Coal has no bilateral trade resource in Comtrade: it stays in the table on
+-- purpose, so a missing HHI is declared as "trade missing", not as low risk.
+-- Naphtha is included because its GIC is non-positive (secondary product):
+-- it exercises the dual-null branch and must stay "insufficient_data".
 
 WITH energy AS (
     SELECT
         year,
         product,
         product_label,
-        gross_import_dependency_pct AS physical_id_pct,
+        net_import_dependency_pct AS physical_id_pct,
         apparent_consumption_ktoe,
+        gic_ktoe,
         production_ktoe,
         imports_ktoe
     FROM read_parquet('{support.energy.mart.mart_energy_balance}')
-    WHERE product IN ('G3000', 'C0000X0350-0370', 'O4630', 'E7000')
+    WHERE product IN ('G3000', 'C0000X0350-0370', 'E7000', 'O4640', 'O4100_TOT', 'O4000XBIO')
 ),
 trade AS (
     SELECT
@@ -28,8 +34,10 @@ trade AS (
 resource_map AS (
     SELECT 'G3000' AS product, 'gas' AS resource
     UNION ALL SELECT 'C0000X0350-0370', 'carbone'
-    UNION ALL SELECT 'O4630', 'prodotti_petroliferi'
     UNION ALL SELECT 'E7000', 'elettricita'
+    UNION ALL SELECT 'O4640', 'nafta'
+    UNION ALL SELECT 'O4100_TOT', 'petrolio_greggio'
+    UNION ALL SELECT 'O4000XBIO', 'prodotti_petroliferi'
 )
 SELECT
     e.year,
@@ -38,6 +46,7 @@ SELECT
     rm.resource,
     ROUND(e.physical_id_pct, 1) AS physical_id_pct,
     ROUND(e.apparent_consumption_ktoe, 0) AS apparent_consumption_ktoe,
+    ROUND(e.gic_ktoe, 0) AS gic_ktoe,
     ROUND(e.production_ktoe, 0) AS production_ktoe,
     ROUND(e.imports_ktoe, 0) AS imports_ktoe,
     ROUND(t.hhi, 1) AS trade_hhi,
@@ -58,6 +67,8 @@ SELECT
         WHEN e.physical_id_pct < 50 AND t.hhi IS NULL THEN 'low_dependency_trade_missing'
         WHEN e.physical_id_pct IS NULL AND t.hhi > 2500 THEN 'trade_high_concentration_only'
         WHEN e.physical_id_pct IS NULL AND t.hhi IS NOT NULL THEN 'trade_only'
+        WHEN e.physical_id_pct < 50 AND t.hhi > 2500 THEN 'low_dependency_high_concentration'
+        WHEN e.physical_id_pct < 50 AND t.hhi <= 2500 THEN 'low_dependency_diversified'
         ELSE 'low_dependency'
     END AS risk_profile,
     'compose' AS source,

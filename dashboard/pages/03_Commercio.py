@@ -186,7 +186,7 @@ else:
 st.subheader(f"Balance commerciale — tutte le risorse ({year})")
 st.caption(
     "Export − import. Arancione/verde: a destra del zero = net exporter. "
-    "Il gas da solo domina il deficit commerciale delle risorse monitorate."
+    "Petrolio greggio e gas dominano il deficit commerciale delle risorse monitorate."
 )
 if bal.empty:
     st.info("Nessun trade balance per l'anno selezionato.")
