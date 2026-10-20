@@ -20,7 +20,12 @@ import comtradeapicall
 # partnerCode=None returns every partner plus the World aggregate row
 # (partnerCode 0), which is skipped below to avoid double counting.
 RESOURCES = {
-    "gas": {"hs": "2711"},
+    # Gas split by transport mode: pipeline (271121) vs LNG (271111),
+    # plus LPG (271112/113/119) and residual gaseous hydrocarbons (271129).
+    # The old 2711 aggregate hid two distinct supplier risks.
+    "gas_pipeline": {"hs": "271121"},
+    "gas_lng": {"hs": "271111"},
+    "gpl": {"hs": "271112,271113,271119"},
     "petrolio_greggio": {"hs": "2709"},
     "prodotti_petroliferi": {"hs": "2710"},
     "fertilizzanti": {"hs": "3102,3103,3104,3105"},

@@ -30,14 +30,22 @@ def _load(directory: Path, table: str):
 class TestPartnerUniverse:
     """Il denominatore HHI è il totale import, non un paniere di 8 partner."""
 
-    def test_gas_uses_all_partners(self):
+    def test_gas_split_uses_all_partners_and_unit_values(self):
         df = _load(TRADE_DIR, "mart_trade_concentration")
-        gas = df[(df["resource"] == "gas") & (df["year"] == 2024)].iloc[0]
-        assert gas["num_suppliers"] >= 40
-        assert gas["total_import_value_usd"] > 25_000_000_000
-        assert gas["hhi"] < 2500
-        assert gas["top1_supplier"] == "Algeria"
-        assert 40 <= gas["top1_share_pct"] <= 46
+        pipe = df[(df["resource"] == "gas_pipeline") & (df["year"] == 2024)].iloc[0]
+        lng = df[(df["resource"] == "gas_lng") & (df["year"] == 2024)].iloc[0]
+        assert pipe["num_suppliers"] >= 5
+        assert pipe["hhi"] > 2500
+        assert pipe["top1_supplier"] == "Algeria"
+        assert 45 <= pipe["top1_share_pct"] <= 55
+        assert lng["num_suppliers"] >= 20
+        assert lng["hhi"] > 2500
+        assert lng["top1_supplier"] == "Qatar"
+        assert 38 <= lng["top1_share_pct"] <= 48
+        assert pipe["import_unit_value_usd_per_kg"] > 0
+        assert lng["import_unit_value_usd_per_kg"] > 0
+        assert pipe["import_unit_value_usd_per_kg"] < 2
+        assert lng["import_unit_value_usd_per_kg"] < 2
 
     def test_oil_trade_resources_are_present(self):
         df = _load(TRADE_DIR, "mart_trade_concentration")

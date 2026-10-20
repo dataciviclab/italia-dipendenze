@@ -17,13 +17,14 @@ WITH energy AS (
         production_ktoe,
         imports_ktoe
     FROM read_parquet('{support.energy.mart.mart_energy_balance}')
-    WHERE product IN ('G3000', 'C0000X0350-0370', 'E7000', 'O4640', 'O4100_TOT', 'O4000XBIO')
+    WHERE product IN ('G3000', 'C0000X0350-0370', 'E7000', 'O4640', 'O4100_TOT', 'O4000XBIO', 'O4630')
 ),
 trade AS (
     SELECT
         year,
         resource,
         hhi,
+        import_unit_value_usd_per_kg,
         concentration_level,
         top1_supplier,
         top1_share_pct,
@@ -32,12 +33,14 @@ trade AS (
     FROM read_parquet('{support.trade.mart.mart_trade_concentration}')
 ),
 resource_map AS (
-    SELECT 'G3000' AS product, 'gas' AS resource
+    SELECT 'G3000' AS product, 'gas_pipeline' AS resource
+    UNION ALL SELECT 'G3000', 'gas_lng'
     UNION ALL SELECT 'C0000X0350-0370', 'carbone'
     UNION ALL SELECT 'E7000', 'elettricita'
     UNION ALL SELECT 'O4640', 'nafta'
     UNION ALL SELECT 'O4100_TOT', 'petrolio_greggio'
     UNION ALL SELECT 'O4000XBIO', 'prodotti_petroliferi'
+    UNION ALL SELECT 'O4630', 'gpl'
 )
 SELECT
     e.year,
@@ -50,6 +53,7 @@ SELECT
     ROUND(e.production_ktoe, 0) AS production_ktoe,
     ROUND(e.imports_ktoe, 0) AS imports_ktoe,
     ROUND(t.hhi, 1) AS trade_hhi,
+    ROUND(t.import_unit_value_usd_per_kg, 4) AS import_unit_value_usd_per_kg,
     t.concentration_level AS trade_concentration,
     t.top1_supplier,
     t.top1_share_pct,

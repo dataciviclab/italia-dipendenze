@@ -32,6 +32,8 @@ LOCAL_ROOT = detect_local_root(repo_root=ROOT)
 # Etichette leggibili per risorse / codici SIEC del compose
 RESOURCE_LABELS = {
     "gas": "Gas naturale",
+    "gas_pipeline": "Gas pipeline",
+    "gas_lng": "Gas LNG",
     "petrolio_greggio": "Petrolio greggio",
     "carbone": "Carbone",
     "coke": "Coke",

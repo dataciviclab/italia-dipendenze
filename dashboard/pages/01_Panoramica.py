@@ -58,9 +58,24 @@ n_high_hhi = int((rd["concentration_level"] == "high").sum()) if "concentration_
 n_phys_high = int((rd["physical_id_pct"] > 90).sum()) if "physical_id_pct" in rd else 0
 
 gas_row = rd[rd["resource"] == "gas"]
+gas_pipe = rd[rd["resource"] == "gas_pipeline"]
+gas_lng = rd[rd["resource"] == "gas_lng"]
 gas_dep = float(gas_row["physical_id_pct"].iloc[0]) if not gas_row.empty and pd.notna(gas_row["physical_id_pct"].iloc[0]) else None
-gas_hhi = float(gas_row["hhi"].iloc[0]) if not gas_row.empty and pd.notna(gas_row["hhi"].iloc[0]) else None
-gas_top = str(gas_row["top1_supplier"].iloc[0]) if not gas_row.empty and pd.notna(gas_row["top1_supplier"].iloc[0]) else "—"
+gas_hhi = float(gas_pipe["hhi"].iloc[0]) if not gas_pipe.empty and pd.notna(gas_pipe["hhi"].iloc[0]) else None
+gas_top = str(gas_pipe["top1_supplier"].iloc[0]) if not gas_pipe.empty and pd.notna(gas_pipe["top1_supplier"].iloc[0]) else "—"
+gas_pipe_share = float(gas_pipe["top1_share_pct"].iloc[0]) if not gas_pipe.empty and pd.notna(gas_pipe["top1_share_pct"].iloc[0]) else None
+gas_lng_top = str(gas_lng["top1_supplier"].iloc[0]) if not gas_lng.empty and pd.notna(gas_lng["top1_supplier"].iloc[0]) else "—"
+gas_lng_share = float(gas_lng["top1_share_pct"].iloc[0]) if not gas_lng.empty and pd.notna(gas_lng["top1_share_pct"].iloc[0]) else None
+
+gas_help_parts = []
+if gas_top != "—" and gas_pipe_share is not None:
+    gas_help_parts.append(f"Pipeline: {gas_top} {gas_pipe_share:.1f}%")
+if gas_hhi is not None:
+    gas_help_parts.append(f"HHI {gas_hhi:,.0f}")
+if gas_lng_top != "—" and gas_lng_share is not None:
+    gas_help_parts.append(f"LNG: {gas_lng_top} {gas_lng_share:.1f}%")
+gas_help_parts.append("dipendenza fisica netta")
+gas_help = " · ".join(gas_help_parts)
 
 k1, k2, k3, k4 = st.columns(4)
 with k1:
@@ -82,9 +97,7 @@ with k4:
         st.metric(
             "Dipendenza gas",
             fmt_pct(gas_dep, decimals=1),
-            help=f"Top fornitore: {gas_top}"
-            + (f" · HHI {gas_hhi:,.0f}" if gas_hhi else "")
-            + " · % del consumo apparente coperto da import",
+            help=gas_help,
         )
     else:
         st.metric("Dipendenza gas", "—")
@@ -185,10 +198,14 @@ if not dep.empty:
 st.subheader("In sintesi")
 bullets = []
 if gas_dep is not None:
+    parts = []
+    if gas_top != "—" and gas_pipe_share is not None:
+        parts.append(f"pipeline {gas_top} ({gas_pipe_share:.0f}%)")
+    if gas_lng_top != "—" and gas_lng_share is not None:
+        parts.append(f"LNG {gas_lng_top} ({gas_lng_share:.0f}%)")
     bullets.append(
-        f"- **Gas**: {fmt_pct(gas_dep, decimals=1)} di dipendenza import; "
-        f"primo fornitore **{gas_top}**"
-        + (f" (~{gas_row['top1_share_pct'].iloc[0]:.0f}%)" if not gas_row.empty and pd.notna(gas_row["top1_share_pct"].iloc[0]) else "")
+        f"- **Gas**: {fmt_pct(gas_dep, decimals=1)} di dipendenza netta"
+        + ("; " + ", ".join(parts) if parts else "")
         + "."
     )
 oil = eb[

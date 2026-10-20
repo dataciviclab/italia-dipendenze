@@ -90,7 +90,7 @@ class TestRiskProfileMartValues:
 
     def test_gas_with_both_metrics_matches_hhi_threshold(self):
         df = _load_energy_vs_trade()
-        gas = df[(df["resource"] == "gas") & df["physical_id_pct"].notna() & df["trade_hhi"].notna()]
+        gas = df[df["resource"].isin(["gas_pipeline", "gas_lng"]) & df["physical_id_pct"].notna() & df["trade_hhi"].notna()]
         if gas.empty:
             pytest.skip("no gas rows with both metrics")
         for _, row in gas.iterrows():

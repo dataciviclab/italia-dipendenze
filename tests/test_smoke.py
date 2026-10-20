@@ -53,25 +53,25 @@ MART_CONTRACTS = {
     "comtrade_bilateral": {
         "mart_trade_bilateral": {
             "min_rows": 10,
-            "required_columns": ["year", "hs_code", "flow", "primary_value_usd"],
+            "required_columns": ["year", "hs_code", "flow", "primary_value_usd", "unit_value_usd_per_kg"],
         },
         "mart_trade_concentration": {
             "min_rows": 1,
-            "required_columns": ["year", "resource", "hhi", "top1_supplier", "top1_share_pct", "hhi_change", "trend_status"],
+            "required_columns": ["year", "resource", "import_net_wgt_kg", "import_unit_value_usd_per_kg", "hhi", "top1_supplier", "top1_share_pct", "hhi_change", "trend_status"],
         },
         "mart_trade_balance": {
             "min_rows": 1,
-            "required_columns": ["year", "resource", "import_value_usd", "export_value_usd", "balance_usd", "trade_position"],
+            "required_columns": ["year", "resource", "import_value_usd", "import_unit_value_usd_per_kg", "export_value_usd", "balance_usd", "trade_position"],
         },
     },
     "resource_dependency_compose": {
         "mart_resource_dependency": {
             "min_rows": 10,
-            "required_columns": ["year", "resource", "physical_id_pct", "hhi", "top1_supplier", "data_source"],
+            "required_columns": ["year", "resource", "physical_id_pct", "import_unit_value_usd_per_kg", "hhi", "top1_supplier", "data_source"],
         },
         "mart_energy_vs_trade": {
             "min_rows": 5,
-            "required_columns": ["year", "product", "physical_id_pct", "risk_profile"],
+            "required_columns": ["year", "product", "physical_id_pct", "import_unit_value_usd_per_kg", "risk_profile"],
         },
     },
 }

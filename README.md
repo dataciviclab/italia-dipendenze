@@ -6,7 +6,7 @@ La Italy Resource & Dependency Map è un sistema aperto che misura le principali
 
 | Risorse coperte | Periodo | Fonti dati | Aggiornamento |
 |:---:|:---:|:---:|:---:|
-| 25 prodotti energetici + 11 risorse commerciali | energia 1990–2024 · commercio 2020–2024 | Eurostat, UN Comtrade, FAO | Pipeline automatica |
+| 25 prodotti energetici + 13 risorse commerciali | energia 1990–2024 · commercio 2020–2024 | Eurostat, UN Comtrade, FAO | Pipeline automatica |
 
 ---
 
@@ -24,29 +24,35 @@ Questi dati rendono visibili le catene di dipendenza materiale dell'Italia.
 |------|------|:---:|----------|
 | Bilancio energetico | 25 prodotti SIEC × 16 indicatori (flussi, GIC, TO, consumi finali) | 875 | dipendenza netta/lorda, disponibilità interna, quota domestica |
 | Consumi finali | 25 prodotti × 10 settori (industria, trasporti, famiglie, …) | 770 | consumi finali per prodotto e settore |
-| Commercio bilaterale | Import/export per HS6 × paese × anno | 7389 | HHI, Top-1/3/5 share |
-| Trade balance | Balance = export - import per risorsa × anno | 55 | trade_position, export_coverage |
-| Concentration trend | HHI trend + YoY change | 55 | trend_status, hhi_change |
+| Commercio bilaterale | Import/export per HS6 × paese × anno | 8064 | HHI, Top-1/3/5 share, prezzo $/kg |
+| Trade balance | Balance = export - import per risorsa × anno | 65 | trade_position, export_coverage, unit value |
+| Concentration trend | HHI trend + YoY change | 65 | trend_status, hhi_change |
 | Fertilizzanti | Consumo Italia | 6 | Consumo totale |
-| Compose | Matrice unica: ID + concentrazione per risorsa | 801 + 210 | data_source, risk_profile |
+| Compose | Matrice unica: ID + concentrazione per risorsa | 811 + 280 | data_source, risk_profile |
 
 ### Risorse monitorate
 
-| Risorsa | Import 2024 | Concentrazione (HHI) | Top fornitore |
-|---------|---:|:---:|---|
-| Petrolio greggio | $33.6B | 1215 | Libia (21%) |
-| Gas naturale | $25.3B | 2397 | Algeria (43%) |
-| Prodotti petroliferi | $11.9B | 843 | Arabia Saudita (23%) |
-| Rame | $6.2B | 874 | Bulgaria (15%) |
-| Elettricità | $5.6B | 3198 | Svizzera (41%) |
-| Alluminio | $3.4B | 562 | Mozambico (11%) |
-| Ferro/acciaio | $1.6B | 1463 | Russia (25%) |
-| Fertilizzanti | $1.1B | 853 | Egitto (19%) |
-| Cobalto | $44M | 1595 | Germania (24%) |
-| Terre rare | $6.1M | 1247 | Cina (21%) |
-| Litio | $1.9M | 3561 | Germania (54%) |
+| Risorsa | Import 2024 | Concentrazione (HHI) | Top fornitore | Prezzo $/kg |
+|---------|---:|:---:|---|---:|
+| Petrolio greggio | $33.6B | 1215 | Libia (21%) | 0,615 |
+| Gas pipeline | $18.6B | 3315 | Algeria (51%) | 0,585 |
+| Prodotti petroliferi | $11.9B | 843 | Arabia Saudita (23%) | 0,803 |
+| Rame | $6.2B | 874 | Bulgaria (15%) | — |
+| Elettricità | $5.6B | 3198 | Svizzera (41%) | — |
+| Gas LNG | $5.5B | 3180 | Qatar (43%) | 0,516 |
+| Alluminio | $3.4B | 562 | Mozambico (11%) | — |
+| Ferro/acciaio | $1.6B | 1463 | Russia (25%) | 0,602 |
+| GPL | $1.3B | 3892 | Algeria (59%) | — |
+| Fertilizzanti | $1.1B | 853 | Egitto (19%) | — |
+| Cobalto | $44M | 1595 | Germania (24%) | 46,64 |
+| Terre rare | $6.1M | 1247 | Cina (21%) | 15,96 |
+| Litio | $1.9M | 3561 | Germania (54%) | 12,88 |
 
-**Nota HHI.** Il calcolo usa tutti i partner Comtrade (47 per il gas, 36 per il greggio, 73 per i raffinati): il denominatore è il totale import italiano, non un paniere pre-selezionato.
+**Nota HHI.** Il calcolo usa tutti i partner Comtrade (7 per il gas pipeline, 26 per l'LNG, 39 per il GPL): il denominatore è il totale import italiano, non un paniere pre-selezionato.
+
+**Nota gas.** Il gas è split in pipeline (`271121`), LNG (`271111`) e GPL (`271112/113/119`). La dipendenza fisica del gas resta 95,2% (bilancio), ma i due segmenti commerciali hanno HHI **3315** e **3180**, entrambi sopra 2500: l'aggregato precedente (2397) nascondeva questa differenza.
+
+**Nota prezzo.** Il prezzo è il valore unitario medio all'import: valore / peso netto Comtrade. Non è un prezzo di mercato e non è disponibile per risorse senza peso (es. elettricità).
 
 ### Bilancio energetico (2024)
 

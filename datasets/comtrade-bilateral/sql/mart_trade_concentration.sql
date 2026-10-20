@@ -1,8 +1,9 @@
 -- mart_trade_concentration.sql: Supplier concentration metrics per resource × year.
 -- Computes HHI, top-1/3/5 shares from import bilateral data, plus YoY trend.
+-- Unit value is the weighted average import price: total value / total net weight.
 
 WITH imports AS (
-    SELECT year, resource, hs_code, partner_name, primary_value_usd
+    SELECT year, resource, hs_code, partner_name, primary_value_usd, net_wgt_kg
     FROM clean_input
     WHERE flow = 'M'
       AND primary_value_usd > 0
@@ -12,7 +13,8 @@ partner_totals AS (
         year,
         resource,
         partner_name,
-        SUM(primary_value_usd) AS partner_value_usd
+        SUM(primary_value_usd) AS partner_value_usd,
+        SUM(COALESCE(net_wgt_kg, 0)) AS partner_net_wgt_kg
     FROM imports
     GROUP BY year, resource, partner_name
 ),
@@ -20,7 +22,8 @@ resource_totals AS (
     SELECT
         year,
         resource,
-        SUM(partner_value_usd) AS total_import_value_usd
+        SUM(partner_value_usd) AS total_import_value_usd,
+        SUM(partner_net_wgt_kg) AS total_net_wgt_kg
     FROM partner_totals
     GROUP BY year, resource
 ),
@@ -30,7 +33,9 @@ with_shares AS (
         pt.resource,
         pt.partner_name,
         pt.partner_value_usd,
+        pt.partner_net_wgt_kg,
         rt.total_import_value_usd,
+        rt.total_net_wgt_kg,
         pt.partner_value_usd / rt.total_import_value_usd * 100 AS share_pct
     FROM partner_totals pt
     JOIN resource_totals rt ON pt.year = rt.year AND pt.resource = rt.resource
@@ -46,6 +51,7 @@ concentration AS (
         year,
         resource,
         total_import_value_usd,
+        total_net_wgt_kg,
         -- HHI: sum of squared shares
         (SELECT SUM(r2.share_pct * r2.share_pct)
          FROM ranked r2
@@ -66,7 +72,7 @@ concentration AS (
          FROM ranked r4
          WHERE r4.year = r.year AND r4.resource = r.resource) AS num_suppliers
     FROM ranked r
-    GROUP BY year, resource, total_import_value_usd
+    GROUP BY year, resource, total_import_value_usd, total_net_wgt_kg
 ),
 lagged AS (
     SELECT
@@ -80,6 +86,15 @@ SELECT
     year,
     resource,
     ROUND(total_import_value_usd, 0) AS total_import_value_usd,
+    ROUND(total_net_wgt_kg, 0) AS import_net_wgt_kg,
+    ROUND(
+        CASE
+            WHEN total_net_wgt_kg > 0 AND resource <> 'elettricita'
+            THEN total_import_value_usd / total_net_wgt_kg
+            ELSE NULL
+        END,
+        4
+    ) AS import_unit_value_usd_per_kg,
     ROUND(hhi, 1) AS hhi,
     CASE
         WHEN hhi < 1500 THEN 'low'

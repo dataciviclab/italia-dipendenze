@@ -12,6 +12,11 @@ SELECT
     flow_label,
     net_wgt_kg,
     primary_value_usd,
+    CASE
+        WHEN net_wgt_kg > 0 AND hs_code NOT IN ('2716')
+        THEN ROUND(primary_value_usd / net_wgt_kg, 4)
+        ELSE NULL
+    END AS unit_value_usd_per_kg,
     classification,
     'un_comtrade' AS source,
     'observed' AS method,
