@@ -196,7 +196,8 @@ else:
 st.subheader(f"Balance commerciale — tutte le risorse ({year})")
 st.caption(
     "Export − import. Arancione/verde: a destra del zero = net exporter. "
-    "Petrolio greggio e gas dominano il deficit commerciale delle risorse monitorate."
+    "Petrolio greggio e gas (pipeline + LNG) dominano il deficit commerciale. "
+    "Prezzo = valore / peso netto Comtrade; — se il peso non è disponibile."
 )
 if bal.empty:
     st.info("Nessun trade balance per l'anno selezionato.")
@@ -227,6 +228,14 @@ else:
             "Import USD": [cell(v, kind="usd") for v in bal_tbl["import_value_usd"]],
             "Export USD": [cell(v, kind="usd") for v in bal_tbl["export_value_usd"]],
             "Balance USD": [cell(v, kind="usd") for v in bal_tbl["balance_usd"]],
+            "Prezzo import $/kg": [
+                f"$ {float(v):,.3f}" if pd.notna(v) else "—"
+                for v in bal_tbl["import_unit_value_usd_per_kg"]
+            ],
+            "Prezzo export $/kg": [
+                f"$ {float(v):,.3f}" if pd.notna(v) else "—"
+                for v in bal_tbl["export_unit_value_usd_per_kg"]
+            ],
             "Posizione": [position_label(v) for v in bal_tbl["trade_position"]],
             "Export coverage %": [cell(v, kind="pct") for v in bal_tbl.get("export_coverage_pct", pd.Series(dtype=float))],
         }
