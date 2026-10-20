@@ -1,9 +1,13 @@
 -- mart_energy_balance.sql: Italy energy balance by product x year.
 --
--- Dependency is measured on DOMESTIC SUPPLY, not on the old PPRD + IMP - EXP
--- denominator (which ignored stock changes and produced artifacts >100%).
+-- Dependency is measured on DOMESTIC SUPPLY, using the official Eurostat GIC
+-- (gross inland consumption) when available. The previous formula used
+-- PPRD + IMP - EXP - STK_CHG, which inverted the stock-change sign:
+-- Eurostat's STK_CHG is positive for a stock draw, so the identity is
+--   GIC = PPRD + IMP - EXP + STK_CHG.
 --
---   gic_ktoe          = PPRD + IMP - EXP - STK_CHG
+--   gic_computed_ktoe = PPRD + IMP - EXP + STK_CHG   (audit, when GIC missing)
+--   gic_ktoe          = COALESCE(GIC reported, gic_computed_ktoe)
 --   supply_ktoe       = gic_ktoe                       (primary / aggregate)
 --                     = gic_ktoe + TO                  (secondary products)
 --   net_import_dependency_pct   = (IMP - EXP) / supply * 100  (headline)
@@ -63,10 +67,17 @@ with_metrics AS (
         COALESCE(production_ktoe, 0) + COALESCE(imports_ktoe, 0) - COALESCE(exports_ktoe, 0)
             AS apparent_consumption_ktoe,
         COALESCE(production_ktoe, 0) + COALESCE(imports_ktoe, 0) - COALESCE(exports_ktoe, 0)
-            - COALESCE(stock_change_ktoe, 0) AS gic_ktoe,
-        COALESCE(production_ktoe, 0) + COALESCE(imports_ktoe, 0) - COALESCE(exports_ktoe, 0)
-            - COALESCE(stock_change_ktoe, 0)
-            + CASE WHEN product_kind = 'secondary' THEN COALESCE(domestic_output_ktoe, 0) ELSE 0 END
+            + COALESCE(stock_change_ktoe, 0) AS gic_computed_ktoe,
+        COALESCE(
+            gic_reported_ktoe,
+            COALESCE(production_ktoe, 0) + COALESCE(imports_ktoe, 0) - COALESCE(exports_ktoe, 0)
+                + COALESCE(stock_change_ktoe, 0)
+        ) AS gic_ktoe,
+        COALESCE(
+            gic_reported_ktoe,
+            COALESCE(production_ktoe, 0) + COALESCE(imports_ktoe, 0) - COALESCE(exports_ktoe, 0)
+                + COALESCE(stock_change_ktoe, 0)
+        ) + CASE WHEN product_kind = 'secondary' THEN COALESCE(domestic_output_ktoe, 0) ELSE 0 END
             AS supply_ktoe
     FROM classified
 ),
@@ -112,8 +123,9 @@ SELECT
     stock_change_ktoe,
     domestic_output_ktoe,
     apparent_consumption_ktoe,
-    gic_ktoe,
+    gic_computed_ktoe,
     gic_reported_ktoe,
+    gic_ktoe,
     supply_ktoe,
     gross_import_dependency_pct,
     net_import_dependency_pct,

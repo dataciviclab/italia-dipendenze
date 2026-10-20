@@ -72,8 +72,23 @@ class TestDependencyFormula:
         gas = df[(df["product"] == "G3000") & (df["year"] == 2022)].iloc[0]
         assert gas["net_import_dependency_pct"] is not None
         assert gas["net_import_dependency_pct"] < 100
-        assert gas["net_import_dependency_pct"] == pytest.approx(92.3, abs=0.3)
-        assert gas["gross_import_dependency_pct"] == pytest.approx(98.5, abs=0.3)
+        assert gas["net_import_dependency_pct"] == pytest.approx(99.2, abs=0.3)
+        assert gas["gross_import_dependency_pct"] == pytest.approx(106.0, abs=0.3)
+
+    def test_gic_uses_official_value_and_positive_stock_sign(self):
+        """GIC = PPRD + IMP - EXP + STK_CHG; il segno di STK_CHG era invertito."""
+        df = _load("mart_energy_balance")
+        gas = df[(df["product"] == "G3000") & (df["year"] == 2022)].iloc[0]
+        assert gas["gic_ktoe"] == pytest.approx(gas["gic_reported_ktoe"], abs=0.01)
+        assert gas["gic_computed_ktoe"] == pytest.approx(gas["gic_reported_ktoe"], abs=0.01)
+        assert gas["gic_computed_ktoe"] == pytest.approx(56103.9, abs=0.5)
+
+    def test_oil_aggregate_uses_reported_gic(self):
+        """Sul petrolio il GIC ufficiale include bunker/rettifiche: non ricalcolarlo."""
+        df = _load("mart_energy_balance")
+        oil = df[(df["product"] == "O4000XBIO") & (df["year"] == 2024)].iloc[0]
+        assert oil["gic_ktoe"] == pytest.approx(oil["gic_reported_ktoe"], abs=0.01)
+        assert oil["net_import_dependency_pct"] == pytest.approx(93.9, abs=0.3)
 
     def test_secondary_products_use_transformation_output(self):
         df = _load("mart_energy_balance")

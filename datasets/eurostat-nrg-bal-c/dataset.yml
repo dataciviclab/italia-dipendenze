@@ -209,6 +209,7 @@ mart:
           - stock_change_ktoe
           - domestic_output_ktoe
           - apparent_consumption_ktoe
+          - gic_computed_ktoe
           - gic_ktoe
           - supply_ktoe
           - gross_import_dependency_pct

@@ -52,13 +52,15 @@ Questi dati rendono visibili le catene di dipendenza materiale dell'Italia.
 
 | Prodotto | Dip. netta % | Dip. lorda % | Import (KTOE) |
 |----------|:---:|:---:|---:|
-| Petrolio e prodotti (excl. biofuel) | 92,7 | 141,1 | 73,674 |
-| Gas naturale | 96,4 | 97,4 | 48,699 |
-| Carbone e solidi fossili | 103,7 | 115,7 | 2,481 |
+| Petrolio e prodotti (excl. biofuel) | 93,9 | 142,9 | 73,674 |
+| Gas naturale | 95,2 | 96,2 | 48,699 |
+| Carbone e solidi fossili | 96,5 | 107,7 | 2,481 |
 | Rinnovabili e biocarburanti | 6,1 | 7,5 | 2,233 |
-| Coke | -27,1 | 11,5 | 70 |
+| Coke | -22,4 | 9,5 | 70 |
 
-**Come si legge.** Dipendenza netta = (import − export) / disponibilità interna. La disponibilità include la produzione primaria e, per i prodotti secondari (elettricità, gasolio, benzina, GPL, cherosene, olio combustibile, coke), la produzione delle trasformazioni (`TO`). La dipendenza lorda = import / disponibilità è solo diagnostica: sul petrolio somma greggio importato e prodotti raffinati esportati, quindi non è una misura di dipendenza. Il 102,1% del gas 2022 della versione precedente era un artefatto della formula senza scorte: il valore corretto è **92,3% netto** (98,5% lordo). Totale energia 2024: **75,2% netto**.
+**Come si legge.** Dipendenza netta = (import − export) / disponibilità interna. La disponibilità usa il **GIC ufficiale Eurostat** e, per i prodotti secondari (elettricità, gasolio, benzina, GPL, cherosene, olio combustibile, coke), aggiunge la produzione delle trasformazioni (`TO`). La dipendenza lorda = import / disponibilità è solo diagnostica: sul petrolio somma greggio importato e prodotti raffinati esportati, quindi non è una misura di dipendenza. Il 102,1% del gas 2022 della versione precedente era un artefatto del segno delle scorte: il valore corretto è **99,2% netto** (106,0% lordo). Totale energia 2024: **75,1% netto**.
+
+**Nota di quadratura.** Per il petrolio il ricalcolo `PPRD + IMP − EXP + STK_CHG` dà 89,8%, il GIC ufficiale 93,9%: la differenza (≈2.356 KTOE) sono bunker internazionali e rettifiche statistiche. Il mart usa il GIC ufficiale.
 
 ---
 

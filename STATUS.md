@@ -8,7 +8,7 @@
 ## Stato attuale
 
 Pipeline funzionante: `make clean && make run-all && make test`
-- 4/4 dataset SUCCESS, 38 test (36 pass, 2 skip)
+- 4/4 dataset SUCCESS, 40 test (38 pass, 2 skip)
 - Eurostat **dichiarativo** (`type: sdmx` + codelist SIEC/NRG_BAL); Comtrade e FAO via script
 - Zero CSV committati
 
@@ -54,9 +54,9 @@ comtrade (~83s) → eurostat (~4s) → fao (~1.5s) → compose (~0.5s)
 
 | Risorsa | Import ($) | HHI | Top supplier | Conc. | Dipendenza netta % |
 |---------|---:|:---:|---|:---:|:---:|
-| Petrolio greggio | $33.6B | 1215 | Libia 21% | low | 93,5 |
-| Gas | $25.3B | 2397 | Algeria 43% | medium | 96,4 |
-| Prodotti petroliferi | $11.9B | 843 | Arabia Saudita 23% | low | 92,7 |
+| Petrolio greggio | $33.6B | 1215 | Libia 21% | low | 91,8 |
+| Gas | $25.3B | 2397 | Algeria 43% | medium | 95,2 |
+| Prodotti petroliferi | $11.9B | 843 | Arabia Saudita 23% | low | 93,9 |
 | Rame | $6.2B | 874 | Bulgaria 15% | low | — |
 | Elettricità | $5.6B | 3198 | Svizzera 41% | high | 15,8 |
 | Alluminio | $3.4B | 562 | Mozambico 11% | low | — |
@@ -72,21 +72,23 @@ comtrade (~83s) → eurostat (~4s) → fao (~1.5s) → compose (~0.5s)
 
 | Prodotto | Dipendenza netta % | Import (KTOE) | Consumo finale (KTOE) |
 |----------|---:|---:|---:|
-| Petrolio e prodotti (excl. biofuel) | 92,7 | 73.674 | 40.918 |
-| Petrolio greggio | 93,5 | 56.051 | — |
-| Gas naturale | 96,4 | 48.699 | 29.899 |
-| Carbone e solidi fossili | 103,7 | 2.481 | — |
-| Gasolio | -7,9 (net exporter raffinati) | 5.943 | 25.647 |
-| Benzina | -60,0 (net exporter raffinati) | 742 | 8.956 |
-| GPL | 57,3 | 2.802 | — |
-| Cherosene jet | 49,1 | 2.678 | — |
-| Olio combustibile | -98,5 | 726 | — |
-| Coke | -27,1 | 70 | — |
+| Petrolio e prodotti (excl. biofuel) | 93,9 | 73.674 | 40.918 |
+| Petrolio greggio | 91,8 | 56.051 | — |
+| Gas naturale | 95,2 | 48.699 | 29.899 |
+| Carbone e solidi fossili | 96,5 | 2.481 | — |
+| Gasolio | -8,2 (net exporter raffinati) | 5.943 | 25.647 |
+| Benzina | -60,4 (net exporter raffinati) | 742 | 8.956 |
+| GPL | 56,1 | 2.802 | — |
+| Cherosene jet | 47,6 | 2.678 | — |
+| Olio combustibile | -210,2 (net exporter) | 726 | — |
+| Coke | -22,4 | 70 | — |
 | Elettricità | 15,8 | 4.807 | — |
 | Rinnovabili e biocarburanti | 6,1 | 2.233 | — |
-| **Totale energia** | **75,2** | 131.894 | — |
+| **Totale energia** | **75,1** | 131.894 | — |
 
-Il gasolio e la benzina sono **prodotti secondari**: la loro disponibilità è la produzione delle raffinerie (`TO`), non la produzione primaria. La dipendenza netta negativa indica che l'Italia esporta più raffinati di quanti ne importi; la vulnerabilità esterna resta sul **greggio** (93,5%). La quota domestica può superare 100% per i prodotti esportati.
+Il gasolio e la benzina sono **prodotti secondari**: la loro disponibilità è la produzione delle raffinerie (`TO`), non la produzione primaria. La dipendenza netta negativa indica che l'Italia esporta più raffinati di quanti ne importi; la vulnerabilità esterna resta sul **greggio** (91,8%). La quota domestica può superare 100% per i prodotti esportati.
+
+**Nota di quadratura.** Per il petrolio il ricalcolo `PPRD + IMP − EXP + STK_CHG` dà 89,8%, il GIC ufficiale 93,9%: la differenza (≈2.356 KTOE) sono bunker internazionali e rettifiche statistiche. Il mart usa il GIC ufficiale.
 
 ### Trade balance — net exporter/importer
 
@@ -111,31 +113,32 @@ Il gasolio e la benzina sono **prodotti secondari**: la loro disponibilità è l
 |---|------|-------|
 | 1 | Migrazione Eurostat da script a `type: sdmx` (3 richieste, 176 LOC rimosse) | ✅ |
 | 2 | Etichette SIEC/NRG_BAL da codelist (niente più O4640 = "gasolio") | ✅ |
-| 3 | Dipendenza su GIC + scorte + `TO` per i prodotti secondari | ✅ |
+| 3 | Dipendenza su GIC ufficiale + `TO`; segno `STK_CHG` corretto | ✅ |
 | 4 | Consumi finali per prodotto × settore (`mart_energy_final_consumption`) | ✅ |
 | 5 | Compose allineato a dipendenza netta e nuove etichette | ✅ |
 | 6 | Trade balance + concentration trend | ✅ |
 | 7 | **Comtrade tutti i partner** — HHI su totale import, non su 8 | ✅ | 47 partner gas, 36 greggio, 73 raffinati |
 | 8 | **HS 2709/2710** — valore, peso, prezzo implicito, concentrazione petrolio | ✅ | greggio + raffinati separati |
 | 9 | **QA `TO` elettricità vs Terna** | ✅ | 23.303 vs 23.302 KTOE (2024) |
+| 10 | **Fix segno `STK_CHG`** — GIC ufficiale (`+ STK_CHG`) | ✅ | gas 2022 99,2%, carbone 96,5% |
 
 ### Prossimi passi
 
 | # | Cosa | Sforzo | Note |
 |---|------|--------|------|
-| 10 | **QA `TO` raffinazione** — confronto con ISPRA/UNFCCC | Medio | benzina, gasolio, jet, olio combustibile |
-| 11 | **OECD TiVA** — FVA/DVA per decomposizione valore | Medio | Bulk download gratuito |
-| 12 | **USGS Minerali** — production data per metalli critici | Basso | PDF parsing |
-| 13 | **FAO live API** — sostituire hardcoded con dati freschi + breakdown | Medio | API fenixservices attualmente giù (521) |
+| 11 | **QA `TO` raffinazione** — confronto con ISPRA/UNFCCC | Medio | benzina, gasolio, jet, olio combustibile |
+| 12 | **OECD TiVA** — FVA/DVA per decomposizione valore | Medio | Bulk download gratuito |
+| 13 | **USGS Minerali** — production data per metalli critici | Basso | PDF parsing |
+| 14 | **FAO live API** — sostituire hardcoded con dati freschi + breakdown | Medio | API fenixservices attualmente giù (521) |
 
 ### Backlog
 
 | # | Cosa | Sforzo |
 |---|------|--------|
-| 14 | Ownership analysis (ISTAT Multinazionali) | Medio |
-| 15 | Upstream dependency (IO tables) | Alto |
-| 16 | Farmaci/API | Alto |
-| 17 | Semiconduttori | Alto |
+| 15 | Ownership analysis (ISTAT Multinazionali) | Medio |
+| 16 | Upstream dependency (IO tables) | Alto |
+| 17 | Farmaci/API | Alto |
+| 18 | Semiconduttori | Alto |
 
 ---
 
@@ -172,7 +175,7 @@ make all
   │     │     └── mart: SQL aggregazione + metriche
   │     └── compose: read_parquet dagli upstream
   └── make test
-        └── pytest tests/ dashboard/tests/ (38 test)
+        └── pytest tests/ dashboard/tests/ (40 test)
 ```
 
 ### Dipendenze CI
