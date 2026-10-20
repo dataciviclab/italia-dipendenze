@@ -4,7 +4,7 @@
 -- The old gross ratio (imports / GIC) overstates oil dependency because Italy
 -- imports crude and exports refined products.
 
-WITH energy AS (
+WITH energy_base AS (
     SELECT
         year,
         CASE
@@ -32,7 +32,7 @@ WITH energy AS (
             WHEN product = 'W6100_6220' THEN 'rifiuti_non_rinnovabili'
             WHEN product = 'W6210' THEN 'rifiuti_rinnovabili'
             ELSE product
-        END AS resource,
+        END AS base_resource,
         product,
         product_label,
         net_import_dependency_pct,
@@ -45,6 +45,30 @@ WITH energy AS (
     FROM read_parquet('{support.energy.mart.mart_energy_balance}')
     -- Exclude aggregates to avoid double-counting in the resource matrix.
     WHERE product NOT IN ('TOTAL', 'BIOE')
+),
+resource_map AS (
+    -- G3000 is one physical product but two trade segments: pipeline and LNG.
+    -- The physical dependency (95.2%) applies to both; the aggregate 'gas'
+    -- row stays energy-only to avoid double-counting in the trade totals.
+    SELECT 'G3000' AS product, 'gas' AS resource
+    UNION ALL SELECT 'G3000', 'gas_pipeline'
+    UNION ALL SELECT 'G3000', 'gas_lng'
+),
+energy AS (
+    SELECT
+        e.year,
+        COALESCE(rm.resource, e.base_resource) AS resource,
+        e.product,
+        e.product_label,
+        e.net_import_dependency_pct,
+        e.domestic_share_pct,
+        e.supply_ktoe,
+        e.production_ktoe,
+        e.imports_ktoe,
+        e.exports_ktoe,
+        e.energy_data_quality
+    FROM energy_base e
+    LEFT JOIN resource_map rm ON e.product = rm.product
 ),
 trade AS (
     SELECT

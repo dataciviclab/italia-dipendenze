@@ -103,7 +103,7 @@ with k4:
         st.metric("Dipendenza gas", "—")
 
 st.caption(
-    f"Oltre {n_phys_high} prodotti energetici con dipendenza import >90% nel {year} · "
+    f"{n_phys_high} prodotti energetici con dipendenza import >90% nel {year} · "
     "HHI alto = concentrazione fornitura, non necessariamente volumi grandi."
 )
 
