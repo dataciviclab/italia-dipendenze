@@ -71,7 +71,7 @@ Questi dati rendono visibili le catene di dipendenza materiale dell'Italia.
 
 **Nota di quadratura.** Per il petrolio il ricalcolo `PPRD + IMP − EXP + STK_CHG` dà 89,8%, il GIC ufficiale 93,9%: la differenza (≈2.356 KTOE) sono bunker internazionali e rettifiche statistiche. Il mart usa il GIC ufficiale.
 
-**QA raffinazione (interno).** La somma dei `TO` dei prodotti principali è 60.019 KTOE = **99,3%** del crude intake 2024 (60.431 THS_T); l'aggregato `O4000XBIO` (75.497 KTOE) include altri prodotti/feedstock. Script: `scripts/qa_refinery.py`. Resta il confronto esterno con ISPRA/UNFCCC CRF.
+**QA raffinazione (interno).** La somma dei `TO` dei prodotti principali è 60.019 KTOE = **99,3%** del crude intake 2024 (60.431 THS_T). Il rapporto è **indicativo**: numeratore in KTOE, denominatore in THS_T (1 t ≈ 1 toe), quindi non è una quadratura di massa. L'aggregato `O4000XBIO` (75.497 KTOE) include altri prodotti/feedstock. Script: `scripts/qa_refinery.py`. Resta il confronto esterno con ISPRA/UNFCCC CRF.
 
 ---
 

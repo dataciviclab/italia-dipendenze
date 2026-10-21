@@ -129,7 +129,7 @@ Il gasolio e la benzina sono **prodotti secondari**: la loro disponibilità è l
 | 9 | **QA `TO` elettricità vs Terna** | ✅ | 23.303 vs 23.302 KTOE (2024) |
 | 10 | **Fix segno `STK_CHG`** — GIC ufficiale (`+ STK_CHG`) | ✅ | gas 2022 99,2%, carbone 96,5% |
 | 11 | **Split gas pipeline/LNG/GPL + prezzo $/kg** | ✅ | HHI 3315 pipeline, 3180 LNG |
-| 12 | **Split HS6 raffinati + QA raffinazione interno** | ✅ | benzina/distillati; TO principali 99,3% crude intake |
+| 12 | **Split HS6 raffinati + QA raffinazione interno** | ✅ | benzina/distillati; TO principali 99,3% crude intake (KTOE vs THS_T, indicativo) |
 
 ### Prossimi passi
 
