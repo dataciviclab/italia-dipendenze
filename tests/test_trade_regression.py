@@ -16,6 +16,7 @@ import pytest
 ROOT = Path(__file__).resolve().parent.parent
 TRADE_DIR = ROOT / "out" / "data" / "mart" / "comtrade_bilateral"
 ENERGY_DIR = ROOT / "out" / "data" / "mart" / "eurostat_nrg_bal_c"
+COMPOSE_DIR = ROOT / "out" / "data" / "mart" / "resource_dependency_compose"
 
 
 def _load(directory: Path, table: str):
@@ -49,7 +50,7 @@ class TestPartnerUniverse:
 
     def test_oil_trade_resources_are_present(self):
         df = _load(TRADE_DIR, "mart_trade_concentration")
-        for resource in ("petrolio_greggio", "prodotti_petroliferi"):
+        for resource in ("petrolio_greggio", "benzina", "distillati_medi"):
             row = df[(df["resource"] == resource) & (df["year"] == 2024)]
             assert not row.empty, f"missing trade resource {resource}"
             assert row["hhi"].iloc[0] is not None
@@ -100,3 +101,16 @@ class TestTransformationOutputQa:
         ).fetchone()[0]
         terna_ktoe = float(gwh) * 0.086
         assert abs(eurostat_ktoe - terna_ktoe) / terna_ktoe < 0.02
+
+
+@pytest.mark.regression
+class TestDistillatiAggregate:
+    """L'aggregato fisico distillati medi è accoppiato al trade 271019."""
+
+    def test_distillati_medi_has_physical_and_trade(self):
+        df = _load(COMPOSE_DIR, "mart_energy_vs_trade")
+        row = df[(df["resource"] == "distillati_medi") & (df["year"] == 2024)]
+        assert not row.empty
+        assert -15 < row["physical_id_pct"].iloc[0] < 0
+        assert row["trade_hhi"].iloc[0] == pytest.approx(985.6, abs=2)
+        assert row["risk_profile"].iloc[0] == "low_dependency_diversified"

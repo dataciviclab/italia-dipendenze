@@ -6,7 +6,7 @@
 -- Naphtha is included because its GIC is non-positive (secondary product):
 -- it exercises the dual-null branch and must stay "insufficient_data".
 
-WITH energy AS (
+WITH energy_base AS (
     SELECT
         year,
         product,
@@ -17,7 +17,27 @@ WITH energy AS (
         production_ktoe,
         imports_ktoe
     FROM read_parquet('{support.energy.mart.mart_energy_balance}')
-    WHERE product IN ('G3000', 'C0000X0350-0370', 'E7000', 'O4640', 'O4100_TOT', 'O4000XBIO', 'O4630')
+    WHERE product IN ('G3000', 'C0000X0350-0370', 'E7000', 'O4640', 'O4100_TOT', 'O4652XR5210B', 'O4630')
+),
+energy_agg AS (
+    -- Physical aggregate of middle distillates, paired with trade 271019.
+    SELECT
+        year,
+        'DISTILLATI_MEDI' AS product,
+        'Distillati medi (gasolio+jet+fuel oil)' AS product_label,
+        ROUND(SUM(imports_ktoe - exports_ktoe) / NULLIF(SUM(supply_ktoe), 0) * 100, 1) AS physical_id_pct,
+        SUM(apparent_consumption_ktoe) AS apparent_consumption_ktoe,
+        SUM(gic_ktoe) AS gic_ktoe,
+        SUM(production_ktoe) AS production_ktoe,
+        SUM(imports_ktoe) AS imports_ktoe
+    FROM read_parquet('{support.energy.mart.mart_energy_balance}')
+    WHERE product IN ('O4671XR5220B', 'O4661XR5230B', 'O4680')
+    GROUP BY year
+),
+energy AS (
+    SELECT * FROM energy_base
+    UNION ALL
+    SELECT * FROM energy_agg
 ),
 trade AS (
     SELECT
@@ -39,7 +59,8 @@ resource_map AS (
     UNION ALL SELECT 'E7000', 'elettricita'
     UNION ALL SELECT 'O4640', 'nafta'
     UNION ALL SELECT 'O4100_TOT', 'petrolio_greggio'
-    UNION ALL SELECT 'O4000XBIO', 'prodotti_petroliferi'
+    UNION ALL SELECT 'O4652XR5210B', 'benzina'
+    UNION ALL SELECT 'DISTILLATI_MEDI', 'distillati_medi'
     UNION ALL SELECT 'O4630', 'gpl'
 )
 SELECT

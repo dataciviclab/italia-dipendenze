@@ -43,6 +43,7 @@ RESOURCE_LABELS = {
     "gpl": "GPL",
     "nafta": "Nafta",
     "benzina": "Benzina",
+    "distillati_medi": "Distillati medi",
     "gasolio": "Gasolio",
     "cherosene": "Cherosene",
     "olio_pesante": "Olio pesante",

@@ -27,7 +27,10 @@ RESOURCES = {
     "gas_lng": {"hs": "271111"},
     "gpl": {"hs": "271112,271113,271119"},
     "petrolio_greggio": {"hs": "2709"},
-    "prodotti_petroliferi": {"hs": "2710"},
+    # Refined products split at HS6: light oils (gasoline) vs middle distillates.
+    # 271019 still aggregates diesel/jet/fuel oil; HS8/Comext is needed to split them.
+    "benzina": {"hs": "271012"},
+    "distillati_medi": {"hs": "271019"},
     "fertilizzanti": {"hs": "3102,3103,3104,3105"},
     "rame": {"hs": "7403,2603,7404"},
     "terre_rare": {"hs": "280530,2846"},

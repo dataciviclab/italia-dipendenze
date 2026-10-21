@@ -6,7 +6,7 @@ La Italy Resource & Dependency Map è un sistema aperto che misura le principali
 
 | Risorse coperte | Periodo | Fonti dati | Aggiornamento |
 |:---:|:---:|:---:|:---:|
-| 25 prodotti energetici + 13 risorse commerciali | energia 1990–2024 · commercio 2020–2024 | Eurostat, UN Comtrade, FAO | Pipeline automatica |
+| 25 prodotti energetici + 14 risorse commerciali | energia 1990–2024 · commercio 2020–2024 | Eurostat, UN Comtrade, FAO | Pipeline automatica |
 
 ---
 
@@ -24,11 +24,11 @@ Questi dati rendono visibili le catene di dipendenza materiale dell'Italia.
 |------|------|:---:|----------|
 | Bilancio energetico | 25 prodotti SIEC × 16 indicatori (flussi, GIC, TO, consumi finali) | 875 | dipendenza netta/lorda, disponibilità interna, quota domestica |
 | Consumi finali | 25 prodotti × 10 settori (industria, trasporti, famiglie, …) | 770 | consumi finali per prodotto e settore |
-| Commercio bilaterale | Import/export per HS6 × paese × anno | 8064 | HHI, Top-1/3/5 share, prezzo $/kg |
-| Trade balance | Balance = export - import per risorsa × anno | 65 | trade_position, export_coverage, unit value |
-| Concentration trend | HHI trend + YoY change | 65 | trend_status, hhi_change |
+| Commercio bilaterale | Import/export per HS6 × paese × anno | 8596 | HHI, Top-1/3/5 share, prezzo $/kg |
+| Trade balance | Balance = export - import per risorsa × anno | 70 | trade_position, export_coverage, unit value |
+| Concentration trend | HHI trend + YoY change | 70 | trend_status, hhi_change |
 | Fertilizzanti | Consumo Italia | 6 | Consumo totale |
-| Compose | Matrice unica: ID + concentrazione per risorsa | 811 + 280 | data_source, risk_profile |
+| Compose | Matrice unica: ID + concentrazione per risorsa | 906 + 315 | data_source, risk_profile |
 
 ### Risorse monitorate
 
@@ -36,12 +36,13 @@ Questi dati rendono visibili le catene di dipendenza materiale dell'Italia.
 |---------|---:|:---:|---|---:|
 | Petrolio greggio | $33.6B | 1215 | Libia (21%) | 0,615 |
 | Gas pipeline | $18.6B | 3315 | Algeria (51%) | 0,585 |
-| Prodotti petroliferi | $11.9B | 843 | Arabia Saudita (23%) | 0,803 |
+| Distillati medi | $10.6B | 986 | Arabia Saudita (25%) | 0,795 |
 | Rame | $6.2B | 874 | Bulgaria (15%) | — |
 | Elettricità | $5.6B | 3198 | Svizzera (41%) | — |
 | Gas LNG | $5.5B | 3180 | Qatar (43%) | 0,516 |
 | Alluminio | $3.4B | 562 | Mozambico (11%) | — |
 | Ferro/acciaio | $1.6B | 1463 | Russia (25%) | 0,602 |
+| Benzina | $1.36B | 1046 | Grecia (21%) | 0,866 |
 | GPL | $1.3B | 3892 | Algeria (59%) | — |
 | Fertilizzanti | $1.1B | 853 | Egitto (19%) | — |
 | Cobalto | $44M | 1595 | Germania (24%) | 46,64 |
@@ -53,6 +54,8 @@ Questi dati rendono visibili le catene di dipendenza materiale dell'Italia.
 **Nota gas.** Il gas è split in pipeline (`271121`), LNG (`271111`) e GPL (`271112/113/119`). La dipendenza fisica del gas resta 95,2% (bilancio), ma i due segmenti commerciali hanno HHI **3315** e **3180**, entrambi sopra 2500: l'aggregato precedente (2397) nascondeva questa differenza.
 
 **Nota prezzo.** Il prezzo è il valore unitario medio all'import: valore / peso netto Comtrade. Non è un prezzo di mercato e non è disponibile per risorse senza peso (es. elettricità).
+
+**Nota raffinati.** I raffinati sono split HS6: `271012` benzina (light oils) e `271019` distillati medi (gasolio/jet/fuel oil). L'aggregato fisico `distillati_medi` (gasolio+jet+fuel oil) è accoppiato al trade `271019`: **-7,8% netto**, HHI 986. `271019` resta un aggregato merceologico: per separare gasolio, jet e fuel oil serve HS8/Comext. Benzina è net exporter (+$5,4 mld), distillati medi net importer (-$0,9 mld).
 
 ### Bilancio energetico (2024)
 
@@ -67,6 +70,8 @@ Questi dati rendono visibili le catene di dipendenza materiale dell'Italia.
 **Come si legge.** Dipendenza netta = (import − export) / disponibilità interna. La disponibilità usa il **GIC ufficiale Eurostat** e, per i prodotti secondari (elettricità, gasolio, benzina, GPL, cherosene, olio combustibile, coke), aggiunge la produzione delle trasformazioni (`TO`). La dipendenza lorda = import / disponibilità è solo diagnostica: sul petrolio somma greggio importato e prodotti raffinati esportati, quindi non è una misura di dipendenza. Il 102,1% del gas 2022 della versione precedente era un artefatto del segno delle scorte: il valore corretto è **99,2% netto** (106,0% lordo). Totale energia 2024: **75,1% netto**.
 
 **Nota di quadratura.** Per il petrolio il ricalcolo `PPRD + IMP − EXP + STK_CHG` dà 89,8%, il GIC ufficiale 93,9%: la differenza (≈2.356 KTOE) sono bunker internazionali e rettifiche statistiche. Il mart usa il GIC ufficiale.
+
+**QA raffinazione (interno).** La somma dei `TO` dei prodotti principali è 60.019 KTOE = **99,3%** del crude intake 2024 (60.431 THS_T). Il rapporto è **indicativo**: numeratore in KTOE, denominatore in THS_T (1 t ≈ 1 toe), quindi non è una quadratura di massa. L'aggregato `O4000XBIO` (75.497 KTOE) include altri prodotti/feedstock. Script: `scripts/qa_refinery.py`. Resta il confronto esterno con ISPRA/UNFCCC CRF.
 
 ---
 
@@ -104,6 +109,7 @@ COMTRADE_SUBSCRIPTION_KEY=xxx make all
 
 **Fonti:**
 - Eurostat NRG_BAL_C (SDMX API, no key)
+- Eurostat NRG_CB_OILM (solo QA raffinazione, mensile)
 - UN Comtrade (API con key gratuita)
 - FAO (dati cached)
 
