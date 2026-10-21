@@ -2,7 +2,7 @@
   "schema_version": 1,
   "repo": "italia-dipendenze",
   "source_repo": "dataciviclab/italia-dipendenze",
-  "updated_at": "2026-10-06",
+  "updated_at": "2026-10-21",
   "datasets": [
     {
       "slug": "comtrade_bilateral",
@@ -117,7 +117,7 @@
       "source": "",
       "source_id": "eurostat",
       "period": {
-        "start": 2020,
+        "start": 1990,
         "end": 2024
       },
       "tags": [
@@ -182,6 +182,24 @@
           "semantic_type": "nuts_code"
         },
         {
+          "name": "freq",
+          "type": "VARCHAR",
+          "role": "dimension",
+          "description": ""
+        },
+        {
+          "name": "flag",
+          "type": "VARCHAR",
+          "role": "dimension",
+          "description": ""
+        },
+        {
+          "name": "flag_label",
+          "type": "VARCHAR",
+          "role": "dimension",
+          "description": ""
+        },
+        {
           "name": "source",
           "type": "VARCHAR",
           "role": "dimension",
@@ -207,7 +225,8 @@
       },
       "stage": "incubating",
       "mart_refs": [
-        "eurostat_nrg_bal_c__mart_energy_balance"
+        "eurostat_nrg_bal_c__mart_energy_balance",
+        "eurostat_nrg_bal_c__mart_energy_final_consumption"
       ]
     },
     {
@@ -283,6 +302,31 @@
       "mart_refs": [
         "fao_fertilizer_consumption__mart_fertilizer_consumption"
       ]
+    },
+    {
+      "slug": "resource_dependency_compose",
+      "name": "Resource Dependency Compose",
+      "description": "Italy Resource & Dependency Map — joins energy balance, bilateral trade, and fertilizer consumption",
+      "source": "",
+      "source_id": "dataciviclab_composite",
+      "period": {
+        "start": 1990,
+        "end": 2024
+      },
+      "tags": [
+        "dipendenze",
+        "risorse",
+        "compose",
+        "energia",
+        "commercio",
+        "agricoltura"
+      ],
+      "category": "economia-reale",
+      "stage": "incubating",
+      "mart_refs": [
+        "resource_dependency_compose__mart_resource_dependency",
+        "resource_dependency_compose__mart_energy_vs_trade"
+      ]
     }
   ],
   "marts": [
@@ -327,6 +371,16 @@
       }
     },
     {
+      "slug": "eurostat_nrg_bal_c__mart_energy_final_consumption",
+      "dataset": "eurostat_nrg_bal_c",
+      "table": "mart_energy_final_consumption",
+      "location": {
+        "type": "gcs",
+        "path": "gs://dataciviclab-mart/italia_dipendenze/eurostat_nrg_bal_c/2026/mart_energy_final_consumption.parquet",
+        "multi_file": false
+      }
+    },
+    {
       "slug": "fao_fertilizer_consumption__mart_fertilizer_consumption",
       "dataset": "fao_fertilizer_consumption",
       "table": "mart_fertilizer_consumption",
@@ -366,21 +420,21 @@
       "detail": "anno 2026 — mart: si",
       "action": "",
       "run": {
-        "run_id": "20261006T120348Z_439555b9",
+        "run_id": "20261021T074441Z_99ae934a",
         "year": 2026,
         "status": "SUCCESS",
         "quality_score": {
           "mart": 100
         },
         "output_rows": {
-          "mart": 104
+          "mart": 1151
         },
         "output_bytes": {
-          "mart": 10053
+          "mart": 23704
         },
-        "started_at": "2026-10-06T12:03:48.349672+00:00",
-        "finished_at": "2026-10-06T12:03:48.408339+00:00",
-        "duration_seconds": 0.059
+        "started_at": "2026-10-21T07:44:41.332734+00:00",
+        "finished_at": "2026-10-21T07:44:41.421426+00:00",
+        "duration_seconds": 0.089
       }
     },
     {
@@ -391,27 +445,27 @@
       "detail": "anno 2026 — mart: si",
       "action": "",
       "run": {
-        "run_id": "20261006T120123Z_4df67634",
+        "run_id": "20261021T074213Z_3f120964",
         "year": 2026,
         "status": "SUCCESS",
         "quality_score": {
           "raw": 100,
           "clean": 100,
-          "mart": 95
+          "mart": 100
         },
         "output_rows": {
-          "raw": 682,
-          "clean": 682,
-          "mart": 766
+          "raw": 8064,
+          "clean": 8064,
+          "mart": 8194
         },
         "output_bytes": {
-          "raw": 96189,
-          "clean": 12314,
-          "mart": 21761
+          "raw": 1342122,
+          "clean": 96867,
+          "mart": 147935
         },
-        "started_at": "2026-10-06T12:01:23.313948+00:00",
-        "finished_at": "2026-10-06T12:02:12.128341+00:00",
-        "duration_seconds": 48.814
+        "started_at": "2026-10-21T07:42:13.517654+00:00",
+        "finished_at": "2026-10-21T07:44:35.215975+00:00",
+        "duration_seconds": 141.698
       }
     },
     {
@@ -422,7 +476,7 @@
       "detail": "anno 2026 — mart: si",
       "action": "",
       "run": {
-        "run_id": "20261006T120212Z_cd9d00d4",
+        "run_id": "20261021T074437Z_916d8fcc",
         "year": 2026,
         "status": "SUCCESS",
         "quality_score": {
@@ -431,18 +485,18 @@
           "mart": 100
         },
         "output_rows": {
-          "raw": 460,
-          "clean": 355,
-          "mart": 115
+          "raw": 6160,
+          "clean": 11235,
+          "mart": 1645
         },
         "output_bytes": {
-          "raw": 46151,
-          "clean": 5025,
-          "mart": 7504
+          "raw": 553104,
+          "clean": 46372,
+          "mart": 79411
         },
-        "started_at": "2026-10-06T12:02:12.194704+00:00",
-        "finished_at": "2026-10-06T12:03:47.866145+00:00",
-        "duration_seconds": 95.671
+        "started_at": "2026-10-21T07:44:37.716972+00:00",
+        "finished_at": "2026-10-21T07:44:40.678067+00:00",
+        "duration_seconds": 2.961
       }
     },
     {
@@ -453,7 +507,7 @@
       "detail": "anno 2026 — mart: si",
       "action": "",
       "run": {
-        "run_id": "20261006T120347Z_7b13db77",
+        "run_id": "20261021T074440Z_43b79e40",
         "year": 2026,
         "status": "SUCCESS",
         "quality_score": {
@@ -471,9 +525,9 @@
           "clean": 1542,
           "mart": 1334
         },
-        "started_at": "2026-10-06T12:03:47.910447+00:00",
-        "finished_at": "2026-10-06T12:03:48.294028+00:00",
-        "duration_seconds": 0.384
+        "started_at": "2026-10-21T07:44:40.771551+00:00",
+        "finished_at": "2026-10-21T07:44:41.247195+00:00",
+        "duration_seconds": 0.476
       }
     }
   ],
