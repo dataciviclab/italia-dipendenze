@@ -18,3 +18,7 @@ FROM raw_input
 WHERE year IS NOT NULL
   AND hs_code IS NOT NULL
   AND flow IN ('M', 'X')
+  -- partner_code 0 is the Comtrade World aggregate: keep only real partners,
+  -- otherwise the concentration denominator double counts.
+  AND partner_code IS NOT NULL
+  AND partner_code != 0

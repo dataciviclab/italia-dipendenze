@@ -15,8 +15,8 @@ from sources import (
 st.title("⚡ Bilancio energetico")
 st.caption(
     "Flussi fisici Italia (KTOE) da Eurostat NRG_BAL_C: produzione, import, export, "
-    "dipendenza lorda dall'import e quota domestica. "
-    "Dipendenza >100% = import + attingimento scorte."
+    "dipendenza netta dall'import e quota domestica. "
+    "Dipendenza netta = (import - export) / disponibilità interna; valori negativi = net exporter."
 )
 
 year = st.selectbox("Anno dati", DATA_YEARS, index=len(DATA_YEARS) - 1)
@@ -32,23 +32,23 @@ eb["label_it"] = eb["product_label"].map(product_label)
 # ── KPI sistema ───────────────────────────────────────────────────────────────
 total_row = eb[eb["product"].isin(["TOTAL", "FE", "FEC"]) | eb["product_label"].str.contains("Total final", case=False, na=False)]
 if total_row.empty:
-    total_row = eb.nlargest(1, "apparent_consumption_ktoe")
+    total_row = eb.nlargest(1, "supply_ktoe")
 
 dep_gas = eb[eb["product"] == "G3000"]
 k1, k2, k3, k4 = st.columns(4)
 with k1:
-    if not total_row.empty and pd.notna(total_row["apparent_consumption_ktoe"].iloc[0]):
-        k1.metric("Consumo apparente totale", f"{total_row['apparent_consumption_ktoe'].iloc[0]:,.0f} KTOE")
+    if not total_row.empty and pd.notna(total_row["supply_ktoe"].iloc[0]):
+        k1.metric("Disponibilità interna totale", f"{total_row['supply_ktoe'].iloc[0]:,.0f} KTOE")
     else:
-        k1.metric("Consumo apparente totale", "—")
+        k1.metric("Disponibilità interna totale", "—")
 with k2:
-    if not total_row.empty and pd.notna(total_row["gross_import_dependency_pct"].iloc[0]):
-        k2.metric("Dipendenza import (totale)", fmt_pct(total_row["gross_import_dependency_pct"].iloc[0]))
+    if not total_row.empty and pd.notna(total_row["net_import_dependency_pct"].iloc[0]):
+        k2.metric("Dipendenza import (totale)", fmt_pct(total_row["net_import_dependency_pct"].iloc[0]))
     else:
         k2.metric("Dipendenza import (totale)", "—")
 with k3:
-    if not dep_gas.empty and pd.notna(dep_gas["gross_import_dependency_pct"].iloc[0]):
-        k3.metric("Gas — import dep", fmt_pct(dep_gas["gross_import_dependency_pct"].iloc[0]))
+    if not dep_gas.empty and pd.notna(dep_gas["net_import_dependency_pct"].iloc[0]):
+        k3.metric("Gas — import dep", fmt_pct(dep_gas["net_import_dependency_pct"].iloc[0]))
     else:
         k3.metric("Gas — import dep", "—")
 with k4:
@@ -78,13 +78,13 @@ c1, c2 = st.columns(2)
 
 with c1:
     st.subheader("Dipendenza import %")
-    dep = filtered[filtered["gross_import_dependency_pct"].notna()].sort_values("gross_import_dependency_pct", ascending=True)
+    dep = filtered[filtered["net_import_dependency_pct"].notna()].sort_values("net_import_dependency_pct", ascending=True)
     if dep.empty:
         st.info("Nessun valore di import dependency per i filtri selezionati.")
     else:
         fig = go.Figure(
             go.Bar(
-                x=dep["gross_import_dependency_pct"],
+                x=dep["net_import_dependency_pct"],
                 y=dep["label_it"],
                 orientation="h",
                 marker_color="#d97706",
@@ -95,7 +95,7 @@ with c1:
         fig.update_layout(
             height=420,
             margin={"t": 20, "b": 40, "l": 220},
-            xaxis_title="Gross import dependency %",
+            xaxis_title="Net import dependency %",
             showlegend=False,
         )
         st.plotly_chart(fig, width="stretch")
@@ -130,8 +130,9 @@ show_cols = [
     "production_ktoe",
     "imports_ktoe",
     "exports_ktoe",
-    "apparent_consumption_ktoe",
-    "gross_import_dependency_pct",
+    "domestic_output_ktoe",
+    "supply_ktoe",
+    "net_import_dependency_pct",
     "domestic_share_pct",
     "data_quality",
 ]
@@ -145,7 +146,7 @@ st.dataframe(view, width="stretch", hide_index=True)
 st.subheader("Trend dipendenza — prodotti chiave")
 full = load_energy_balance()
 key_products = ["G3000", "O4100_TOT", "C0000X0350-0370", "RA000", "TOTAL"]
-trend = full[full["product"].isin(key_products) & full["gross_import_dependency_pct"].notna()]
+trend = full[full["product"].isin(key_products) & full["net_import_dependency_pct"].notna()]
 if trend.empty:
     st.info("Nessuna serie di dipendenza.")
 else:
@@ -164,7 +165,7 @@ else:
         fig3.add_trace(
             go.Scatter(
                 x=part["year"],
-                y=part["gross_import_dependency_pct"],
+                y=part["net_import_dependency_pct"],
                 mode="lines+markers",
                 name=labels.get(prod, prod),
                 hovertemplate="%{y:.1f}%<extra>%{fullData.name}</extra>",
@@ -174,7 +175,7 @@ else:
         height=400,
         margin={"t": 20, "b": 40},
         xaxis={"dtick": 1},
-        yaxis_title="Gross import dependency %",
+        yaxis_title="Net import dependency %",
         hovermode="x unified",
         legend_title="Prodotto",
     )

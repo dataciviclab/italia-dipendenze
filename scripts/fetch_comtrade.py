@@ -15,16 +15,27 @@ from pathlib import Path
 
 import comtradeapicall
 
+# All partner countries, no curated panel: HHI and top-supplier shares must be
+# computed on total Italian imports, not on 8 pre-selected partners.
+# partnerCode=None returns every partner plus the World aggregate row
+# (partnerCode 0), which is skipped below to avoid double counting.
 RESOURCES = {
-    "gas": {"hs": "2711", "partners": "012,031,634,842,643,434,528,276"},
-    "fertilizzanti": {"hs": "3102,3103,3104,3105", "partners": "156,356,643,112,124,842,276,528"},
-    "rame": {"hs": "7403,2603,7404", "partners": "152,604,180,156,842,360,036,643,124"},
-    "terre_rare": {"hs": "280530,2846", "partners": "156,842,276,724,616,528,826,380"},
-    "litio": {"hs": "282520", "partners": "036,152,156,842,724,276,826,380"},
-    "cobalto": {"hs": "8105", "partners": "180,156,124,842,724,276,360,710"},
-    "alluminio": {"hs": "7601", "partners": "156,124,360,036,842,276,724,643"},
-    "ferro_acciaio": {"hs": "7207", "partners": "156,643,276,124,842,724,826,710"},
-    "elettricita": {"hs": "2716", "partners": "276,756,724,752,528,250,826,643"},
+    # Gas split by transport mode: pipeline (271121) vs LNG (271111),
+    # plus LPG (271112/113/119) and residual gaseous hydrocarbons (271129).
+    # The old 2711 aggregate hid two distinct supplier risks.
+    "gas_pipeline": {"hs": "271121"},
+    "gas_lng": {"hs": "271111"},
+    "gpl": {"hs": "271112,271113,271119"},
+    "petrolio_greggio": {"hs": "2709"},
+    "prodotti_petroliferi": {"hs": "2710"},
+    "fertilizzanti": {"hs": "3102,3103,3104,3105"},
+    "rame": {"hs": "7403,2603,7404"},
+    "terre_rare": {"hs": "280530,2846"},
+    "litio": {"hs": "282520"},
+    "cobalto": {"hs": "8105"},
+    "alluminio": {"hs": "7601"},
+    "ferro_acciaio": {"hs": "7207"},
+    "elettricita": {"hs": "2716"},
 }
 
 CSV_COLUMNS = [
@@ -63,7 +74,7 @@ def main():
                 reporterCode="380",
                 cmdCode=cfg["hs"],
                 flowCode=flow,
-                partnerCode=cfg["partners"],
+                partnerCode=None,
                 partner2Code=None, customsCode=None, motCode=None,
                 maxRecords=50000, format_output="JSON",
                 aggregateBy=None, breakdownMode="classic",
@@ -71,6 +82,9 @@ def main():
             )
             if df is not None and len(df) > 0:
                 for _, row in df.iterrows():
+                    # World aggregate row (partnerCode 0) would double count.
+                    if row.get("partnerCode") in (0, "0"):
+                        continue
                     all_rows.append({
                         "year": row.get("period"),
                         "hs_code": row.get("cmdCode"),

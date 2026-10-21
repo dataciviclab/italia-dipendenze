@@ -6,13 +6,13 @@ La Italy Resource & Dependency Map è un sistema aperto che misura le principali
 
 | Risorse coperte | Periodo | Fonti dati | Aggiornamento |
 |:---:|:---:|:---:|:---:|
-| 23 prodotti energetici + 9 risorse commerciali | 2020–2024 | Eurostat, UN Comtrade, FAO | Pipeline automatica |
+| 25 prodotti energetici + 13 risorse commerciali | energia 1990–2024 · commercio 2020–2024 | Eurostat, UN Comtrade, FAO | Pipeline automatica |
 
 ---
 
 ## Perché questi dati
 
-L'Italia dipende per oltre il 95% dall'estero per gas, petrolio, carbone e metalli critici. Capire **da chi** dipendiamo e **quanto è concentrata** quella dipendenza è il primo passo per valutare la resilienza del sistema paese.
+L'Italia dipende dall'estero per oltre il 90% di gas e petrolio e per circa il 100% del carbone. Capire **da chi** dipendiamo e **quanto è concentrata** quella dipendenza è il primo passo per valutare la resilienza del sistema paese.
 
 Questi dati rendono visibili le catene di dipendenza materiale dell'Italia.
 
@@ -22,36 +22,51 @@ Questi dati rendono visibili le catene di dipendenza materiale dell'Italia.
 
 | Area | Dati | Righe | Metriche |
 |------|------|:---:|----------|
-| Bilancio energetico | 23 prodotti SIEC × 4 indicatori (produzione, import, export, stocks) | 115 | Gross Import Dependency, domestic share |
-| Commercio bilaterale | Import/export per HS6 × paese × anno | 682 | HHI, Top-1/3/5 share |
-| Trade balance | Balance = export - import per risorsa × anno | 45 | trade_position, export_coverage |
-| Concentration trend | HHI trend + YoY change | 45 | trend_status, hhi_change |
+| Bilancio energetico | 25 prodotti SIEC × 16 indicatori (flussi, GIC, TO, consumi finali) | 875 | dipendenza netta/lorda, disponibilità interna, quota domestica |
+| Consumi finali | 25 prodotti × 10 settori (industria, trasporti, famiglie, …) | 770 | consumi finali per prodotto e settore |
+| Commercio bilaterale | Import/export per HS6 × paese × anno | 8064 | HHI, Top-1/3/5 share, prezzo $/kg |
+| Trade balance | Balance = export - import per risorsa × anno | 65 | trade_position, export_coverage, unit value |
+| Concentration trend | HHI trend + YoY change | 65 | trend_status, hhi_change |
 | Fertilizzanti | Consumo Italia | 6 | Consumo totale |
-| Compose | Matrice unica: ID + concentrazione per risorsa | 104 | data_source, risk_profile |
+| Compose | Matrice unica: ID + concentrazione per risorsa | 811 + 280 | data_source, risk_profile |
 
 ### Risorse monitorate
 
-| Risorsa | Import 2024 | Concentrazione (HHI) | Top fornitore |
-|---------|---:|:---:|---|
-| Gas naturale | $22.5B | 2945 | Algeria (48%) |
-| Rame | $1.3B | 3292 | Perù (34%) |
-| Ferro/acciaio | $868M | 3998 | Russia (46%) |
-| Fertilizzanti | $334M | 2770 | Russia (32%) |
-| Alluminio | $328M | 2666 | Russia (40%) |
-| Elettricita | $2.0B | 10000 | — |
-| Cobalto | $23M | 4172 | Germany (46%) |
-| Terre rare | $2.4M | 3651 | China (54%) |
-| Litio | $1M | 9320 | Germany (96%) |
+| Risorsa | Import 2024 | Concentrazione (HHI) | Top fornitore | Prezzo $/kg |
+|---------|---:|:---:|---|---:|
+| Petrolio greggio | $33.6B | 1215 | Libia (21%) | 0,615 |
+| Gas pipeline | $18.6B | 3315 | Algeria (51%) | 0,585 |
+| Prodotti petroliferi | $11.9B | 843 | Arabia Saudita (23%) | 0,803 |
+| Rame | $6.2B | 874 | Bulgaria (15%) | — |
+| Elettricità | $5.6B | 3198 | Svizzera (41%) | — |
+| Gas LNG | $5.5B | 3180 | Qatar (43%) | 0,516 |
+| Alluminio | $3.4B | 562 | Mozambico (11%) | — |
+| Ferro/acciaio | $1.6B | 1463 | Russia (25%) | 0,602 |
+| GPL | $1.3B | 3892 | Algeria (59%) | — |
+| Fertilizzanti | $1.1B | 853 | Egitto (19%) | — |
+| Cobalto | $44M | 1595 | Germania (24%) | 46,64 |
+| Terre rare | $6.1M | 1247 | Cina (21%) | 15,96 |
+| Litio | $1.9M | 3561 | Germania (54%) | 12,88 |
+
+**Nota HHI.** Il calcolo usa tutti i partner Comtrade (7 per il gas pipeline, 26 per l'LNG, 39 per il GPL): il denominatore è il totale import italiano, non un paniere pre-selezionato.
+
+**Nota gas.** Il gas è split in pipeline (`271121`), LNG (`271111`) e GPL (`271112/113/119`). La dipendenza fisica del gas resta 95,2% (bilancio), ma i due segmenti commerciali hanno HHI **3315** e **3180**, entrambi sopra 2500: l'aggregato precedente (2397) nascondeva questa differenza.
+
+**Nota prezzo.** Il prezzo è il valore unitario medio all'import: valore / peso netto Comtrade. Non è un prezzo di mercato e non è disponibile per risorse senza peso (es. elettricità).
 
 ### Bilancio energetico (2024)
 
-| Prodotto | Import dep % | Import (KTOE) |
-|----------|:---:|---:|
-| Petrolio (excl. biofuel) | 143% | 73,674 |
-| Gas naturale | 102% | 48,699 |
-| Carbone | 111% | 2,481 |
-| Rinnovabili | 8% | 2,233 |
-| Coke | 100% | 105 |
+| Prodotto | Dip. netta % | Dip. lorda % | Import (KTOE) |
+|----------|:---:|:---:|---:|
+| Petrolio e prodotti (excl. biofuel) | 93,9 | 142,9 | 73,674 |
+| Gas naturale | 95,2 | 96,2 | 48,699 |
+| Carbone e solidi fossili | 96,5 | 107,7 | 2,481 |
+| Rinnovabili e biocarburanti | 6,1 | 7,5 | 2,233 |
+| Coke | -22,4 | 9,5 | 70 |
+
+**Come si legge.** Dipendenza netta = (import − export) / disponibilità interna. La disponibilità usa il **GIC ufficiale Eurostat** e, per i prodotti secondari (elettricità, gasolio, benzina, GPL, cherosene, olio combustibile, coke), aggiunge la produzione delle trasformazioni (`TO`). La dipendenza lorda = import / disponibilità è solo diagnostica: sul petrolio somma greggio importato e prodotti raffinati esportati, quindi non è una misura di dipendenza. Il 102,1% del gas 2022 della versione precedente era un artefatto del segno delle scorte: il valore corretto è **99,2% netto** (106,0% lordo). Totale energia 2024: **75,1% netto**.
+
+**Nota di quadratura.** Per il petrolio il ricalcolo `PPRD + IMP − EXP + STK_CHG` dà 89,8%, il GIC ufficiale 93,9%: la differenza (≈2.356 KTOE) sono bunker internazionali e rettifiche statistiche. Il mart usa il GIC ufficiale.
 
 ---
 
@@ -98,11 +113,11 @@ COMTRADE_SUBSCRIPTION_KEY=xxx make all
 
 ```
 comtrade (script) ────────┐
-eurostat (script) ─────────┼──→ compose
+eurostat (sdmx) ──────────┼──→ compose
 fao (script) ──────────────┘
 ```
 
-Lo script fetcha i dati freschi dalle API, il toolkit li processa (clean → mart), il compose li unisce in una matrice unica.
+Il toolkit fetcha i dati freschi dalle API (Eurostat via `type: sdmx`, con codelist SIEC/NRG_BAL), li processa (clean → mart), il compose li unisce in una matrice unica.
 
 ---
 

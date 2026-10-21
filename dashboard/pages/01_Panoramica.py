@@ -30,9 +30,9 @@ with st.expander("📖 Come leggere questa dashboard", expanded=False):
 
 | Metrica | Domanda | Come si legge |
 |---|---|---|
-| **Dipendenza fisica %** | Quanto importiamo rispetto a quanto consumiamo? | >90% = quasi tutto dall'estero. >100% = si attinge anche alle scorte. |
+| **Dipendenza fisica %** | Quanto importiamo, al netto delle esportazioni, rispetto alla disponibilità interna? | >90% = quasi tutto dall'estero. Negativo = net exporter. |
 | **HHI (Herfindahl)** | Da quanti paesi compriamo? | ~10.000 = un solo fornitore. >2.500 = concentrazione alta (zona rischio). 1.500–2.500 = media. <1.500 = diversificato. |
-| **Top-1 %** | Quota del primo fornitore | Es. Algeria 48% sul gas = metà dell'import da un paese. |
+| **Top-1 %** | Quota del primo fornitore sul totale import italiano | Es. Algeria 43% sul gas = quota del totale import italiano. |
 | **Trade balance** | Export − import | Negativo = siamo net importer (compriamo più di quanto vendiamo). |
 
 **Cosa NON è** un confronto diretto: rame/litio hanno HHI dal commercio ma non un "ID% fisico" Eurostat; carbone/petrolio hanno la dipendenza fisica ma a volte manca l'HHI bilaterale. Nella tabella `copertura dati` vedi quali lati sono presenti.
@@ -58,9 +58,24 @@ n_high_hhi = int((rd["concentration_level"] == "high").sum()) if "concentration_
 n_phys_high = int((rd["physical_id_pct"] > 90).sum()) if "physical_id_pct" in rd else 0
 
 gas_row = rd[rd["resource"] == "gas"]
+gas_pipe = rd[rd["resource"] == "gas_pipeline"]
+gas_lng = rd[rd["resource"] == "gas_lng"]
 gas_dep = float(gas_row["physical_id_pct"].iloc[0]) if not gas_row.empty and pd.notna(gas_row["physical_id_pct"].iloc[0]) else None
-gas_hhi = float(gas_row["hhi"].iloc[0]) if not gas_row.empty and pd.notna(gas_row["hhi"].iloc[0]) else None
-gas_top = str(gas_row["top1_supplier"].iloc[0]) if not gas_row.empty and pd.notna(gas_row["top1_supplier"].iloc[0]) else "—"
+gas_hhi = float(gas_pipe["hhi"].iloc[0]) if not gas_pipe.empty and pd.notna(gas_pipe["hhi"].iloc[0]) else None
+gas_top = str(gas_pipe["top1_supplier"].iloc[0]) if not gas_pipe.empty and pd.notna(gas_pipe["top1_supplier"].iloc[0]) else "—"
+gas_pipe_share = float(gas_pipe["top1_share_pct"].iloc[0]) if not gas_pipe.empty and pd.notna(gas_pipe["top1_share_pct"].iloc[0]) else None
+gas_lng_top = str(gas_lng["top1_supplier"].iloc[0]) if not gas_lng.empty and pd.notna(gas_lng["top1_supplier"].iloc[0]) else "—"
+gas_lng_share = float(gas_lng["top1_share_pct"].iloc[0]) if not gas_lng.empty and pd.notna(gas_lng["top1_share_pct"].iloc[0]) else None
+
+gas_help_parts = []
+if gas_top != "—" and gas_pipe_share is not None:
+    gas_help_parts.append(f"Pipeline: {gas_top} {gas_pipe_share:.1f}%")
+if gas_hhi is not None:
+    gas_help_parts.append(f"HHI {gas_hhi:,.0f}")
+if gas_lng_top != "—" and gas_lng_share is not None:
+    gas_help_parts.append(f"LNG: {gas_lng_top} {gas_lng_share:.1f}%")
+gas_help_parts.append("dipendenza fisica netta")
+gas_help = " · ".join(gas_help_parts)
 
 k1, k2, k3, k4 = st.columns(4)
 with k1:
@@ -82,15 +97,13 @@ with k4:
         st.metric(
             "Dipendenza gas",
             fmt_pct(gas_dep, decimals=1),
-            help=f"Top fornitore: {gas_top}"
-            + (f" · HHI {gas_hhi:,.0f}" if gas_hhi else "")
-            + " · % del consumo apparente coperto da import",
+            help=gas_help,
         )
     else:
         st.metric("Dipendenza gas", "—")
 
 st.caption(
-    f"Oltre {n_phys_high} prodotti energetici con dipendenza import >90% nel {year} · "
+    f"{n_phys_high} prodotti energetici con dipendenza import >90% nel {year} · "
     "HHI alto = concentrazione fornitura, non necessariamente volumi grandi."
 )
 
@@ -153,19 +166,19 @@ if not hhi_df.empty:
     st.plotly_chart(fig, width="stretch")
 
 # ── Dipendenza fisica (energia) ───────────────────────────────────────────────
-dep = eb[eb["gross_import_dependency_pct"].notna()].copy() if not eb.empty else pd.DataFrame()
+dep = eb[eb["net_import_dependency_pct"].notna()].copy() if not eb.empty else pd.DataFrame()
 if not dep.empty:
     st.subheader("Dipendenza import energetica")
     st.caption(
-        "Quota del consumo apparente coperta da import. "
-        ">100% = import + attingimento scorte. Rinnovabili/resto domestico in basso."
+        "Dipendenza netta: (import - export) / disponibilità interna. "
+        "Valori negativi = net exporter. Rinnovabili/resto domestico in basso."
     )
-    dep = dep.sort_values("gross_import_dependency_pct", ascending=False)
+    dep = dep.sort_values("net_import_dependency_pct", ascending=False)
     top_dep = dep.head(12).copy()
     top_dep["label_it"] = top_dep["product_label"].map(product_label)
     fig2 = go.Figure(
         go.Bar(
-            x=top_dep["gross_import_dependency_pct"],
+            x=top_dep["net_import_dependency_pct"],
             y=top_dep["label_it"],
             orientation="h",
             marker_color="#059669",
@@ -176,7 +189,7 @@ if not dep.empty:
     fig2.update_layout(
         height=420,
         margin={"t": 20, "b": 40, "l": 220},
-        xaxis_title="Gross import dependency %",
+        xaxis_title="Net import dependency %",
         showlegend=False,
     )
     st.plotly_chart(fig2, width="stretch")
@@ -185,23 +198,31 @@ if not dep.empty:
 st.subheader("In sintesi")
 bullets = []
 if gas_dep is not None:
+    parts = []
+    if gas_top != "—" and gas_pipe_share is not None:
+        parts.append(f"pipeline {gas_top} ({gas_pipe_share:.0f}%)")
+    if gas_lng_top != "—" and gas_lng_share is not None:
+        parts.append(f"LNG {gas_lng_top} ({gas_lng_share:.0f}%)")
     bullets.append(
-        f"- **Gas**: {fmt_pct(gas_dep, decimals=1)} di dipendenza import; "
-        f"primo fornitore **{gas_top}**"
-        + (f" (~{gas_row['top1_share_pct'].iloc[0]:.0f}%)" if not gas_row.empty and pd.notna(gas_row["top1_share_pct"].iloc[0]) else "")
+        f"- **Gas**: {fmt_pct(gas_dep, decimals=1)} di dipendenza netta"
+        + ("; " + ", ".join(parts) if parts else "")
         + "."
     )
-oil = eb[eb["product"].str.contains("Oil & petroleum|Crude oil", case=False, na=False)]
-if not oil.empty and oil["gross_import_dependency_pct"].notna().any():
-    worst = oil.loc[oil["gross_import_dependency_pct"].idxmax()]
+oil = eb[
+    eb["product"].isin(
+        ["O4000XBIO", "O4100_TOT", "O4652XR5210B", "O4671XR5220B", "O4661XR5230B", "O4680"]
+    )
+]
+if not oil.empty and oil["net_import_dependency_pct"].notna().any():
+    worst = oil.loc[oil["net_import_dependency_pct"].idxmax()]
     bullets.append(
-        f"- **Petrolio/prodotti**: fino al {fmt_pct(worst['gross_import_dependency_pct'], decimals=1)} "
+        f"- **Petrolio/prodotti**: fino al {fmt_pct(worst['net_import_dependency_pct'], decimals=1)} "
         f"di dipendenza ({product_label(worst['product_label'])})."
     )
 ren = eb[eb["product"] == "RA000"]
-if not ren.empty and pd.notna(ren["gross_import_dependency_pct"].iloc[0]):
+if not ren.empty and pd.notna(ren["net_import_dependency_pct"].iloc[0]):
     bullets.append(
-        f"- **Rinnovabili totali**: solo {fmt_pct(ren['gross_import_dependency_pct'].iloc[0], decimals=1)} "
+        f"- **Rinnovabili totali**: solo {fmt_pct(ren['net_import_dependency_pct'].iloc[0], decimals=1)} "
         "di dipendenza — l'unico angolo largamente domestico."
     )
 crit = has_trade.nlargest(3, "hhi") if not has_trade.empty else pd.DataFrame()
@@ -213,16 +234,16 @@ st.markdown("\n".join(bullets) if bullets else "Nessun riepilogo calcolabile.")
 with st.expander("Caveat e limiti dei dati", expanded=False):
     st.markdown(
         """
-- **Dipendenza fisica (`physical_id_pct`)**: da bilancio energetico Eurostat (gas, carbone, petrolio, rinnovabili…).
+- **Dipendenza fisica (`physical_id_pct`)**: da bilancio energetico Eurostat, dipendenza **netta** = (import − export) / disponibilità interna (gas, carbone, petrolio, rinnovabili…). Per i prodotti raffinati la disponibilità include la produzione delle raffinerie (TO).
   Per metalli critici e risorse solo commerciali non esiste un ID% fisico.
-- **HHI / fornitore**: da UN Comtrade (import HS6 per partner). Valori in **USD**, non euro.
+- **HHI / fornitore**: da UN Comtrade (import HS6 per partner), su tutti i partner — denominatore = totale import italiano. Valori in **USD**, non euro.
 - **`copertura dati`**:
   - `Energia + commercio` = entrambi i lati (es. gas);
   - `Solo commercio` = HHI e fornitore, ma non il bilancio fisico (rame, litio, cobalto…);
   - `Solo energia` = dipendenza fisica, spesso senza HHI bilaterale (carbone, rinnovabili).
 - **`risk_profile`** (pagina Dipendenze): se manca l'HHI non è "basso rischio" — è "HHI non disponibile".
 - **Fertilizzanti**: consumo FAO (tonnellate), non un bilancio di import dependency.
-- **Anni dati**: 2020–2024 (fertilizzanti 2018–2023). I parquet pubblicati sono nella cartella toolkit `2026/`.
+- **Anni dati**: energia 1990–2024; commercio 2020–2024; fertilizzanti 2018–2023. I parquet pubblicati sono nella cartella toolkit `2026/`.
 - **Non è una mappa di rischio geopolitico completa**: non copre ownership, contratti di fornitura, stock strategici o filiere upstream.
         """
     )

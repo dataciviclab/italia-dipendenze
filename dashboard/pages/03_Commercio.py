@@ -29,7 +29,7 @@ if conc_all.empty:
     st.stop()
 
 resources = sorted(conc_all["resource"].dropna().unique().tolist())
-default_res = "gas" if "gas" in resources else resources[0]
+default_res = "gas_pipeline" if "gas_pipeline" in resources else resources[0]
 
 c1, c2 = st.columns([2, 1])
 with c1:
@@ -46,7 +46,7 @@ bal_r = bal[bal["resource"] == resource] if not bal.empty else pd.DataFrame()
 bil_r = bil[(bil["resource"] == resource) & (bil["flow"] == "M")].copy() if not bil.empty else pd.DataFrame()
 
 # ── KPI risorsa ───────────────────────────────────────────────────────────────
-k1, k2, k3, k4 = st.columns(4)
+k1, k2, k3, k4, k5 = st.columns(5)
 with k1:
     if not conc_r.empty and pd.notna(conc_r["hhi"].iloc[0]):
         hhi = float(conc_r["hhi"].iloc[0])
@@ -79,6 +79,16 @@ with k4:
         k4.metric("Import", fmt_usd(float(conc_r["total_import_value_usd"].iloc[0])))
     else:
         k4.metric("Import", "—")
+with k5:
+    if not conc_r.empty and pd.notna(conc_r["import_unit_value_usd_per_kg"].iloc[0]):
+        uv = float(conc_r["import_unit_value_usd_per_kg"].iloc[0])
+        k5.metric(
+            "Prezzo medio import",
+            f"$ {uv:,.3f}/kg",
+            help="Valore / peso netto Comtrade. Null per risorse senza peso (es. elettricità).",
+        )
+    else:
+        k5.metric("Prezzo medio import", "—")
 
 # ── Top partner import ────────────────────────────────────────────────────────
 st.subheader(f"Top fornitori — {resource_label(resource)} ({year})")
@@ -186,7 +196,8 @@ else:
 st.subheader(f"Balance commerciale — tutte le risorse ({year})")
 st.caption(
     "Export − import. Arancione/verde: a destra del zero = net exporter. "
-    "Il gas da solo domina il deficit commerciale delle risorse monitorate."
+    "Petrolio greggio e gas (pipeline + LNG) dominano il deficit commerciale. "
+    "Prezzo = valore / peso netto Comtrade; — se il peso non è disponibile."
 )
 if bal.empty:
     st.info("Nessun trade balance per l'anno selezionato.")
@@ -217,6 +228,14 @@ else:
             "Import USD": [cell(v, kind="usd") for v in bal_tbl["import_value_usd"]],
             "Export USD": [cell(v, kind="usd") for v in bal_tbl["export_value_usd"]],
             "Balance USD": [cell(v, kind="usd") for v in bal_tbl["balance_usd"]],
+            "Prezzo import $/kg": [
+                f"$ {float(v):,.3f}" if pd.notna(v) else "—"
+                for v in bal_tbl["import_unit_value_usd_per_kg"]
+            ],
+            "Prezzo export $/kg": [
+                f"$ {float(v):,.3f}" if pd.notna(v) else "—"
+                for v in bal_tbl["export_unit_value_usd_per_kg"]
+            ],
             "Posizione": [position_label(v) for v in bal_tbl["trade_position"]],
             "Export coverage %": [cell(v, kind="pct") for v in bal_tbl.get("export_coverage_pct", pd.Series(dtype=float))],
         }

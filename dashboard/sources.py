@@ -1,7 +1,7 @@
 """Data access layer — Italia Dipendenze dashboard.
 
 Multi-dataset via lab_connectors: GCS default, out/ locale come fallback.
-Anno toolkit (cartella path contract) = 2026; anni dati nei parquet = 2020–2024.
+Anno toolkit (cartella path contract) = 2026; energia 1990–2024, commercio 2020–2024.
 """
 
 from __future__ import annotations
@@ -32,14 +32,21 @@ LOCAL_ROOT = detect_local_root(repo_root=ROOT)
 # Etichette leggibili per risorse / codici SIEC del compose
 RESOURCE_LABELS = {
     "gas": "Gas naturale",
+    "gas_pipeline": "Gas pipeline",
+    "gas_lng": "Gas LNG",
     "petrolio_greggio": "Petrolio greggio",
     "carbone": "Carbone",
     "coke": "Coke",
     "elettricita": "Elettricità",
+    "calore": "Calore",
     "prodotti_petroliferi": "Prodotti petroliferi",
+    "gpl": "GPL",
+    "nafta": "Nafta",
+    "benzina": "Benzina",
     "gasolio": "Gasolio",
     "cherosene": "Cherosene",
     "olio_pesante": "Olio pesante",
+    "olio_combustibile": "Olio combustibile",
     "rinnovabili_total": "Rinnovabili totali",
     "eolico": "Eolico",
     "geotermico": "Geotermico",
@@ -48,6 +55,9 @@ RESOURCE_LABELS = {
     "idroelettrico": "Idroelettrico",
     "biocarburanti_liquidi": "Biocarburanti liquidi",
     "biocombustibili_solidi": "Biocombustibili solidi",
+    "calore_ambiente": "Calore ambiente",
+    "rifiuti_non_rinnovabili": "Rifiuti non rinnovabili",
+    "rifiuti_rinnovabili": "Rifiuti rinnovabili",
     "nucleare": "Nucleare",
     "rame": "Rame",
     "litio": "Litio",
@@ -71,6 +81,8 @@ RISK_LABELS = {
     "trade_high_concentration_only": "Solo HHI · concentrazione alta (ID% n/d)",
     "trade_only": "Solo HHI commerciale (ID% n/d)",
     "insufficient_data": "Dati insufficienti (ID% e HHI n/d)",
+    "low_dependency_high_concentration": "Bassa dipendenza · alta concentrazione",
+    "low_dependency_diversified": "Bassa dipendenza · fornitura diversificata",
     "low_dependency": "Bassa dipendenza",
 }
 
@@ -93,23 +105,41 @@ POSITION_LABELS = {
 
 # Etichette prodotti Eurostat (product_label) per UI in italiano
 PRODUCT_LABELS = {
+    # Etichette SIEC correnti (Eurostat NRG_BAL_C)
     "Natural gas": "Gas naturale",
+    "Solid fossil fuels": "Carbone e solidi fossili",
+    "Coke oven coke": "Coke di fornace",
+    "Oil and petroleum products (excluding biofuel portion)": "Prodotti petroliferi (excl. biofuel)",
+    "Crude oil": "Petrolio greggio",
+    "Liquefied petroleum gases": "GPL",
+    "Naphtha": "Nafta",
+    "Motor gasoline (excluding biofuel portion)": "Benzina",
+    "Gas oil and diesel oil (excluding biofuel portion)": "Gasolio",
+    "Kerosene-type jet fuel (excluding biofuel portion)": "Cherosene per jet",
+    "Fuel oil": "Olio combustibile",
+    "Electricity": "Elettricità",
+    "Heat": "Calore",
+    "Renewables and biofuels": "Rinnovabili e biocarburanti",
+    "Hydro": "Idroelettrico",
+    "Geothermal": "Geotermico",
+    "Wind": "Eolico",
+    "Solar thermal": "Solare termico",
+    "Solar photovoltaic": "Solare fotovoltaico",
+    "Ambient heat (heat pumps)": "Calore ambiente (pompe di calore)",
+    "Primary solid biofuels": "Biocombustibili solidi primari",
+    "Non-renewable waste": "Rifiuti non rinnovabili",
+    "Renewable municipal waste": "Rifiuti rinnovabili",
+    "Bioenergy": "Bioenergia",
+    "Total": "Totale",
+    # Etichette legacy (snapshot GCS precedenti)
     "Oil & petroleum products (excl. biofuel): see O4630": "Prodotti petroliferi",
     "Oil & petroleum products (excl. biofuel)": "Prodotti petroliferi (excl. biofuel)",
     "Crude oil, NGL, feedstocks": "Petrolio greggio, NGL, feedstock",
     "Coal and other solid fossil fuels": "Carbone e solidi fossili",
-    "Coke oven coke": "Coke di fornace",
     "Total renewables and biofuels": "Rinnovabili e biocarburanti totali",
     "Total bioenergy": "Bioenergia totale",
     "Total final energy consumption": "Consumo finale totale",
-    "Electricity": "Elettricità",
-    "Wind": "Eolico",
-    "Geothermal": "Geotermico",
     "Solar photovoltaico": "Solare fotovoltaico",
-    "Solar thermal": "Solare termico",
-    "Non-renewable waste": "Rifiuti non rinnovabili",
-    "Renewable waste": "Rifiuti rinnovabili",
-    "Primary solid biofuels": "Biocombustibili solidi primari",
     "Gas/diesel oil": "Gasolio",
     "Heavy fuel oil": "Olio pesante",
     "Kerosene-type jet fuel": "Cherosene per jet",
