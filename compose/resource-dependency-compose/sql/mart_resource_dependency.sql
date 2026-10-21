@@ -54,6 +54,28 @@ resource_map AS (
     UNION ALL SELECT 'G3000', 'gas_pipeline'
     UNION ALL SELECT 'G3000', 'gas_lng'
 ),
+distillati_physical AS (
+    -- Middle distillates: gasoil + jet + fuel oil. Trade 271019 covers the
+    -- same perimeter, so the physical aggregate can be paired with it.
+    SELECT
+        year,
+        'distillati_medi' AS resource,
+        'DISTILLATI_MEDI' AS product,
+        'Distillati medi (gasolio+jet+fuel oil)' AS product_label,
+        ROUND(SUM(imports_ktoe - exports_ktoe) / NULLIF(SUM(supply_ktoe), 0) * 100, 1) AS net_import_dependency_pct,
+        ROUND(SUM(domestic_output_ktoe) / NULLIF(SUM(supply_ktoe), 0) * 100, 1) AS domestic_share_pct,
+        SUM(supply_ktoe) AS supply_ktoe,
+        SUM(production_ktoe) AS production_ktoe,
+        SUM(imports_ktoe) AS imports_ktoe,
+        SUM(exports_ktoe) AS exports_ktoe,
+        CASE
+            WHEN MAX(CASE WHEN data_quality = 'partial' THEN 1 ELSE 0 END) = 1 THEN 'partial'
+            ELSE 'verified'
+        END AS energy_data_quality
+    FROM read_parquet('{support.energy.mart.mart_energy_balance}')
+    WHERE product IN ('O4671XR5220B', 'O4661XR5230B', 'O4680')
+    GROUP BY year
+),
 energy AS (
     SELECT
         e.year,
@@ -69,6 +91,8 @@ energy AS (
         e.energy_data_quality
     FROM energy_base e
     LEFT JOIN resource_map rm ON e.product = rm.product
+    UNION ALL
+    SELECT * FROM distillati_physical
 ),
 trade AS (
     SELECT

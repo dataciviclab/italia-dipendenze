@@ -28,7 +28,7 @@ Questi dati rendono visibili le catene di dipendenza materiale dell'Italia.
 | Trade balance | Balance = export - import per risorsa × anno | 70 | trade_position, export_coverage, unit value |
 | Concentration trend | HHI trend + YoY change | 70 | trend_status, hhi_change |
 | Fertilizzanti | Consumo Italia | 6 | Consumo totale |
-| Compose | Matrice unica: ID + concentrazione per risorsa | 876 + 280 | data_source, risk_profile |
+| Compose | Matrice unica: ID + concentrazione per risorsa | 906 + 315 | data_source, risk_profile |
 
 ### Risorse monitorate
 
@@ -55,7 +55,7 @@ Questi dati rendono visibili le catene di dipendenza materiale dell'Italia.
 
 **Nota prezzo.** Il prezzo è il valore unitario medio all'import: valore / peso netto Comtrade. Non è un prezzo di mercato e non è disponibile per risorse senza peso (es. elettricità).
 
-**Nota raffinati.** I raffinati sono split HS6: `271012` benzina (light oils) e `271019` distillati medi (gasolio/jet/fuel oil). `271019` resta un aggregato: per separare gasolio, jet e fuel oil serve HS8/Comext. Benzina è net exporter (+$5,4 mld), distillati medi net importer (-$0,9 mld).
+**Nota raffinati.** I raffinati sono split HS6: `271012` benzina (light oils) e `271019` distillati medi (gasolio/jet/fuel oil). L'aggregato fisico `distillati_medi` (gasolio+jet+fuel oil) è accoppiato al trade `271019`: **-7,8% netto**, HHI 986. `271019` resta un aggregato merceologico: per separare gasolio, jet e fuel oil serve HS8/Comext. Benzina è net exporter (+$5,4 mld), distillati medi net importer (-$0,9 mld).
 
 ### Bilancio energetico (2024)
 

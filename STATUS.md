@@ -8,7 +8,7 @@
 ## Stato attuale
 
 Pipeline funzionante: `make clean && make run-all && make test`
-- 4/4 dataset SUCCESS, 40 test (38 pass, 2 skip)
+- 4/4 dataset SUCCESS, 41 test (39 pass, 2 skip)
 - Eurostat **dichiarativo** (`type: sdmx` + codelist SIEC/NRG_BAL); Comtrade e FAO via script
 - Zero CSV committati
 
@@ -33,7 +33,7 @@ comtrade (~62s) → eurostat (~4s) → fao (~1.5s) → compose (~0.5s)
 | comtrade_bilateral | 8.596 | 3 | 8.736 |
 | eurostat_nrg_bal_c | 11.235 | 2 | 1.645 |
 | fao_fertilizer_consumption | 6 | 1 | 6 |
-| resource_dependency_compose | — | 2 | 1.156 |
+| resource_dependency_compose | — | 2 | 1.221 |
 
 ### Mart disponibili
 
@@ -56,7 +56,7 @@ comtrade (~62s) → eurostat (~4s) → fao (~1.5s) → compose (~0.5s)
 |---------|---:|:---:|---|:---:|:---:|---:|
 | Petrolio greggio | $33.6B | 1215 | Libia 21% | low | 91,8 | 0,615 |
 | Gas pipeline | $18.6B | 3315 | Algeria 51% | high | 95,2 | 0,585 |
-| Distillati medi | $10.6B | 986 | Arabia Saudita 25% | low | — | 0,795 |
+| Distillati medi | $10.6B | 986 | Arabia Saudita 25% | low | -7,8 | 0,795 |
 | Rame | $6.2B | 874 | Bulgaria 15% | low | — | — |
 | Elettricità | $5.6B | 3198 | Svizzera 41% | high | 15,8 | — |
 | Gas LNG | $5.5B | 3180 | Qatar 43% | high | 95,2 | 0,516 |
@@ -73,7 +73,7 @@ comtrade (~62s) → eurostat (~4s) → fao (~1.5s) → compose (~0.5s)
 
 **Nota gas**: pipeline e LNG condividono la dipendenza fisica del gas (95,2%) ma hanno concentrazioni diverse (HHI 3315 vs 3180, entrambe >2500). GPL è un prodotto separato (56,1%). Il prezzo è valore/peso netto Comtrade, non un prezzo di mercato.
 
-**Nota raffinati**: benzina ha fisico -60,4 e HHI 1046; distillati medi sono trade-only (il fisico gasolio è -8,2 nella tabella prodotti energetici). L'aggregato petrolifero 93,9 resta nella tabella prodotti energetici.
+**Nota raffinati**: benzina ha fisico -60,4 e HHI 1046; distillati medi hanno l'aggregato fisico -7,8 (gasolio+jet+fuel oil) accoppiato al trade 271019, HHI 986. Gasolio, cherosene e olio combustibile restano righe energy-only. L'aggregato petrolifero 93,9 resta nella tabella prodotti energetici.
 
 ### Prodotti energetici 2024 — dipendenza e consumi
 
@@ -129,7 +129,7 @@ Il gasolio e la benzina sono **prodotti secondari**: la loro disponibilità è l
 | 9 | **QA `TO` elettricità vs Terna** | ✅ | 23.303 vs 23.302 KTOE (2024) |
 | 10 | **Fix segno `STK_CHG`** — GIC ufficiale (`+ STK_CHG`) | ✅ | gas 2022 99,2%, carbone 96,5% |
 | 11 | **Split gas pipeline/LNG/GPL + prezzo $/kg** | ✅ | HHI 3315 pipeline, 3180 LNG |
-| 12 | **Split HS6 raffinati + QA raffinazione interno** | ✅ | benzina/distillati; TO principali 99,3% crude intake (KTOE vs THS_T, indicativo) |
+| 12 | **Split HS6 raffinati + QA raffinazione interno** | ✅ | benzina/distillati; aggregato fisico -7,8; TO principali 99,3% crude intake (KTOE vs THS_T, indicativo) |
 
 ### Prossimi passi
 
@@ -184,7 +184,7 @@ make all
   │     │     └── mart: SQL aggregazione + metriche
   │     └── compose: read_parquet dagli upstream
   └── make test
-        └── pytest tests/ dashboard/tests/ (40 test)
+        └── pytest tests/ dashboard/tests/ (41 test)
 ```
 
 ### Dipendenze CI
