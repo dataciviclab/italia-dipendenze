@@ -17,7 +17,7 @@ WITH energy AS (
         production_ktoe,
         imports_ktoe
     FROM read_parquet('{support.energy.mart.mart_energy_balance}')
-    WHERE product IN ('G3000', 'C0000X0350-0370', 'E7000', 'O4640', 'O4100_TOT', 'O4000XBIO', 'O4630')
+    WHERE product IN ('G3000', 'C0000X0350-0370', 'E7000', 'O4640', 'O4100_TOT', 'O4652XR5210B', 'O4630')
 ),
 trade AS (
     SELECT
@@ -39,7 +39,7 @@ resource_map AS (
     UNION ALL SELECT 'E7000', 'elettricita'
     UNION ALL SELECT 'O4640', 'nafta'
     UNION ALL SELECT 'O4100_TOT', 'petrolio_greggio'
-    UNION ALL SELECT 'O4000XBIO', 'prodotti_petroliferi'
+    UNION ALL SELECT 'O4652XR5210B', 'benzina'
     UNION ALL SELECT 'O4630', 'gpl'
 )
 SELECT

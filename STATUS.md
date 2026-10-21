@@ -15,7 +15,7 @@ Pipeline funzionante: `make clean && make run-all && make test`
 ### Ordine esecuzione
 
 ```
-comtrade (~48s) → eurostat (~4s) → fao (~1.5s) → compose (~0.5s)
+comtrade (~62s) → eurostat (~4s) → fao (~1.5s) → compose (~0.5s)
 ```
 
 ### Fonti dati
@@ -23,17 +23,17 @@ comtrade (~48s) → eurostat (~4s) → fao (~1.5s) → compose (~0.5s)
 | Fonte | Tipo | Key | Dati |
 |-------|------|-----|------|
 | Eurostat NRG_BAL_C | `sdmx` (ESTAT, dichiarativo) | No | Bilancio fisico Italia, 25 prodotti SIEC, 16 indicatori, 1990-2024 |
-| UN Comtrade | script (comtradeapicall) | Sì | Commercio bilaterale HS6, 2020-2024, 13 risorse (gas split, petrolio, tutti i partner) |
+| UN Comtrade | script (comtradeapicall) | Sì | Commercio bilaterale HS6, 2020-2024, 14 risorse (gas split, raffinati split, petrolio, tutti i partner) |
 | FAO | script (cached) | No | Consumo fertilizzanti, 2018-2023 |
 
 ### Output
 
 | Dataset | Righe clean | Mart tabelle | Righe mart |
 |---------|:-----------:|:------------:|:----------:|
-| comtrade_bilateral | 8.064 | 3 | 8.194 |
+| comtrade_bilateral | 8.596 | 3 | 8.736 |
 | eurostat_nrg_bal_c | 11.235 | 2 | 1.645 |
 | fao_fertilizer_consumption | 6 | 1 | 6 |
-| resource_dependency_compose | — | 2 | 1.091 |
+| resource_dependency_compose | — | 2 | 1.156 |
 
 ### Mart disponibili
 
@@ -56,21 +56,24 @@ comtrade (~48s) → eurostat (~4s) → fao (~1.5s) → compose (~0.5s)
 |---------|---:|:---:|---|:---:|:---:|---:|
 | Petrolio greggio | $33.6B | 1215 | Libia 21% | low | 91,8 | 0,615 |
 | Gas pipeline | $18.6B | 3315 | Algeria 51% | high | 95,2 | 0,585 |
-| Prodotti petroliferi | $11.9B | 843 | Arabia Saudita 23% | low | 93,9 | 0,803 |
+| Distillati medi | $10.6B | 986 | Arabia Saudita 25% | low | — | 0,795 |
 | Rame | $6.2B | 874 | Bulgaria 15% | low | — | — |
 | Elettricità | $5.6B | 3198 | Svizzera 41% | high | 15,8 | — |
 | Gas LNG | $5.5B | 3180 | Qatar 43% | high | 95,2 | 0,516 |
 | Alluminio | $3.4B | 562 | Mozambico 11% | low | — | — |
 | Ferro/acciaio | $1.6B | 1463 | Russia 25% | low | — | 0,602 |
+| Benzina | $1.36B | 1046 | Grecia 21% | low | -60,4 | 0,866 |
 | GPL | $1.3B | 3892 | Algeria 59% | high | 56,1 | — |
 | Fertilizzanti | $1.1B | 853 | Egitto 19% | low | — | — |
 | Cobalto | $44M | 1595 | Germania 24% | medium | — | 46,64 |
 | Terre rare | $6.1M | 1247 | Cina 21% | low | — | 15,96 |
 | Litio | $1.9M | 3561 | Germania 54% | high | — | 12,88 |
 
-**Nota HHI**: tutti i partner Comtrade (7 pipeline, 26 LNG, 39 GPL); il denominatore è il totale import italiano, non un paniere pre-selezionato.
+**Nota HHI**: tutti i partner Comtrade (7 pipeline, 26 LNG, 39 GPL, 36 benzina, 69 distillati); il denominatore è il totale import italiano, non un paniere pre-selezionato.
 
 **Nota gas**: pipeline e LNG condividono la dipendenza fisica del gas (95,2%) ma hanno concentrazioni diverse (HHI 3315 vs 3180, entrambe >2500). GPL è un prodotto separato (56,1%). Il prezzo è valore/peso netto Comtrade, non un prezzo di mercato.
+
+**Nota raffinati**: benzina ha fisico -60,4 e HHI 1046; distillati medi sono trade-only (il fisico gasolio è -8,2 nella tabella prodotti energetici). L'aggregato petrolifero 93,9 resta nella tabella prodotti energetici.
 
 ### Prodotti energetici 2024 — dipendenza e consumi
 
@@ -96,22 +99,22 @@ Il gasolio e la benzina sono **prodotti secondari**: la loro disponibilità è l
 
 ### Trade balance — net exporter/importer
 
-- **Net importer**: petrolio greggio (-$32,9 mld), gas pipeline (-$18,4 mld), LNG (-$5,4 mld), elettricità (-$5,1 mld), rame (-$4,6 mld), GPL (-$1,2 mld), alluminio (-$1,7 mld), ferro/acciaio (-$1,3 mld)
-- **Net exporter**: prodotti petroliferi (+$4,9 mld), terre rare (+$3 mln)
+- **Net importer**: petrolio greggio (-$32,9 mld), gas pipeline (-$18,4 mld), LNG (-$5,4 mld), elettricità (-$5,1 mld), rame (-$4,6 mld), alluminio (-$1,7 mld), ferro/acciaio (-$1,3 mld), GPL (-$1,2 mld), distillati medi (-$0,9 mld)
+- **Net exporter**: benzina (+$5,4 mld), terre rare (+$3 mln)
 
 ### Concentration trend (2024 vs 2023)
 
 - **Litio**: +1367 HHI (newly_concentrated)
+- **Benzina**: -694 HHI (diversification_improving)
 - **GPL**: +568 HHI (concentration_increasing)
 - **Gas LNG**: +529 HHI (concentration_increasing)
-- **Prodotti petroliferi**: -186 HHI (diversification_improving)
-- **Terre rare**: -169 HHI (diversification_improving)
+- **Distillati medi**: -178 HHI (diversification_improving)
 
 ---
 
 ## Cosa manca
 
-### Fatto oggi (2026-10-20)
+### Fatto oggi (2026-10-21)
 
 | # | Cosa | Stato |
 |---|------|-------|
@@ -121,29 +124,30 @@ Il gasolio e la benzina sono **prodotti secondari**: la loro disponibilità è l
 | 4 | Consumi finali per prodotto × settore (`mart_energy_final_consumption`) | ✅ |
 | 5 | Compose allineato a dipendenza netta e nuove etichette | ✅ |
 | 6 | Trade balance + concentration trend | ✅ |
-| 7 | **Comtrade tutti i partner** — HHI su totale import, non su 8 | ✅ | 7 pipeline, 26 LNG, 39 GPL, 36 greggio, 73 raffinati |
+| 7 | **Comtrade tutti i partner** — HHI su totale import, non su 8 | ✅ | 7 pipeline, 26 LNG, 39 GPL, 36 benzina, 69 distillati |
 | 8 | **HS 2709/2710** — valore, peso, prezzo implicito, concentrazione petrolio | ✅ | greggio + raffinati separati |
 | 9 | **QA `TO` elettricità vs Terna** | ✅ | 23.303 vs 23.302 KTOE (2024) |
 | 10 | **Fix segno `STK_CHG`** — GIC ufficiale (`+ STK_CHG`) | ✅ | gas 2022 99,2%, carbone 96,5% |
 | 11 | **Split gas pipeline/LNG/GPL + prezzo $/kg** | ✅ | HHI 3315 pipeline, 3180 LNG |
+| 12 | **Split HS6 raffinati + QA raffinazione interno** | ✅ | benzina/distillati; TO principali 99,3% crude intake |
 
 ### Prossimi passi
 
 | # | Cosa | Sforzo | Note |
 |---|------|--------|------|
-| 12 | **QA `TO` raffinazione** — confronto con ISPRA/UNFCCC | Medio | benzina, gasolio, jet, olio combustibile |
-| 13 | **OECD TiVA** — FVA/DVA per decomposizione valore | Medio | Bulk download gratuito |
-| 14 | **USGS Minerali** — production data per metalli critici | Basso | PDF parsing |
-| 15 | **FAO live API** — sostituire hardcoded con dati freschi + breakdown | Medio | API fenixservices attualmente giù (521) |
+| 13 | **QA esterno raffinazione** — confronto con ISPRA/UNFCCC | Medio | benzina, gasolio, jet, olio combustibile |
+| 14 | **OECD TiVA** — FVA/DVA per decomposizione valore | Medio | Bulk download gratuito |
+| 15 | **USGS Minerali** — production data per metalli critici | Basso | PDF parsing |
+| 16 | **FAO live API** — sostituire hardcoded con dati freschi + breakdown | Medio | API fenixservices attualmente giù (521) |
 
 ### Backlog
 
 | # | Cosa | Sforzo |
 |---|------|--------|
-| 16 | Ownership analysis (ISTAT Multinazionali) | Medio |
-| 17 | Upstream dependency (IO tables) | Alto |
-| 18 | Farmaci/API | Alto |
-| 19 | Semiconduttori | Alto |
+| 17 | Ownership analysis (ISTAT Multinazionali) | Medio |
+| 18 | Upstream dependency (IO tables) | Alto |
+| 19 | Farmaci/API | Alto |
+| 20 | Semiconduttori | Alto |
 
 ---
 

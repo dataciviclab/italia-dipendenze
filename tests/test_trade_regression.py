@@ -49,7 +49,7 @@ class TestPartnerUniverse:
 
     def test_oil_trade_resources_are_present(self):
         df = _load(TRADE_DIR, "mart_trade_concentration")
-        for resource in ("petrolio_greggio", "prodotti_petroliferi"):
+        for resource in ("petrolio_greggio", "benzina", "distillati_medi"):
             row = df[(df["resource"] == resource) & (df["year"] == 2024)]
             assert not row.empty, f"missing trade resource {resource}"
             assert row["hhi"].iloc[0] is not None
