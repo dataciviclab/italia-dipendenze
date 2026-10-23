@@ -63,7 +63,9 @@ def main() -> None:
         )
 
     print()
-    print("I perimetri sono diversi (CN8 vs SIEC): la differenza è un QA, non un errore.")
+    print("Mt = massa (Comext), Mtoe = energia (NRG_BAL_C): per i prodotti petroliferi 1 t ≈ 1,02 toe.")
+    print("Il confronto è indicativo, non una quadratura di massa.")
+    print("I 4 gruppi non coprono tutto 271019: esclusi 2710 19 11-19 e 2710 19 29.")
 
 
 if __name__ == "__main__":

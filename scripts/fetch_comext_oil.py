@@ -48,6 +48,24 @@ FLOW_LABELS = {"1": "imports", "2": "exports"}
 AGGREGATE_PARTNERS = {"WORLD", "EU", "EA", "XX"}
 PARTNER_RE = re.compile(r"^[A-Z]{2}$")
 
+
+def _get(url: str, params: dict | None = None, *, timeout: int = 180, attempts: int = 3) -> requests.Response:
+    """GET with retry/backoff on transient errors (5xx, timeouts)."""
+    last: Exception | None = None
+    for attempt in range(1, attempts + 1):
+        try:
+            resp = requests.get(url, params=params, timeout=timeout)
+            if resp.status_code >= 500:
+                raise requests.HTTPError(f"HTTP {resp.status_code}")
+            resp.raise_for_status()
+            return resp
+        except requests.RequestException as exc:
+            last = exc
+            if attempt == attempts:
+                break
+            time.sleep(2 * attempt)
+    raise SystemExit(f"Comext request failed after {attempts} attempts: {last}")
+
 OUTPUT_COLUMNS = [
     "year", "product_group", "flow", "flow_label",
     "partner_code", "partner_name", "value_eur", "quantity_100kg",
@@ -57,13 +75,16 @@ OUTPUT_COLUMNS = [
 
 def fetch_partner_names() -> dict[str, str]:
     """Return {ISO2: English name} from the Comext partner codelist."""
-    resp = requests.get(PARTNER_CODELIST, timeout=120)
-    resp.raise_for_status()
+    resp = _get(PARTNER_CODELIST, timeout=120)
+    if "<s:Code" not in resp.text:
+        raise SystemExit("Comext partner codelist: unexpected response (not SDMX XML)")
     names: dict[str, str] = {}
     for match in re.finditer(r'<s:Code id="([^"]+)"[^>]*>(.*?)</s:Code>', resp.text, re.S):
         code = match.group(1)
         label = re.search(r'<c:Name xml:lang="en">([^<]*)</c:Name>', match.group(2))
         names[code] = label.group(1) if label else code
+    if not names:
+        raise SystemExit("Comext partner codelist returned no codes")
     return names
 
 
@@ -79,15 +100,13 @@ def _is_country(partner: str) -> bool:
 def fetch_group(codes: list[str], flow: str, indicator: str, start: int, end: int) -> dict[tuple[int, str], float]:
     """Sum a group's CN8 codes by (year, partner)."""
     key = f"A.IT..{'+'.join(codes)}.{flow}.{indicator}"
-    resp = requests.get(
+    resp = _get(
         f"{DATA}/{key}",
         params={"format": "TSV", "startPeriod": str(start), "endPeriod": str(end)},
-        timeout=180,
     )
-    resp.raise_for_status()
     lines = resp.text.splitlines()
-    if not lines:
-        return {}
+    if not lines or "TIME_PERIOD" not in lines[0]:
+        raise SystemExit(f"Comext data: unexpected response for {key}")
     years = [y.strip() for y in lines[0].split("\t")[1:]]
     totals: dict[tuple[int, str], float] = {}
     for line in lines[1:]:

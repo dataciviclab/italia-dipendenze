@@ -69,7 +69,7 @@ Questi dati rendono visibili le catene di dipendenza materiale dell'Italia.
 
 **Nota Comext.** Fonte Eurostat `DS-045409`, valori in **euro** (Comtrade è in USD). Il solo HS6 `271019` (HHI 986, Arabia 25%) era una media: il **gasolio import** è il gruppo più concentrato (Arabia 41%, HHI 1984), il jet è più diversificato (HHI 1127). Gasolio e olio combustibile sono net exporter; il jet è net importer.
 
-**QA volumi (Comext vs bilancio energetico).** Import 2024: gasolio 7,38 Mt (Comext) vs 5,94 Mtoe (NRG_BAL_C), jet 2,87 vs 2,68, olio combustibile 2,28 vs 0,73. I perimetri non coincidono (CN8 vs SIEC) e la differenza va letta come QA, non come errore: sugli export l'olio combustibile combacia (3,43 vs 3,53 Mt). Script: `scripts/qa_comext_vs_energy.py`.
+**QA volumi (Comext vs bilancio energetico).** Import 2024: gasolio 7,38 Mt (Comext) vs 5,94 Mtoe (NRG_BAL_C), jet 2,87 vs 2,68, olio combustibile 2,28 vs 0,73. Il confronto mescola unità: **Mt = massa** (Comext) e **Mtoe = energia** (NRG_BAL_C); per i prodotti petroliferi 1 t ≈ 1,02 toe, quindi il rapporto è **indicativo**, non una quadratura di massa. I perimetri non coincidono (CN8 vs SIEC): sugli export l'olio combustibile combacia (3,43 vs 3,53 Mt), sull'import il divario è di perimetro. Inoltre i 4 gruppi non coprono tutto `271019`: restano fuori `2710 19 11-19` (medium oils) e `2710 19 29` (altro cherosene), quindi il confronto con l'HHI HS6 986 è illustrativo. Script: `scripts/qa_comext_vs_energy.py`.
 
 ### Bilancio energetico (2024)
 
