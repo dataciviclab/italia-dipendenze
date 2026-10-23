@@ -6,6 +6,7 @@ out/smoke/
 datasets/*/comtrade_bilateral.csv
 datasets/*/eurostat_energy_balance.csv
 datasets/*/fao_fertilizer_consumption.csv
+datasets/*/comext_oil.csv
 
 # Raw intermediate files (fetched data)
 out/raw/comtrade/*.json

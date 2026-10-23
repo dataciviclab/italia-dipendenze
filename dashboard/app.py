@@ -27,6 +27,7 @@ pages = {
         st.Page("pages/02_Dipendenze.py", title="Dipendenze", icon="🌐"),
         st.Page("pages/03_Commercio.py", title="Commercio", icon="🚢"),
         st.Page("pages/04_Energia.py", title="Energia", icon="⚡"),
+        st.Page("pages/06_Comext.py", title="Comext raffinati", icon="🛢️"),
     ],
     "Strumenti": [
         st.Page("pages/05_SQL.py", title="Query SQL", icon="🧪"),
@@ -36,7 +37,7 @@ pages = {
 pg = st.navigation(pages, position="sidebar")
 
 st.sidebar.markdown("---")
-st.sidebar.caption("Fonti: Eurostat NRG_BAL_C · UN Comtrade · FAO — energia 1990–2024 · commercio 2020–2024")
+st.sidebar.caption("Fonti: Eurostat NRG_BAL_C · Eurostat Comext · UN Comtrade · FAO — energia 1990–2024 · commercio 2020–2024")
 st.sidebar.caption(
     "Caveat: valori commerciali in USD · dipendenza fisica solo su prodotti energetici"
 )

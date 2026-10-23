@@ -22,6 +22,9 @@ support:
   - name: fertilizer
     config: ../../datasets/fao-fertilizer-consumption/dataset.yml
     years: [2026]
+  - name: comext
+    config: ../../datasets/comext-oil/dataset.yml
+    years: [2026]
 
 mart:
   tables:
@@ -29,9 +32,12 @@ mart:
       sql: "sql/mart_resource_dependency.sql"
     - name: "mart_energy_vs_trade"
       sql: "sql/mart_energy_vs_trade.sql"
+    - name: "mart_refined_dependency"
+      sql: "sql/mart_refined_dependency.sql"
   required_tables:
     - "mart_resource_dependency"
     - "mart_energy_vs_trade"
+    - "mart_refined_dependency"
   validate:
     table_rules:
       mart_resource_dependency:
@@ -41,6 +47,10 @@ mart:
       mart_energy_vs_trade:
         required_columns: [year, product, physical_id_pct, trade_hhi, import_unit_value_usd_per_kg, top1_supplier, data_quality]
         min_rows: 1
+      mart_refined_dependency:
+        required_columns: [year, resource, physical_id_pct, import_value_eur, import_unit_value_eur_per_kg, hhi, top1_supplier, risk_profile]
+        primary_key: [year, resource]
+        min_rows: 15
 
 validation:
   fail_on_error: true

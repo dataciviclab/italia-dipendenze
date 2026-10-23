@@ -64,6 +64,32 @@ MART_CONTRACTS = {
             "required_columns": ["year", "resource", "import_value_usd", "import_unit_value_usd_per_kg", "export_value_usd", "balance_usd", "trade_position"],
         },
     },
+    "comext_oil": {
+        "mart_comext_oil_concentration": {
+            "min_rows": 4,
+            "required_columns": [
+                "year",
+                "product_group",
+                "total_import_value_eur",
+                "import_quantity_kg",
+                "import_unit_value_eur_per_kg",
+                "hhi",
+                "top1_supplier",
+                "top1_share_pct",
+            ],
+        },
+        "mart_comext_oil_balance": {
+            "min_rows": 4,
+            "required_columns": [
+                "year",
+                "product_group",
+                "import_value_eur",
+                "export_value_eur",
+                "balance_eur",
+                "trade_position",
+            ],
+        },
+    },
     "resource_dependency_compose": {
         "mart_resource_dependency": {
             "min_rows": 10,
@@ -72,6 +98,10 @@ MART_CONTRACTS = {
         "mart_energy_vs_trade": {
             "min_rows": 5,
             "required_columns": ["year", "product", "physical_id_pct", "import_unit_value_usd_per_kg", "risk_profile"],
+        },
+        "mart_refined_dependency": {
+            "min_rows": 15,
+            "required_columns": ["year", "resource", "physical_id_pct", "import_value_eur", "hhi", "top1_supplier", "risk_profile"],
         },
     },
 }
