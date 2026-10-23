@@ -1,0 +1,119 @@
+root: "../../out"
+schema_version: 1
+
+dataset:
+  name: "comext_oil"
+  source_id: "eurostat"
+  tags: [energia, petrolio, raffinati, gasolio, jet, comext, eurostat, italia, commercio]
+  category: energia
+  description: "Eurostat Comext DS-045409 — Italy oil products by CN8 group and partner"
+  years: [2026]
+  time_coverage:
+    start_year: 2020
+    end_year: 2024
+
+raw:
+  output_policy: overwrite
+  sources:
+    - name: "comext_oil_fetch"
+      type: "script"
+      args:
+        command: "python3 ../../scripts/fetch_comext_oil.py --output-dir . --start-year 2020 --end-year 2024"
+        output: "comext_oil.csv"
+        filename: "comext_oil.csv"
+      primary: true
+
+clean:
+  sql: "sql/clean.sql"
+  read:
+    source: auto
+    mode: latest
+    delim: ","
+    encoding: utf-8
+    header: true
+  required_columns:
+    - year
+    - product_group
+    - flow
+    - flow_label
+    - partner_code
+    - partner_name
+    - value_eur
+    - quantity_100kg
+    - unit_value_eur_per_kg
+    - source
+    - method
+    - data_quality
+  validate:
+    min_rows: 100
+    not_null:
+      - year
+      - product_group
+      - flow
+      - partner_code
+
+mart:
+  tables:
+    - name: "mart_comext_oil_concentration"
+      sql: "sql/mart_comext_oil_concentration.sql"
+    - name: "mart_comext_oil_balance"
+      sql: "sql/mart_comext_oil_balance.sql"
+    - name: "mart_comext_oil_partners"
+      sql: "sql/mart_comext_oil_partners.sql"
+  required_tables:
+    - "mart_comext_oil_concentration"
+    - "mart_comext_oil_balance"
+    - "mart_comext_oil_partners"
+  validate:
+    table_rules:
+      mart_comext_oil_concentration:
+        required_columns:
+          - year
+          - product_group
+          - total_import_value_eur
+          - import_quantity_kg
+          - import_unit_value_eur_per_kg
+          - hhi
+          - concentration_level
+          - top1_supplier
+          - top1_share_pct
+          - top3_share_pct
+          - top5_share_pct
+          - num_suppliers
+        primary_key: [year, product_group]
+        min_rows: 4
+      mart_comext_oil_balance:
+        required_columns:
+          - year
+          - product_group
+          - import_value_eur
+          - import_quantity_kg
+          - import_unit_value_eur_per_kg
+          - export_value_eur
+          - export_quantity_kg
+          - export_unit_value_eur_per_kg
+          - balance_eur
+          - trade_position
+        primary_key: [year, product_group]
+        min_rows: 4
+      mart_comext_oil_partners:
+        required_columns:
+          - year
+          - product_group
+          - flow
+          - partner_code
+          - partner_name
+          - value_eur
+          - share_pct
+        primary_key: [year, product_group, flow, partner_code]
+        min_rows: 100
+
+validation:
+  fail_on_error: true
+
+registry:
+  dataflow: "DS-045409"
+  theme: "International trade / Comext oil products"
+  nuts_level: 0
+  dimensions: ["year", "product_group", "flow", "partner"]
+  description: "Italy oil products by CN8 group (gasolio, jet, olio combustibile, lubrificanti) and partner"

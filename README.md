@@ -6,7 +6,7 @@ La Italy Resource & Dependency Map è un sistema aperto che misura le principali
 
 | Risorse coperte | Periodo | Fonti dati | Aggiornamento |
 |:---:|:---:|:---:|:---:|
-| 25 prodotti energetici + 14 risorse commerciali | energia 1990–2024 · commercio 2020–2024 | Eurostat, UN Comtrade, FAO | Pipeline automatica |
+| 25 prodotti energetici + 14 risorse commerciali + 4 gruppi raffinati Comext | energia 1990–2024 · commercio 2020–2024 | Eurostat, Eurostat Comext, UN Comtrade, FAO | Pipeline automatica |
 
 ---
 
@@ -28,6 +28,7 @@ Questi dati rendono visibili le catene di dipendenza materiale dell'Italia.
 | Trade balance | Balance = export - import per risorsa × anno | 70 | trade_position, export_coverage, unit value |
 | Concentration trend | HHI trend + YoY change | 70 | trend_status, hhi_change |
 | Fertilizzanti | Consumo Italia | 6 | Consumo totale |
+| Raffinati Comext | 4 gruppi CN8 × anno × partner | 2086 clean · 40 mart | HHI, top fornitori, prezzo €/kg |
 | Compose | Matrice unica: ID + concentrazione per risorsa | 906 + 315 | data_source, risk_profile |
 
 ### Risorse monitorate
@@ -55,7 +56,18 @@ Questi dati rendono visibili le catene di dipendenza materiale dell'Italia.
 
 **Nota prezzo.** Il prezzo è il valore unitario medio all'import: valore / peso netto Comtrade. Non è un prezzo di mercato e non è disponibile per risorse senza peso (es. elettricità).
 
-**Nota raffinati.** I raffinati sono split HS6: `271012` benzina (light oils) e `271019` distillati medi (gasolio/jet/fuel oil). L'aggregato fisico `distillati_medi` (gasolio+jet+fuel oil) è accoppiato al trade `271019`: **-7,8% netto**, HHI 986. `271019` resta un aggregato merceologico: per separare gasolio, jet e fuel oil serve HS8/Comext. Benzina è net exporter (+$5,4 mld), distillati medi net importer (-$0,9 mld).
+**Nota raffinati.** I raffinati sono split HS6: `271012` benzina (light oils) e `271019` distillati medi (gasolio/jet/fuel oil). L'aggregato fisico `distillati_medi` (gasolio+jet+fuel oil) è accoppiato al trade `271019`: **-7,8% netto**, HHI 986. `271019` resta un aggregato merceologico: **Comext** lo separa in gasolio, jet, olio combustibile e lubrificanti (tabella sotto). Benzina è net exporter (+$5,4 mld), distillati medi net importer (-$0,9 mld).
+
+### Raffinati — Comext (2024)
+
+| Gruppo | Import | HHI import | Top import | Prezzo €/kg | Saldo |
+|---|---:|---:|---|---:|---:|
+| Gasolio | €5,66 mld | **1984** | Arabia Saudita 41% | 0,766 | +€0,21 mld |
+| Jet | €2,13 mld | 1127 | UAE 22% | 0,743 | -€1,91 mld |
+| Olio combustibile | €0,97 mld | 1649 | Algeria 35% | 0,423 | +€0,63 mld |
+| Lubrificanti | €0,93 mld | 1309 | Belgio 19% | 1,403 | +€0,30 mld |
+
+**Nota Comext.** Fonte Eurostat `DS-045409`, valori in **euro** (Comtrade è in USD). Il solo HS6 `271019` (HHI 986, Arabia 25%) era una media: il **gasolio import** è il gruppo più concentrato (Arabia 41%, HHI 1984), il jet è più diversificato (HHI 1127). Gasolio e olio combustibile sono net exporter; il jet è net importer.
 
 ### Bilancio energetico (2024)
 
@@ -110,6 +122,7 @@ COMTRADE_SUBSCRIPTION_KEY=xxx make all
 **Fonti:**
 - Eurostat NRG_BAL_C (SDMX API, no key)
 - Eurostat NRG_CB_OILM (solo QA raffinazione, mensile)
+- Eurostat Comext DS-045409 (endpoint dedicato, no key)
 - UN Comtrade (API con key gratuita)
 - FAO (dati cached)
 

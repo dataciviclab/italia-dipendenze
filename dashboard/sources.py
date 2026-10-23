@@ -27,6 +27,7 @@ PREFIX = "italia_dipendenze/"
 TOOLKIT_YEAR = 2026
 DATA_YEARS = list(range(2020, 2025))
 COMPOSE_SLUG = "resource_dependency_compose"
+COMEXT_SLUG = "comext_oil"
 LOCAL_ROOT = detect_local_root(repo_root=ROOT)
 
 # Etichette leggibili per risorse / codici SIEC del compose
@@ -145,6 +146,20 @@ PRODUCT_LABELS = {
     "Heavy fuel oil": "Olio pesante",
     "Kerosene-type jet fuel": "Cherosene per jet",
 }
+
+
+COMEXT_PRODUCT_LABELS = {
+    "gasolio": "Gasolio",
+    "jet": "Jet fuel",
+    "olio_combustibile": "Olio combustibile",
+    "lubrificanti": "Lubrificanti",
+}
+
+
+def comext_product_label(value: str | None) -> str:
+    if value is None or (isinstance(value, float) and pd.isna(value)):
+        return "—"
+    return COMEXT_PRODUCT_LABELS.get(str(value), str(value))
 
 
 def product_label(label: str | None) -> str:
@@ -271,6 +286,21 @@ def load_fertilizer() -> pd.DataFrame:
 
 
 @st.cache_data(ttl=3600, show_spinner=False)
+def load_comext_concentration() -> pd.DataFrame:
+    return load_mart(COMEXT_SLUG, "mart_comext_oil_concentration")
+
+
+@st.cache_data(ttl=3600, show_spinner=False)
+def load_comext_balance() -> pd.DataFrame:
+    return load_mart(COMEXT_SLUG, "mart_comext_oil_balance")
+
+
+@st.cache_data(ttl=3600, show_spinner=False)
+def load_comext_partners() -> pd.DataFrame:
+    return load_mart(COMEXT_SLUG, "mart_comext_oil_partners")
+
+
+@st.cache_data(ttl=3600, show_spinner=False)
 def query(slug: str, sql: str, years: tuple[int, ...] = (TOOLKIT_YEAR,)) -> pd.DataFrame:
     """SQL sul clean layer (anni toolkit, non anni dati)."""
     return _query_clean(slug, sql, list(years), prefix=PREFIX, local_root=LOCAL_ROOT)
@@ -283,6 +313,8 @@ def year_slice(df: pd.DataFrame, year: int) -> pd.DataFrame:
 
 
 __all__ = [
+    "COMEXT_PRODUCT_LABELS",
+    "COMEXT_SLUG",
     "COMPOSE_SLUG",
     "CONC_LABELS",
     "DATA_SOURCE_LABELS",
@@ -296,10 +328,14 @@ __all__ = [
     "TREND_LABELS",
     "TOOLKIT_YEAR",
     "cell",
+    "comext_product_label",
     "conc_label",
     "fmt_num",
     "fmt_pct",
     "fmt_usd",
+    "load_comext_balance",
+    "load_comext_concentration",
+    "load_comext_partners",
     "load_energy_balance",
     "load_energy_vs_trade",
     "load_fertilizer",

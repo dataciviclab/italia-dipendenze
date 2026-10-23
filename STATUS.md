@@ -1,6 +1,6 @@
 # Materie Prime — Stato e Da Farsi
 
-**Data**: 2026-10-21
+**Data**: 2026-10-23
 **Repo**: `dataciviclab/italia-dipendenze` (git)
 
 ---
@@ -8,14 +8,14 @@
 ## Stato attuale
 
 Pipeline funzionante: `make clean && make run-all && make test`
-- 4/4 dataset SUCCESS, 41 test (39 pass, 2 skip)
-- Eurostat **dichiarativo** (`type: sdmx` + codelist SIEC/NRG_BAL); Comtrade e FAO via script
+- 5/5 dataset SUCCESS, 48 test (47 pass, 1 skip)
+- Eurostat **dichiarativo** (`type: sdmx` + codelist SIEC/NRG_BAL); Comtrade, Comext e FAO via script
 - Zero CSV committati
 
 ### Ordine esecuzione
 
 ```
-comtrade (~62s) → eurostat (~4s) → fao (~1.5s) → compose (~0.5s)
+comtrade (~62s) → eurostat (~4s) → comext (~12s) → fao (~1.5s) → compose (~0.5s)
 ```
 
 ### Fonti dati
@@ -25,6 +25,7 @@ comtrade (~62s) → eurostat (~4s) → fao (~1.5s) → compose (~0.5s)
 | Eurostat NRG_BAL_C | `sdmx` (ESTAT, dichiarativo) | No | Bilancio fisico Italia, 25 prodotti SIEC, 16 indicatori, 1990-2024 |
 | UN Comtrade | script (comtradeapicall) | Sì | Commercio bilaterale HS6, 2020-2024, 14 risorse (gas split, raffinati split, petrolio, tutti i partner) |
 | FAO | script (cached) | No | Consumo fertilizzanti, 2018-2023 |
+| Eurostat Comext | script (endpoint dedicato) | No | Raffinati Italia per gruppo CN8, 2020-2024 |
 
 ### Output
 
@@ -33,6 +34,7 @@ comtrade (~62s) → eurostat (~4s) → fao (~1.5s) → compose (~0.5s)
 | comtrade_bilateral | 8.596 | 3 | 8.736 |
 | eurostat_nrg_bal_c | 11.235 | 2 | 1.645 |
 | fao_fertilizer_consumption | 6 | 1 | 6 |
+| comext_oil | 2.086 | 3 | 40 |
 | resource_dependency_compose | — | 2 | 1.221 |
 
 ### Mart disponibili
@@ -45,6 +47,11 @@ comtrade (~62s) → eurostat (~4s) → fao (~1.5s) → compose (~0.5s)
 **eurostat_nrg_bal_c:**
 - `mart_energy_balance` — produzione, import, export, scorte, GIC, `TO`, disponibilità interna, dipendenza netta/lorda, quota domestica
 - `mart_energy_final_consumption` — consumi finali per prodotto × settore (industria, trasporti, famiglie, servizi, agricoltura, pesca, altro, non-energy)
+
+**comext_oil:**
+- `mart_comext_oil_concentration` — HHI, top fornitori, prezzo €/kg per gruppo CN8 × anno
+- `mart_comext_oil_balance` — import/export valore e quantità, saldo, posizione
+- `mart_comext_oil_partners` — valori e quote per partner × gruppo × flusso
 
 **resource_dependency_compose:**
 - `mart_resource_dependency` — matrice unica: dipendenza netta + HHI + data_source
@@ -130,24 +137,25 @@ Il gasolio e la benzina sono **prodotti secondari**: la loro disponibilità è l
 | 10 | **Fix segno `STK_CHG`** — GIC ufficiale (`+ STK_CHG`) | ✅ | gas 2022 99,2%, carbone 96,5% |
 | 11 | **Split gas pipeline/LNG/GPL + prezzo $/kg** | ✅ | HHI 3315 pipeline, 3180 LNG |
 | 12 | **Split HS6 raffinati + QA raffinazione interno** | ✅ | benzina/distillati; aggregato fisico -7,8; TO principali 99,3% crude intake (KTOE vs THS_T, indicativo) |
+| 13 | **Comext raffinati** — gasolio/jet/olio combustibile/lubrificanti | ✅ | gasolio HHI 1984 (Arabia 41%), jet 1127 (UAE 22%) |
 
 ### Prossimi passi
 
 | # | Cosa | Sforzo | Note |
 |---|------|--------|------|
-| 13 | **QA esterno raffinazione** — confronto con ISPRA/UNFCCC | Medio | benzina, gasolio, jet, olio combustibile |
-| 14 | **OECD TiVA** — FVA/DVA per decomposizione valore | Medio | Bulk download gratuito |
-| 15 | **USGS Minerali** — production data per metalli critici | Basso | PDF parsing |
-| 16 | **FAO live API** — sostituire hardcoded con dati freschi + breakdown | Medio | API fenixservices attualmente giù (521) |
+| 14 | **QA esterno raffinazione** — confronto con ISPRA/UNFCCC | Medio | benzina, gasolio, jet, olio combustibile |
+| 15 | **OECD TiVA** — FVA/DVA per decomposizione valore | Medio | Bulk download gratuito |
+| 16 | **USGS Minerali** — production data per metalli critici | Basso | PDF parsing |
+| 17 | **FAO live API** — sostituire hardcoded con dati freschi + breakdown | Medio | API fenixservices attualmente giù (521) |
 
 ### Backlog
 
 | # | Cosa | Sforzo |
 |---|------|--------|
-| 17 | Ownership analysis (ISTAT Multinazionali) | Medio |
-| 18 | Upstream dependency (IO tables) | Alto |
-| 19 | Farmaci/API | Alto |
-| 20 | Semiconduttori | Alto |
+| 18 | Ownership analysis (ISTAT Multinazionali) | Medio |
+| 19 | Upstream dependency (IO tables) | Alto |
+| 20 | Farmaci/API | Alto |
+| 21 | Semiconduttori | Alto |
 
 ---
 
@@ -159,7 +167,7 @@ Stato: **v1 merged** (dashboard Streamlit + lab-connectors).
 |------|-----------|
 | Path | `dashboard/` |
 | Standard | Streamlit + lab-connectors (`infra/lab-ops/standards/dashboard.md`) |
-| Pagine | Panoramica · Dipendenze · Commercio · Energia · Query SQL |
+| Pagine | Panoramica · Dipendenze · Commercio · Energia · Comext raffinati · Query SQL |
 | Dati | GCS `italia_dipendenze/` + fallback `out/data/` |
 | Anno path | toolkit `2026/` · energia 1990–2024 · commercio 2020–2024 |
 | Test | `dashboard/tests/` + `tests/test_energy_regression.py` + `tests/test_trade_regression.py` + `tests/test_risk_profile.py` |
@@ -184,7 +192,7 @@ make all
   │     │     └── mart: SQL aggregazione + metriche
   │     └── compose: read_parquet dagli upstream
   └── make test
-        └── pytest tests/ dashboard/tests/ (41 test)
+        └── pytest tests/ dashboard/tests/ (48 test)
 ```
 
 ### Dipendenze CI
