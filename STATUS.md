@@ -8,7 +8,7 @@
 ## Stato attuale
 
 Pipeline funzionante: `make clean && make run-all && make test`
-- 5/5 dataset SUCCESS, 52 test (51 pass, 1 skip)
+- 5/5 dataset SUCCESS, 53 test (52 pass, 1 skip)
 - Eurostat **dichiarativo** (`type: sdmx` + codelist SIEC/NRG_BAL); Comtrade, Comext e FAO via script
 - Zero CSV committati
 
@@ -193,7 +193,7 @@ make all
   │     │     └── mart: SQL aggregazione + metriche
   │     └── compose: read_parquet dagli upstream
   └── make test
-        └── pytest tests/ dashboard/tests/ (52 test)
+        └── pytest tests/ dashboard/tests/ (53 test)
 ```
 
 ### Dipendenze CI

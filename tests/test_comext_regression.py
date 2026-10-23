@@ -66,6 +66,31 @@ class TestComextOil:
             row = df[(df["product_group"] == group) & (df["year"] == 2024)].iloc[0]
             assert row["import_quantity_kg"] > 0
 
+    def test_comext_totals_match_comtrade_hs6(self):
+        """I gruppi CN8 coprono il 271019 di Comtrade entro ~10% (cambio ~1,08)."""
+        comext = _load("mart_comext_oil_balance")
+        comtrade_files = sorted(
+            (ROOT / "out" / "data" / "mart" / "comtrade_bilateral").glob(
+                "*/mart_trade_balance*.parquet"
+            )
+        )
+        if not comtrade_files:
+            pytest.skip("comtrade balance not built locally")
+        con = duckdb.connect()
+        comtrade = con.execute(
+            f"SELECT * FROM read_parquet('{comtrade_files[-1]}')"
+        ).fetchdf()
+        cx = comext[comext["year"] == 2024]
+        ct = comtrade[
+            (comtrade["year"] == 2024) & (comtrade["resource"] == "distillati_medi")
+        ].iloc[0]
+        assert abs(cx["import_value_eur"].sum() * 1.08 - ct["import_value_usd"]) / ct[
+            "import_value_usd"
+        ] < 0.10
+        assert abs(cx["export_value_eur"].sum() * 1.08 - ct["export_value_usd"]) / ct[
+            "export_value_usd"
+        ] < 0.10
+
 
 @pytest.mark.regression
 class TestRefinedDependency:
