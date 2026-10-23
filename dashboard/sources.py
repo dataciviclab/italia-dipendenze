@@ -151,6 +151,7 @@ PRODUCT_LABELS = {
 COMEXT_PRODUCT_LABELS = {
     "gasolio": "Gasolio",
     "jet": "Jet fuel",
+    "cherosene": "Jet fuel",
     "olio_combustibile": "Olio combustibile",
     "lubrificanti": "Lubrificanti",
 }
@@ -301,6 +302,11 @@ def load_comext_partners() -> pd.DataFrame:
 
 
 @st.cache_data(ttl=3600, show_spinner=False)
+def load_refined_dependency() -> pd.DataFrame:
+    return load_mart(COMPOSE_SLUG, "mart_refined_dependency")
+
+
+@st.cache_data(ttl=3600, show_spinner=False)
 def query(slug: str, sql: str, years: tuple[int, ...] = (TOOLKIT_YEAR,)) -> pd.DataFrame:
     """SQL sul clean layer (anni toolkit, non anni dati)."""
     return _query_clean(slug, sql, list(years), prefix=PREFIX, local_root=LOCAL_ROOT)
@@ -337,6 +343,7 @@ __all__ = [
     "load_comext_concentration",
     "load_comext_partners",
     "load_energy_balance",
+    "load_refined_dependency",
     "load_energy_vs_trade",
     "load_fertilizer",
     "load_mart",

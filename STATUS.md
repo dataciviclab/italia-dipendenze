@@ -8,7 +8,7 @@
 ## Stato attuale
 
 Pipeline funzionante: `make clean && make run-all && make test`
-- 5/5 dataset SUCCESS, 49 test (48 pass, 1 skip)
+- 5/5 dataset SUCCESS, 52 test (51 pass, 1 skip)
 - Eurostat **dichiarativo** (`type: sdmx` + codelist SIEC/NRG_BAL); Comtrade, Comext e FAO via script
 - Zero CSV committati
 
@@ -35,7 +35,7 @@ comtrade (~62s) → eurostat (~4s) → comext (~12s) → fao (~1.5s) → compose
 | eurostat_nrg_bal_c | 11.235 | 2 | 1.645 |
 | fao_fertilizer_consumption | 6 | 1 | 6 |
 | comext_oil | 2.086 | 3 | 40 |
-| resource_dependency_compose | — | 2 | 1.221 |
+| resource_dependency_compose | — | 3 | 1.326 |
 
 ### Mart disponibili
 
@@ -56,6 +56,7 @@ comtrade (~62s) → eurostat (~4s) → comext (~12s) → fao (~1.5s) → compose
 **resource_dependency_compose:**
 - `mart_resource_dependency` — matrice unica: dipendenza netta + HHI + data_source
 - `mart_energy_vs_trade` — risk_profile per prodotti con energy e/o trade
+- `mart_refined_dependency` — gasolio/jet/olio combustibile: fisico + partner Comext in una riga
 
 ### Dipendenza 2024 — Risorse con dati commerciali
 
@@ -137,7 +138,7 @@ Il gasolio e la benzina sono **prodotti secondari**: la loro disponibilità è l
 | 10 | **Fix segno `STK_CHG`** — GIC ufficiale (`+ STK_CHG`) | ✅ | gas 2022 99,2%, carbone 96,5% |
 | 11 | **Split gas pipeline/LNG/GPL + prezzo $/kg** | ✅ | HHI 3315 pipeline, 3180 LNG |
 | 12 | **Split HS6 raffinati + QA raffinazione interno** | ✅ | benzina/distillati; aggregato fisico -7,8; TO principali 99,3% crude intake (KTOE vs THS_T, indicativo) |
-| 13 | **Comext raffinati** — gasolio/jet/olio combustibile/lubrificanti | ✅ | gasolio HHI 1984 (Arabia 41%), jet 1127 (UAE 22%); volumi 7,38/2,87/2,28 Mt |
+| 13 | **Comext raffinati** — gasolio/jet/olio combustibile/lubrificanti | ✅ | gasolio HHI 1984 (Arabia 41%), jet 1127 (UAE 22%); volumi 7,38/2,87/2,28 Mt; compose `mart_refined_dependency` |
 
 ### Prossimi passi
 
@@ -192,7 +193,7 @@ make all
   │     │     └── mart: SQL aggregazione + metriche
   │     └── compose: read_parquet dagli upstream
   └── make test
-        └── pytest tests/ dashboard/tests/ (49 test)
+        └── pytest tests/ dashboard/tests/ (52 test)
 ```
 
 ### Dipendenze CI

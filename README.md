@@ -29,7 +29,7 @@ Questi dati rendono visibili le catene di dipendenza materiale dell'Italia.
 | Concentration trend | HHI trend + YoY change | 70 | trend_status, hhi_change |
 | Fertilizzanti | Consumo Italia | 6 | Consumo totale |
 | Raffinati Comext | 4 gruppi CN8 × anno × partner | 2086 clean · 40 mart | HHI, top fornitori, prezzo €/kg |
-| Compose | Matrice unica: ID + concentrazione per risorsa | 906 + 315 | data_source, risk_profile |
+| Compose | Matrice unica: ID + concentrazione per risorsa | 906 + 315 + 105 | data_source, risk_profile |
 
 ### Risorse monitorate
 
@@ -68,6 +68,14 @@ Questi dati rendono visibili le catene di dipendenza materiale dell'Italia.
 | Lubrificanti | €0,93 mld | 0,66 Mt | 1309 | Belgio 19% | 1,403 | +€0,30 mld |
 
 **Nota Comext.** Fonte Eurostat `DS-045409`, valori in **euro** (Comtrade è in USD). Il solo HS6 `271019` (HHI 986, Arabia 25%) era una media: il **gasolio import** è il gruppo più concentrato (Arabia 41%, HHI 1984), il jet è più diversificato (HHI 1127). Gasolio e olio combustibile sono net exporter; il jet è net importer.
+
+**Compose: dipendenza fisica + partner.** Il mart `mart_refined_dependency` unisce il fisico NRG_BAL_C e la concentrazione Comext per prodotto:
+
+| Prodotto | Dipendenza fisica | HHI | Top fornitore |
+|---|---:|---:|---|
+| Gasolio | -8,2% | 1984 | Arabia Saudita 41% |
+| Jet | 47,6% | 1127 | UAE 22% |
+| Olio combustibile | -210,2% | 1649 | Algeria 35% |
 
 **QA volumi (Comext vs bilancio energetico).** Import 2024: gasolio 7,38 Mt (Comext) vs 5,94 Mtoe (NRG_BAL_C), jet 2,87 vs 2,68, olio combustibile 2,28 vs 0,73. Il confronto mescola unità: **Mt = massa** (Comext) e **Mtoe = energia** (NRG_BAL_C); per i prodotti petroliferi 1 t ≈ 1,02 toe, quindi il rapporto è **indicativo**, non una quadratura di massa. I perimetri non coincidono (CN8 vs SIEC): sugli export l'olio combustibile combacia (3,43 vs 3,53 Mt), sull'import il divario è di perimetro. Inoltre i 4 gruppi non coprono tutto `271019`: restano fuori `2710 19 11-19` (medium oils) e `2710 19 29` (altro cherosene), quindi il confronto con l'HHI HS6 986 è illustrativo. Script: `scripts/qa_comext_vs_energy.py`.
 

@@ -14,10 +14,19 @@ import pytest
 
 ROOT = Path(__file__).resolve().parent.parent
 MART_DIR = ROOT / "out" / "data" / "mart" / "comext_oil"
+COMPOSE_DIR = ROOT / "out" / "data" / "mart" / "resource_dependency_compose"
 
 
 def _load(table: str):
     files = sorted(MART_DIR.glob(f"*/{table}*.parquet"))
+    if not files:
+        pytest.skip(f"{table} not built locally")
+    con = duckdb.connect()
+    return con.execute(f"SELECT * FROM read_parquet('{files[-1]}')").fetchdf()
+
+
+def _load_compose(table: str):
+    files = sorted(COMPOSE_DIR.glob(f"*/{table}*.parquet"))
     if not files:
         pytest.skip(f"{table} not built locally")
     con = duckdb.connect()
@@ -56,3 +65,21 @@ class TestComextOil:
         for group in ("gasolio", "jet", "olio_combustibile"):
             row = df[(df["product_group"] == group) & (df["year"] == 2024)].iloc[0]
             assert row["import_quantity_kg"] > 0
+
+
+@pytest.mark.regression
+class TestRefinedDependency:
+    """Il compose unisce dipendenza fisica e partner Comext per prodotto."""
+
+    def test_gasolio_physical_and_partner(self):
+        df = _load_compose("mart_refined_dependency")
+        row = df[(df["resource"] == "gasolio") & (df["year"] == 2024)].iloc[0]
+        assert row["physical_id_pct"] == pytest.approx(-8.2, abs=0.3)
+        assert 1900 < row["hhi"] < 2100
+        assert row["top1_supplier"] == "Saudi Arabia"
+
+    def test_jet_is_mapped_to_cherosene(self):
+        df = _load_compose("mart_refined_dependency")
+        row = df[(df["resource"] == "cherosene") & (df["year"] == 2024)].iloc[0]
+        assert row["top1_supplier"] == "United Arab Emirates"
+        assert row["hhi"] < 1300

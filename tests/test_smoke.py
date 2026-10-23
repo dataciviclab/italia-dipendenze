@@ -99,6 +99,10 @@ MART_CONTRACTS = {
             "min_rows": 5,
             "required_columns": ["year", "product", "physical_id_pct", "import_unit_value_usd_per_kg", "risk_profile"],
         },
+        "mart_refined_dependency": {
+            "min_rows": 15,
+            "required_columns": ["year", "resource", "physical_id_pct", "import_value_eur", "hhi", "top1_supplier", "risk_profile"],
+        },
     },
 }
 

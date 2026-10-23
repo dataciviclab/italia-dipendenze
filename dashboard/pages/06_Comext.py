@@ -9,6 +9,8 @@ from sources import (
     load_comext_balance,
     load_comext_concentration,
     load_comext_partners,
+    load_refined_dependency,
+    risk_label,
 )
 
 
@@ -116,6 +118,37 @@ else:
         showlegend=False,
     )
     st.plotly_chart(fig, width="stretch")
+
+# ── Dipendenza fisica + partner (compose) ─────────────────────────────────────
+st.subheader("Dipendenza fisica + partner")
+dep = load_refined_dependency()
+dep_r = dep[dep["year"] == year] if not dep.empty else pd.DataFrame()
+if dep_r.empty:
+    st.info("Nessun dato compose per l'anno selezionato.")
+else:
+    view = pd.DataFrame(
+        {
+            "Risorsa": [comext_product_label(v) for v in dep_r["resource"]],
+            "Dip. fisica %": [
+                f"{v:.1f}%" if pd.notna(v) else "—" for v in dep_r["physical_id_pct"]
+            ],
+            "HHI": [f"{v:,.0f}" if pd.notna(v) else "—" for v in dep_r["hhi"]],
+            "Top fornitore": [
+                str(v) if pd.notna(v) else "—" for v in dep_r["top1_supplier"]
+            ],
+            "Import": [fmt_eur(v) for v in dep_r["import_value_eur"]],
+            "Prezzo €/kg": [
+                f"€ {v:,.3f}" if pd.notna(v) else "—"
+                for v in dep_r["import_unit_value_eur_per_kg"]
+            ],
+            "Rischio": [risk_label(v) for v in dep_r["risk_profile"]],
+        }
+    )
+    st.dataframe(view, width="stretch", hide_index=True)
+    st.caption(
+        "Fisico da NRG_BAL_C, partner da Comext CN8. Es. gasolio: fisico -8,2% "
+        "(net exporter) ma import concentrato su Arabia Saudita (HHI 1984)."
+    )
 
 # ── Trend ─────────────────────────────────────────────────────────────────────
 st.subheader("Trend")
