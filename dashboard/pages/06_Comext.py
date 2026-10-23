@@ -56,17 +56,28 @@ conc_r = conc_r.iloc[0]
 bal_r = bal_r.iloc[0] if not bal_r.empty else None
 
 # ── KPI ───────────────────────────────────────────────────────────────────────
-k1, k2, k3, k4, k5 = st.columns(5)
+import_mt = conc_r["import_quantity_kg"] / 1e9 if pd.notna(conc_r["import_quantity_kg"]) else None
+export_mt = (
+    bal_r["export_quantity_kg"] / 1e9
+    if bal_r is not None and pd.notna(bal_r["export_quantity_kg"])
+    else None
+)
+
+k1, k2, k3, k4 = st.columns(4)
 with k1:
     st.metric("Import", fmt_eur(conc_r["total_import_value_eur"]))
 with k2:
-    st.metric("HHI import", f"{conc_r['hhi']:,.0f}", help=">2500 = alta concentrazione")
+    st.metric("Volume import", f"{import_mt:,.2f} Mt" if import_mt is not None else "—")
 with k3:
-    st.metric("Top fornitore", str(conc_r["top1_supplier"]), help=f"Quota {conc_r['top1_share_pct']:.1f}%")
+    st.metric("HHI import", f"{conc_r['hhi']:,.0f}", help=">2500 = alta concentrazione")
 with k4:
+    st.metric("Top fornitore", str(conc_r["top1_supplier"]), help=f"Quota {conc_r['top1_share_pct']:.1f}%")
+
+k5, k6, k7, k8 = st.columns(4)
+with k5:
     unit = conc_r["import_unit_value_eur_per_kg"]
     st.metric("Prezzo medio import", f"€ {unit:,.3f}/kg" if pd.notna(unit) else "—")
-with k5:
+with k6:
     if bal_r is not None:
         st.metric(
             "Saldo commerciale",
@@ -76,6 +87,11 @@ with k5:
         )
     else:
         st.metric("Saldo commerciale", "—")
+with k7:
+    st.metric("Volume export", f"{export_mt:,.2f} Mt" if export_mt is not None else "—")
+with k8:
+    coverage = bal_r["export_coverage_pct"] if bal_r is not None else None
+    st.metric("Export / import", f"{coverage:,.0f}%" if coverage is not None and pd.notna(coverage) else "—")
 
 # ── Top partner import ────────────────────────────────────────────────────────
 st.subheader(f"Top fornitori — {comext_product_label(group)} ({year})")

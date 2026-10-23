@@ -8,7 +8,7 @@
 ## Stato attuale
 
 Pipeline funzionante: `make clean && make run-all && make test`
-- 5/5 dataset SUCCESS, 48 test (47 pass, 1 skip)
+- 5/5 dataset SUCCESS, 49 test (48 pass, 1 skip)
 - Eurostat **dichiarativo** (`type: sdmx` + codelist SIEC/NRG_BAL); Comtrade, Comext e FAO via script
 - Zero CSV committati
 
@@ -137,7 +137,7 @@ Il gasolio e la benzina sono **prodotti secondari**: la loro disponibilità è l
 | 10 | **Fix segno `STK_CHG`** — GIC ufficiale (`+ STK_CHG`) | ✅ | gas 2022 99,2%, carbone 96,5% |
 | 11 | **Split gas pipeline/LNG/GPL + prezzo $/kg** | ✅ | HHI 3315 pipeline, 3180 LNG |
 | 12 | **Split HS6 raffinati + QA raffinazione interno** | ✅ | benzina/distillati; aggregato fisico -7,8; TO principali 99,3% crude intake (KTOE vs THS_T, indicativo) |
-| 13 | **Comext raffinati** — gasolio/jet/olio combustibile/lubrificanti | ✅ | gasolio HHI 1984 (Arabia 41%), jet 1127 (UAE 22%) |
+| 13 | **Comext raffinati** — gasolio/jet/olio combustibile/lubrificanti | ✅ | gasolio HHI 1984 (Arabia 41%), jet 1127 (UAE 22%); volumi 7,38/2,87/2,28 Mt |
 
 ### Prossimi passi
 
@@ -192,7 +192,7 @@ make all
   │     │     └── mart: SQL aggregazione + metriche
   │     └── compose: read_parquet dagli upstream
   └── make test
-        └── pytest tests/ dashboard/tests/ (48 test)
+        └── pytest tests/ dashboard/tests/ (49 test)
 ```
 
 ### Dipendenze CI

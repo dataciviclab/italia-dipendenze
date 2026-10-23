@@ -60,14 +60,16 @@ Questi dati rendono visibili le catene di dipendenza materiale dell'Italia.
 
 ### Raffinati — Comext (2024)
 
-| Gruppo | Import | HHI import | Top import | Prezzo €/kg | Saldo |
-|---|---:|---:|---|---:|---:|
-| Gasolio | €5,66 mld | **1984** | Arabia Saudita 41% | 0,766 | +€0,21 mld |
-| Jet | €2,13 mld | 1127 | UAE 22% | 0,743 | -€1,91 mld |
-| Olio combustibile | €0,97 mld | 1649 | Algeria 35% | 0,423 | +€0,63 mld |
-| Lubrificanti | €0,93 mld | 1309 | Belgio 19% | 1,403 | +€0,30 mld |
+| Gruppo | Import | Volume import | HHI import | Top import | Prezzo €/kg | Saldo |
+|---|---:|---:|---:|---|---:|---:|
+| Gasolio | €5,66 mld | 7,38 Mt | **1984** | Arabia Saudita 41% | 0,766 | +€0,21 mld |
+| Jet | €2,13 mld | 2,87 Mt | 1127 | UAE 22% | 0,743 | -€1,91 mld |
+| Olio combustibile | €0,97 mld | 2,28 Mt | 1649 | Algeria 35% | 0,423 | +€0,63 mld |
+| Lubrificanti | €0,93 mld | 0,66 Mt | 1309 | Belgio 19% | 1,403 | +€0,30 mld |
 
 **Nota Comext.** Fonte Eurostat `DS-045409`, valori in **euro** (Comtrade è in USD). Il solo HS6 `271019` (HHI 986, Arabia 25%) era una media: il **gasolio import** è il gruppo più concentrato (Arabia 41%, HHI 1984), il jet è più diversificato (HHI 1127). Gasolio e olio combustibile sono net exporter; il jet è net importer.
+
+**QA volumi (Comext vs bilancio energetico).** Import 2024: gasolio 7,38 Mt (Comext) vs 5,94 Mtoe (NRG_BAL_C), jet 2,87 vs 2,68, olio combustibile 2,28 vs 0,73. I perimetri non coincidono (CN8 vs SIEC) e la differenza va letta come QA, non come errore: sugli export l'olio combustibile combacia (3,43 vs 3,53 Mt). Script: `scripts/qa_comext_vs_energy.py`.
 
 ### Bilancio energetico (2024)
 

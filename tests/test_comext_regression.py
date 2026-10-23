@@ -50,3 +50,9 @@ class TestComextOil:
     def test_partner_names_are_clean(self):
         df = _load("mart_comext_oil_concentration")
         assert not df["top1_supplier"].str.contains(r"\(", regex=True, na=False).any()
+
+    def test_import_volumes_are_present(self):
+        df = _load("mart_comext_oil_concentration")
+        for group in ("gasolio", "jet", "olio_combustibile"):
+            row = df[(df["product_group"] == group) & (df["year"] == 2024)].iloc[0]
+            assert row["import_quantity_kg"] > 0
