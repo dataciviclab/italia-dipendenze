@@ -2,8 +2,117 @@
   "schema_version": 1,
   "repo": "italia-dipendenze",
   "source_repo": "dataciviclab/italia-dipendenze",
-  "updated_at": "2026-10-21",
+  "updated_at": "2026-10-23",
   "datasets": [
+    {
+      "slug": "comext_oil",
+      "name": "Comext Oil",
+      "description": "Eurostat Comext DS-045409 — Italy oil products by CN8 group and partner",
+      "source": "",
+      "source_id": "eurostat",
+      "period": {
+        "start": 2020,
+        "end": 2024
+      },
+      "tags": [
+        "energia",
+        "petrolio",
+        "raffinati",
+        "gasolio",
+        "jet",
+        "comext",
+        "eurostat",
+        "italia",
+        "commercio"
+      ],
+      "category": "energia",
+      "columns": [
+        {
+          "name": "year",
+          "type": "INTEGER",
+          "role": "dimension",
+          "description": "",
+          "semantic_type": "year"
+        },
+        {
+          "name": "product_group",
+          "type": "VARCHAR",
+          "role": "dimension",
+          "description": ""
+        },
+        {
+          "name": "flow",
+          "type": "VARCHAR",
+          "role": "dimension",
+          "description": ""
+        },
+        {
+          "name": "flow_label",
+          "type": "VARCHAR",
+          "role": "dimension",
+          "description": ""
+        },
+        {
+          "name": "partner_code",
+          "type": "VARCHAR",
+          "role": "dimension",
+          "description": ""
+        },
+        {
+          "name": "partner_name",
+          "type": "VARCHAR",
+          "role": "dimension",
+          "description": ""
+        },
+        {
+          "name": "value_eur",
+          "type": "DOUBLE",
+          "role": "metric",
+          "description": ""
+        },
+        {
+          "name": "quantity_100kg",
+          "type": "DOUBLE",
+          "role": "metric",
+          "description": ""
+        },
+        {
+          "name": "unit_value_eur_per_kg",
+          "type": "DOUBLE",
+          "role": "metric",
+          "description": ""
+        },
+        {
+          "name": "source",
+          "type": "VARCHAR",
+          "role": "dimension",
+          "description": ""
+        },
+        {
+          "name": "method",
+          "type": "VARCHAR",
+          "role": "dimension",
+          "description": ""
+        },
+        {
+          "name": "data_quality",
+          "type": "VARCHAR",
+          "role": "dimension",
+          "description": ""
+        }
+      ],
+      "location": {
+        "type": "gcs",
+        "path": "gs://dataciviclab-clean/italia_dipendenze/comext_oil/2026/comext_oil_2026_clean.parquet",
+        "multi_file": false
+      },
+      "stage": "incubating",
+      "mart_refs": [
+        "comext_oil__mart_comext_oil_concentration",
+        "comext_oil__mart_comext_oil_balance",
+        "comext_oil__mart_comext_oil_partners"
+      ]
+    },
     {
       "slug": "comtrade_bilateral",
       "name": "Comtrade Bilateral",
@@ -325,11 +434,42 @@
       "stage": "incubating",
       "mart_refs": [
         "resource_dependency_compose__mart_resource_dependency",
-        "resource_dependency_compose__mart_energy_vs_trade"
+        "resource_dependency_compose__mart_energy_vs_trade",
+        "resource_dependency_compose__mart_refined_dependency"
       ]
     }
   ],
   "marts": [
+    {
+      "slug": "comext_oil__mart_comext_oil_balance",
+      "dataset": "comext_oil",
+      "table": "mart_comext_oil_balance",
+      "location": {
+        "type": "gcs",
+        "path": "gs://dataciviclab-mart/italia_dipendenze/comext_oil/2026/mart_comext_oil_balance.parquet",
+        "multi_file": false
+      }
+    },
+    {
+      "slug": "comext_oil__mart_comext_oil_concentration",
+      "dataset": "comext_oil",
+      "table": "mart_comext_oil_concentration",
+      "location": {
+        "type": "gcs",
+        "path": "gs://dataciviclab-mart/italia_dipendenze/comext_oil/2026/mart_comext_oil_concentration.parquet",
+        "multi_file": false
+      }
+    },
+    {
+      "slug": "comext_oil__mart_comext_oil_partners",
+      "dataset": "comext_oil",
+      "table": "mart_comext_oil_partners",
+      "location": {
+        "type": "gcs",
+        "path": "gs://dataciviclab-mart/italia_dipendenze/comext_oil/2026/mart_comext_oil_partners.parquet",
+        "multi_file": false
+      }
+    },
     {
       "slug": "comtrade_bilateral__mart_trade_balance",
       "dataset": "comtrade_bilateral",
@@ -401,6 +541,16 @@
       }
     },
     {
+      "slug": "resource_dependency_compose__mart_refined_dependency",
+      "dataset": "resource_dependency_compose",
+      "table": "mart_refined_dependency",
+      "location": {
+        "type": "gcs",
+        "path": "gs://dataciviclab-mart/italia_dipendenze/resource_dependency_compose/2026/mart_refined_dependency.parquet",
+        "multi_file": false
+      }
+    },
+    {
       "slug": "resource_dependency_compose__mart_resource_dependency",
       "dataset": "resource_dependency_compose",
       "table": "mart_resource_dependency",
@@ -420,21 +570,52 @@
       "detail": "anno 2026 — mart: si",
       "action": "",
       "run": {
-        "run_id": "20261021T183829Z_aace5494",
+        "run_id": "20261023T213721Z_d677d6c0",
         "year": 2026,
         "status": "SUCCESS",
         "quality_score": {
           "mart": 100
         },
         "output_rows": {
-          "mart": 1221
+          "mart": 1326
         },
         "output_bytes": {
-          "mart": 25271
+          "mart": 32119
         },
-        "started_at": "2026-10-21T18:38:29.168916+00:00",
-        "finished_at": "2026-10-21T18:38:29.254782+00:00",
-        "duration_seconds": 0.086
+        "started_at": "2026-10-23T21:37:21.599988+00:00",
+        "finished_at": "2026-10-23T21:37:21.709741+00:00",
+        "duration_seconds": 0.11
+      }
+    },
+    {
+      "id": "comext_oil",
+      "source_id": "eurostat",
+      "status": "ok",
+      "label": "comext_oil",
+      "detail": "anno 2026 — mart: si",
+      "action": "",
+      "run": {
+        "run_id": "20261023T213555Z_319d9764",
+        "year": 2026,
+        "status": "SUCCESS",
+        "quality_score": {
+          "raw": 100,
+          "clean": 100,
+          "mart": 100
+        },
+        "output_rows": {
+          "raw": 2086,
+          "clean": 2086,
+          "mart": 2126
+        },
+        "output_bytes": {
+          "raw": 208608,
+          "clean": 35517,
+          "mart": 43653
+        },
+        "started_at": "2026-10-23T21:35:55.717038+00:00",
+        "finished_at": "2026-10-23T21:36:11.520728+00:00",
+        "duration_seconds": 15.804
       }
     },
     {
@@ -445,7 +626,7 @@
       "detail": "anno 2026 — mart: si",
       "action": "",
       "run": {
-        "run_id": "20261021T183736Z_d555f6cf",
+        "run_id": "20261023T213611Z_898e4ecf",
         "year": 2026,
         "status": "SUCCESS",
         "quality_score": {
@@ -463,9 +644,9 @@
           "clean": 102702,
           "mart": 156386
         },
-        "started_at": "2026-10-21T18:37:36.697316+00:00",
-        "finished_at": "2026-10-21T18:38:22.532172+00:00",
-        "duration_seconds": 45.835
+        "started_at": "2026-10-23T21:36:11.609705+00:00",
+        "finished_at": "2026-10-23T21:37:13.222914+00:00",
+        "duration_seconds": 61.613
       }
     },
     {
@@ -476,7 +657,7 @@
       "detail": "anno 2026 — mart: si",
       "action": "",
       "run": {
-        "run_id": "20261021T183825Z_da88a9c7",
+        "run_id": "20261023T213716Z_31917e5a",
         "year": 2026,
         "status": "SUCCESS",
         "quality_score": {
@@ -494,9 +675,9 @@
           "clean": 46372,
           "mart": 79411
         },
-        "started_at": "2026-10-21T18:38:25.322351+00:00",
-        "finished_at": "2026-10-21T18:38:28.523943+00:00",
-        "duration_seconds": 3.202
+        "started_at": "2026-10-23T21:37:16.971737+00:00",
+        "finished_at": "2026-10-23T21:37:20.933779+00:00",
+        "duration_seconds": 3.962
       }
     },
     {
@@ -507,7 +688,7 @@
       "detail": "anno 2026 — mart: si",
       "action": "",
       "run": {
-        "run_id": "20261021T183828Z_e73f54f5",
+        "run_id": "20261023T213721Z_4fdfcc29",
         "year": 2026,
         "status": "SUCCESS",
         "quality_score": {
@@ -525,9 +706,9 @@
           "clean": 1542,
           "mart": 1334
         },
-        "started_at": "2026-10-21T18:38:28.615708+00:00",
-        "finished_at": "2026-10-21T18:38:29.084950+00:00",
-        "duration_seconds": 0.469
+        "started_at": "2026-10-23T21:37:21.021284+00:00",
+        "finished_at": "2026-10-23T21:37:21.514797+00:00",
+        "duration_seconds": 0.494
       }
     }
   ],
@@ -569,6 +750,12 @@
         "label": "Tempo / data",
         "datasets": [
           {
+            "slug": "comext_oil",
+            "name": "Comext Oil",
+            "column": "year",
+            "semantic_type": "year"
+          },
+          {
             "slug": "comtrade_bilateral",
             "name": "Comtrade Bilateral",
             "column": "year",
@@ -588,7 +775,7 @@
           }
         ],
         "types": {
-          "year": 3
+          "year": 4
         }
       }
     },
