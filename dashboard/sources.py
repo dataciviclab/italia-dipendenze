@@ -19,7 +19,7 @@ from lab_connectors.duckdb.queries import (
 from lab_connectors.duckdb.queries import (
     query_clean as _query_clean,
 )
-from lab_connectors.formatters import fmt_num, fmt_pct
+from lab_connectors.formatters import fmt_num, fmt_pct, fmt_usd
 from lab_connectors.registry import load_registry
 
 ROOT = Path(__file__).parent.parent
@@ -188,21 +188,6 @@ def risk_label(profile: str | None) -> str:
     if profile is None or (isinstance(profile, float) and pd.isna(profile)):
         return "—"
     return RISK_LABELS.get(str(profile), str(profile))
-
-
-def fmt_usd(value: float | None, *, compact: bool = True) -> str:
-    """Valore in USD (Comtrade) con formattazione italiana."""
-    if value is None or (isinstance(value, float) and pd.isna(value)):
-        return "—"
-    v = float(value)
-    if compact:
-        if abs(v) >= 1e9:
-            return f"$ {v / 1e9:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".") + " mld"
-        if abs(v) >= 1e6:
-            return f"$ {v / 1e6:,.0f}".replace(",", ".") + " mln"
-        if abs(v) >= 1e3:
-            return f"$ {v / 1e3:,.0f}".replace(",", ".") + " k"
-    return f"$ {v:,.0f}".replace(",", ".")
 
 
 def cell(value, *, kind: str = "auto") -> str:
