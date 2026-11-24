@@ -1,19 +1,18 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "repo": "italia-dipendenze",
   "source_repo": "dataciviclab/italia-dipendenze",
-  "updated_at": "2026-11-01",
+  "updated_at": "2026-11-24",
+  "gcs": {
+    "clean": "year",
+    "prefix": "italia_dipendenze/"
+  },
   "datasets": [
     {
       "slug": "comext_oil",
       "name": "Comext Oil",
       "description": "Eurostat Comext DS-045409 — Italy oil products by CN8 group and partner",
-      "source": "",
       "source_id": "eurostat",
-      "period": {
-        "start": 2020,
-        "end": 2024
-      },
       "tags": [
         "energia",
         "petrolio",
@@ -26,103 +25,92 @@
         "commercio"
       ],
       "category": "energia",
+      "period": {
+        "start": 2020,
+        "end": 2024
+      },
+      "partitions": {
+        "2026": 2086
+      },
       "columns": [
         {
           "name": "year",
           "type": "INTEGER",
           "role": "dimension",
-          "description": "",
           "semantic_type": "year"
         },
         {
           "name": "product_group",
           "type": "VARCHAR",
-          "role": "dimension",
-          "description": ""
+          "role": "dimension"
         },
         {
           "name": "flow",
           "type": "VARCHAR",
-          "role": "dimension",
-          "description": ""
+          "role": "dimension"
         },
         {
           "name": "flow_label",
           "type": "VARCHAR",
-          "role": "dimension",
-          "description": ""
+          "role": "dimension"
         },
         {
           "name": "partner_code",
           "type": "VARCHAR",
-          "role": "dimension",
-          "description": ""
+          "role": "dimension"
         },
         {
           "name": "partner_name",
           "type": "VARCHAR",
-          "role": "dimension",
-          "description": ""
+          "role": "dimension"
         },
         {
           "name": "value_eur",
           "type": "DOUBLE",
-          "role": "metric",
-          "description": ""
+          "role": "metric"
         },
         {
           "name": "quantity_100kg",
           "type": "DOUBLE",
-          "role": "metric",
-          "description": ""
+          "role": "metric"
         },
         {
           "name": "unit_value_eur_per_kg",
           "type": "DOUBLE",
-          "role": "metric",
-          "description": ""
+          "role": "metric"
         },
         {
           "name": "source",
           "type": "VARCHAR",
-          "role": "dimension",
-          "description": ""
+          "role": "dimension"
         },
         {
           "name": "method",
           "type": "VARCHAR",
-          "role": "dimension",
-          "description": ""
+          "role": "dimension"
         },
         {
           "name": "data_quality",
           "type": "VARCHAR",
-          "role": "dimension",
-          "description": ""
+          "role": "dimension"
         }
       ],
-      "location": {
-        "type": "gcs",
-        "path": "gs://dataciviclab-clean/italia_dipendenze/comext_oil/2026/comext_oil_2026_clean.parquet",
-        "multi_file": false
-      },
-      "stage": "incubating",
       "mart_refs": [
         "comext_oil__mart_comext_oil_concentration",
         "comext_oil__mart_comext_oil_balance",
         "comext_oil__mart_comext_oil_partners"
-      ]
+      ],
+      "last_run": {
+        "at": "2026-11-24T23:16:58.214863+00:00",
+        "year": 2026,
+        "status": "SUCCESS"
+      }
     },
     {
       "slug": "comtrade_bilateral",
       "name": "Comtrade Bilateral",
       "description": "Bilateral merchandise trade by HS6 product code — Italy (reporter 380)",
-      "source": "",
       "source_id": "un_comtrade",
-      "period": {
-        "start": 2020,
-        "end": 2024
-      },
       "tags": [
         "commercio",
         "bilaterale",
@@ -132,103 +120,92 @@
         "comtrade"
       ],
       "category": "commercio",
+      "period": {
+        "start": 2020,
+        "end": 2024
+      },
+      "partitions": {
+        "2026": 8596
+      },
       "columns": [
         {
           "name": "year",
           "type": "INTEGER",
           "role": "dimension",
-          "description": "",
           "semantic_type": "year"
         },
         {
           "name": "hs_code",
           "type": "VARCHAR",
-          "role": "dimension",
-          "description": ""
+          "role": "dimension"
         },
         {
           "name": "reporter_code",
           "type": "INTEGER",
-          "role": "metric",
-          "description": ""
+          "role": "metric"
         },
         {
           "name": "partner_code",
           "type": "INTEGER",
-          "role": "metric",
-          "description": ""
+          "role": "metric"
         },
         {
           "name": "flow",
           "type": "VARCHAR",
-          "role": "dimension",
-          "description": ""
+          "role": "dimension"
         },
         {
           "name": "net_wgt_kg",
           "type": "DOUBLE",
-          "role": "metric",
-          "description": ""
+          "role": "metric"
         },
         {
           "name": "primary_value_usd",
           "type": "DOUBLE",
-          "role": "metric",
-          "description": ""
+          "role": "metric"
         },
         {
           "name": "classification",
           "type": "VARCHAR",
-          "role": "dimension",
-          "description": ""
+          "role": "dimension"
         },
         {
           "name": "resource",
           "type": "VARCHAR",
-          "role": "dimension",
-          "description": ""
+          "role": "dimension"
         },
         {
           "name": "hs_code_name",
           "type": "VARCHAR",
-          "role": "dimension",
-          "description": ""
+          "role": "dimension"
         },
         {
           "name": "partner_name",
           "type": "VARCHAR",
-          "role": "dimension",
-          "description": ""
+          "role": "dimension"
         },
         {
           "name": "flow_label",
           "type": "VARCHAR",
-          "role": "dimension",
-          "description": ""
+          "role": "dimension"
         }
       ],
-      "location": {
-        "type": "gcs",
-        "path": "gs://dataciviclab-clean/italia_dipendenze/comtrade_bilateral/2026/comtrade_bilateral_2026_clean.parquet",
-        "multi_file": false
-      },
-      "stage": "incubating",
       "mart_refs": [
         "comtrade_bilateral__mart_trade_bilateral",
         "comtrade_bilateral__mart_trade_concentration",
         "comtrade_bilateral__mart_trade_balance"
-      ]
+      ],
+      "last_run": {
+        "at": "2026-11-24T23:17:28.022302+00:00",
+        "year": 2026,
+        "status": "SUCCESS"
+      }
     },
     {
       "slug": "eurostat_nrg_bal_c",
       "name": "Eurostat Nrg Bal C",
       "description": "Complete energy balances — Italy physical flows by SIEC product (imports, exports, production)",
-      "source": "",
       "source_id": "eurostat",
-      "period": {
-        "start": 1990,
-        "end": 2024
-      },
       "tags": [
         "energia",
         "gas",
@@ -239,115 +216,102 @@
         "italia"
       ],
       "category": "energia",
+      "period": {
+        "start": 1990,
+        "end": 2024
+      },
+      "partitions": {
+        "2026": 11235
+      },
       "columns": [
         {
           "name": "year",
           "type": "INTEGER",
           "role": "dimension",
-          "description": "",
           "semantic_type": "year"
         },
         {
           "name": "product",
           "type": "VARCHAR",
-          "role": "dimension",
-          "description": ""
+          "role": "dimension"
         },
         {
           "name": "product_label",
           "type": "VARCHAR",
-          "role": "dimension",
-          "description": ""
+          "role": "dimension"
         },
         {
           "name": "indicator",
           "type": "VARCHAR",
-          "role": "dimension",
-          "description": ""
+          "role": "dimension"
         },
         {
           "name": "indicator_label",
           "type": "VARCHAR",
-          "role": "dimension",
-          "description": ""
+          "role": "dimension"
         },
         {
           "name": "value_ktoe",
           "type": "DOUBLE",
-          "role": "metric",
-          "description": ""
+          "role": "metric"
         },
         {
           "name": "unit",
           "type": "VARCHAR",
-          "role": "dimension",
-          "description": ""
+          "role": "dimension"
         },
         {
           "name": "geo",
           "type": "VARCHAR",
           "role": "dimension",
-          "description": "",
           "semantic_type": "nuts_code"
         },
         {
           "name": "freq",
           "type": "VARCHAR",
-          "role": "dimension",
-          "description": ""
+          "role": "dimension"
         },
         {
           "name": "flag",
           "type": "VARCHAR",
-          "role": "dimension",
-          "description": ""
+          "role": "dimension"
         },
         {
           "name": "flag_label",
           "type": "VARCHAR",
-          "role": "dimension",
-          "description": ""
+          "role": "dimension"
         },
         {
           "name": "source",
           "type": "VARCHAR",
-          "role": "dimension",
-          "description": ""
+          "role": "dimension"
         },
         {
           "name": "method",
           "type": "VARCHAR",
-          "role": "dimension",
-          "description": ""
+          "role": "dimension"
         },
         {
           "name": "data_quality",
           "type": "VARCHAR",
-          "role": "dimension",
-          "description": ""
+          "role": "dimension"
         }
       ],
-      "location": {
-        "type": "gcs",
-        "path": "gs://dataciviclab-clean/italia_dipendenze/eurostat_nrg_bal_c/2026/eurostat_nrg_bal_c_2026_clean.parquet",
-        "multi_file": false
-      },
-      "stage": "incubating",
       "mart_refs": [
         "eurostat_nrg_bal_c__mart_energy_balance",
         "eurostat_nrg_bal_c__mart_energy_final_consumption"
-      ]
+      ],
+      "last_run": {
+        "at": "2026-11-24T23:18:41.745643+00:00",
+        "year": 2026,
+        "status": "SUCCESS"
+      }
     },
     {
       "slug": "fao_fertilizer_consumption",
       "name": "Fao Fertilizer Consumption",
       "description": "Fertilizer consumption by nutrient — Italy (FAO RFN dataset via OWID)",
-      "source": "",
       "source_id": "faostat",
-      "period": {
-        "start": 2018,
-        "end": 2023
-      },
       "tags": [
         "agricoltura",
         "fertilizzanti",
@@ -356,72 +320,66 @@
         "italia"
       ],
       "category": "agricoltura",
+      "period": {
+        "start": 2018,
+        "end": 2023
+      },
+      "partitions": {
+        "2026": 6
+      },
       "columns": [
         {
           "name": "year",
           "type": "INTEGER",
           "role": "dimension",
-          "description": "",
           "semantic_type": "year"
         },
         {
           "name": "country",
           "type": "VARCHAR",
           "role": "dimension",
-          "description": "",
           "semantic_type": "country_code"
         },
         {
           "name": "country_code",
           "type": "INTEGER",
-          "role": "metric",
-          "description": ""
+          "role": "metric"
         },
         {
           "name": "total_consumption_tonnes",
           "type": "DOUBLE",
-          "role": "metric",
-          "description": ""
+          "role": "metric"
         },
         {
           "name": "source",
           "type": "VARCHAR",
-          "role": "dimension",
-          "description": ""
+          "role": "dimension"
         },
         {
           "name": "method",
           "type": "VARCHAR",
-          "role": "dimension",
-          "description": ""
+          "role": "dimension"
         },
         {
           "name": "data_quality",
           "type": "VARCHAR",
-          "role": "dimension",
-          "description": ""
+          "role": "dimension"
         }
       ],
-      "location": {
-        "type": "gcs",
-        "path": "gs://dataciviclab-clean/italia_dipendenze/fao_fertilizer_consumption/2026/fao_fertilizer_consumption_2026_clean.parquet",
-        "multi_file": false
-      },
-      "stage": "incubating",
       "mart_refs": [
         "fao_fertilizer_consumption__mart_fertilizer_consumption"
-      ]
+      ],
+      "last_run": {
+        "at": "2026-11-24T23:18:50.399753+00:00",
+        "year": 2026,
+        "status": "SUCCESS"
+      }
     },
     {
       "slug": "resource_dependency_compose",
       "name": "Resource Dependency Compose",
       "description": "Italy Resource & Dependency Map — joins energy balance, bilateral trade, and fertilizer consumption",
-      "source": "",
       "source_id": "dataciviclab_composite",
-      "period": {
-        "start": 1990,
-        "end": 2024
-      },
       "tags": [
         "dipendenze",
         "risorse",
@@ -431,12 +389,20 @@
         "agricoltura"
       ],
       "category": "economia-reale",
-      "stage": "incubating",
+      "period": {
+        "start": 1990,
+        "end": 2024
+      },
       "mart_refs": [
         "resource_dependency_compose__mart_resource_dependency",
         "resource_dependency_compose__mart_energy_vs_trade",
         "resource_dependency_compose__mart_refined_dependency"
-      ]
+      ],
+      "last_run": {
+        "at": "2026-11-24T23:18:50.987539+00:00",
+        "year": 2026,
+        "status": "SUCCESS"
+      }
     }
   ],
   "marts": [
@@ -444,341 +410,126 @@
       "slug": "comext_oil__mart_comext_oil_balance",
       "dataset": "comext_oil",
       "table": "mart_comext_oil_balance",
-      "location": {
-        "type": "gcs",
-        "path": "gs://dataciviclab-mart/italia_dipendenze/comext_oil/2026/mart_comext_oil_balance.parquet",
-        "multi_file": false
-      }
+      "layout": "year",
+      "year": 2026,
+      "primary_key": [
+        "year",
+        "product_group"
+      ]
     },
     {
       "slug": "comext_oil__mart_comext_oil_concentration",
       "dataset": "comext_oil",
       "table": "mart_comext_oil_concentration",
-      "location": {
-        "type": "gcs",
-        "path": "gs://dataciviclab-mart/italia_dipendenze/comext_oil/2026/mart_comext_oil_concentration.parquet",
-        "multi_file": false
-      }
+      "layout": "year",
+      "year": 2026,
+      "primary_key": [
+        "year",
+        "product_group"
+      ]
     },
     {
       "slug": "comext_oil__mart_comext_oil_partners",
       "dataset": "comext_oil",
       "table": "mart_comext_oil_partners",
-      "location": {
-        "type": "gcs",
-        "path": "gs://dataciviclab-mart/italia_dipendenze/comext_oil/2026/mart_comext_oil_partners.parquet",
-        "multi_file": false
-      }
+      "layout": "year",
+      "year": 2026,
+      "primary_key": [
+        "year",
+        "product_group",
+        "flow",
+        "partner_code"
+      ]
     },
     {
       "slug": "comtrade_bilateral__mart_trade_balance",
       "dataset": "comtrade_bilateral",
       "table": "mart_trade_balance",
-      "location": {
-        "type": "gcs",
-        "path": "gs://dataciviclab-mart/italia_dipendenze/comtrade_bilateral/2026/mart_trade_balance.parquet",
-        "multi_file": false
-      }
+      "layout": "year",
+      "year": 2026
     },
     {
       "slug": "comtrade_bilateral__mart_trade_bilateral",
       "dataset": "comtrade_bilateral",
       "table": "mart_trade_bilateral",
-      "location": {
-        "type": "gcs",
-        "path": "gs://dataciviclab-mart/italia_dipendenze/comtrade_bilateral/2026/mart_trade_bilateral.parquet",
-        "multi_file": false
-      }
+      "layout": "year",
+      "year": 2026,
+      "primary_key": [
+        "year",
+        "hs_code",
+        "partner_code",
+        "flow"
+      ]
     },
     {
       "slug": "comtrade_bilateral__mart_trade_concentration",
       "dataset": "comtrade_bilateral",
       "table": "mart_trade_concentration",
-      "location": {
-        "type": "gcs",
-        "path": "gs://dataciviclab-mart/italia_dipendenze/comtrade_bilateral/2026/mart_trade_concentration.parquet",
-        "multi_file": false
-      }
+      "layout": "year",
+      "year": 2026
     },
     {
       "slug": "eurostat_nrg_bal_c__mart_energy_balance",
       "dataset": "eurostat_nrg_bal_c",
       "table": "mart_energy_balance",
-      "location": {
-        "type": "gcs",
-        "path": "gs://dataciviclab-mart/italia_dipendenze/eurostat_nrg_bal_c/2026/mart_energy_balance.parquet",
-        "multi_file": false
-      }
+      "layout": "year",
+      "year": 2026,
+      "primary_key": [
+        "year",
+        "product"
+      ]
     },
     {
       "slug": "eurostat_nrg_bal_c__mart_energy_final_consumption",
       "dataset": "eurostat_nrg_bal_c",
       "table": "mart_energy_final_consumption",
-      "location": {
-        "type": "gcs",
-        "path": "gs://dataciviclab-mart/italia_dipendenze/eurostat_nrg_bal_c/2026/mart_energy_final_consumption.parquet",
-        "multi_file": false
-      }
+      "layout": "year",
+      "year": 2026,
+      "primary_key": [
+        "year",
+        "product"
+      ]
     },
     {
       "slug": "fao_fertilizer_consumption__mart_fertilizer_consumption",
       "dataset": "fao_fertilizer_consumption",
       "table": "mart_fertilizer_consumption",
-      "location": {
-        "type": "gcs",
-        "path": "gs://dataciviclab-mart/italia_dipendenze/fao_fertilizer_consumption/2026/mart_fertilizer_consumption.parquet",
-        "multi_file": false
-      }
+      "layout": "year",
+      "year": 2026,
+      "primary_key": [
+        "year"
+      ]
     },
     {
       "slug": "resource_dependency_compose__mart_energy_vs_trade",
       "dataset": "resource_dependency_compose",
       "table": "mart_energy_vs_trade",
-      "location": {
-        "type": "gcs",
-        "path": "gs://dataciviclab-mart/italia_dipendenze/resource_dependency_compose/2026/mart_energy_vs_trade.parquet",
-        "multi_file": false
-      }
+      "layout": "year",
+      "year": 2026
     },
     {
       "slug": "resource_dependency_compose__mart_refined_dependency",
       "dataset": "resource_dependency_compose",
       "table": "mart_refined_dependency",
-      "location": {
-        "type": "gcs",
-        "path": "gs://dataciviclab-mart/italia_dipendenze/resource_dependency_compose/2026/mart_refined_dependency.parquet",
-        "multi_file": false
-      }
+      "layout": "year",
+      "year": 2026,
+      "primary_key": [
+        "year",
+        "resource"
+      ]
     },
     {
       "slug": "resource_dependency_compose__mart_resource_dependency",
       "dataset": "resource_dependency_compose",
       "table": "mart_resource_dependency",
-      "location": {
-        "type": "gcs",
-        "path": "gs://dataciviclab-mart/italia_dipendenze/resource_dependency_compose/2026/mart_resource_dependency.parquet",
-        "multi_file": false
-      }
+      "layout": "year",
+      "year": 2026,
+      "primary_key": [
+        "year",
+        "resource"
+      ]
     }
   ],
-  "signals": [
-    {
-      "id": "compose:resource_dependency_compose",
-      "source_id": "dataciviclab_composite",
-      "status": "ok",
-      "label": "resource_dependency_compose",
-      "detail": "anno 2026 — mart: si",
-      "action": "",
-      "run": {
-        "run_id": "20261101T124631Z_c2ac38c8",
-        "year": 2026,
-        "status": "SUCCESS",
-        "quality_score": {
-          "mart": 100
-        },
-        "output_rows": {
-          "mart": 1326
-        },
-        "output_bytes": {
-          "mart": 32119
-        },
-        "started_at": "2026-11-01T12:46:31.870809+00:00",
-        "finished_at": "2026-11-01T12:46:31.973466+00:00",
-        "duration_seconds": 0.103
-      }
-    },
-    {
-      "id": "comext_oil",
-      "source_id": "eurostat",
-      "status": "ok",
-      "label": "comext_oil",
-      "detail": "anno 2026 — mart: si",
-      "action": "",
-      "run": {
-        "run_id": "20261101T124448Z_ab124f56",
-        "year": 2026,
-        "status": "SUCCESS",
-        "quality_score": {
-          "raw": 100,
-          "clean": 100,
-          "mart": 100
-        },
-        "output_rows": {
-          "raw": 2086,
-          "clean": 2086,
-          "mart": 2126
-        },
-        "output_bytes": {
-          "raw": 208608,
-          "clean": 35517,
-          "mart": 43653
-        },
-        "started_at": "2026-11-01T12:44:48.074685+00:00",
-        "finished_at": "2026-11-01T12:45:00.179966+00:00",
-        "duration_seconds": 12.105
-      }
-    },
-    {
-      "id": "comtrade_bilateral",
-      "source_id": "un_comtrade",
-      "status": "ok",
-      "label": "comtrade_bilateral",
-      "detail": "anno 2026 — mart: si",
-      "action": "",
-      "run": {
-        "run_id": "20261101T124500Z_9d1e0e18",
-        "year": 2026,
-        "status": "SUCCESS",
-        "quality_score": {
-          "raw": 100,
-          "clean": 100,
-          "mart": 100
-        },
-        "output_rows": {
-          "raw": 8596,
-          "clean": 8596,
-          "mart": 8736
-        },
-        "output_bytes": {
-          "raw": 1510607,
-          "clean": 102702,
-          "mart": 156386
-        },
-        "started_at": "2026-11-01T12:45:00.271566+00:00",
-        "finished_at": "2026-11-01T12:46:25.191195+00:00",
-        "duration_seconds": 84.92
-      }
-    },
-    {
-      "id": "eurostat_nrg_bal_c",
-      "source_id": "eurostat",
-      "status": "ok",
-      "label": "eurostat_nrg_bal_c",
-      "detail": "anno 2026 — mart: si",
-      "action": "",
-      "run": {
-        "run_id": "20261101T124627Z_62f9c11a",
-        "year": 2026,
-        "status": "SUCCESS",
-        "quality_score": {
-          "raw": 100,
-          "clean": 100,
-          "mart": 100
-        },
-        "output_rows": {
-          "raw": 6160,
-          "clean": 11235,
-          "mart": 1645
-        },
-        "output_bytes": {
-          "raw": 553104,
-          "clean": 46372,
-          "mart": 79411
-        },
-        "started_at": "2026-11-01T12:46:27.597887+00:00",
-        "finished_at": "2026-11-01T12:46:31.230938+00:00",
-        "duration_seconds": 3.633
-      }
-    },
-    {
-      "id": "fao_fertilizer_consumption",
-      "source_id": "faostat",
-      "status": "ok",
-      "label": "fao_fertilizer_consumption",
-      "detail": "anno 2026 — mart: si",
-      "action": "",
-      "run": {
-        "run_id": "20261101T124631Z_c8b49dd5",
-        "year": 2026,
-        "status": "SUCCESS",
-        "quality_score": {
-          "raw": 100,
-          "clean": 95,
-          "mart": 100
-        },
-        "output_rows": {
-          "raw": 6,
-          "clean": 6,
-          "mart": 6
-        },
-        "output_bytes": {
-          "raw": 415,
-          "clean": 1542,
-          "mart": 1334
-        },
-        "started_at": "2026-11-01T12:46:31.322053+00:00",
-        "finished_at": "2026-11-01T12:46:31.775972+00:00",
-        "duration_seconds": 0.454
-      }
-    }
-  ],
-  "codelists": [],
-  "entities": {
-    "entities": {
-      "Nazione": {
-        "entity": "Nazione",
-        "label": "Nazione",
-        "datasets": [
-          {
-            "slug": "fao_fertilizer_consumption",
-            "name": "Fao Fertilizer Consumption",
-            "column": "country",
-            "semantic_type": "country_code"
-          }
-        ],
-        "types": {
-          "country_code": 1
-        }
-      },
-      "Provincia (tramite NUTS3)": {
-        "entity": "Provincia (tramite NUTS3)",
-        "label": "Provincia (tramite NUTS3)",
-        "datasets": [
-          {
-            "slug": "eurostat_nrg_bal_c",
-            "name": "Eurostat Nrg Bal C",
-            "column": "geo",
-            "semantic_type": "nuts_code"
-          }
-        ],
-        "types": {
-          "nuts_code": 1
-        }
-      },
-      "Tempo": {
-        "entity": "Tempo",
-        "label": "Tempo / data",
-        "datasets": [
-          {
-            "slug": "comext_oil",
-            "name": "Comext Oil",
-            "column": "year",
-            "semantic_type": "year"
-          },
-          {
-            "slug": "comtrade_bilateral",
-            "name": "Comtrade Bilateral",
-            "column": "year",
-            "semantic_type": "year"
-          },
-          {
-            "slug": "eurostat_nrg_bal_c",
-            "name": "Eurostat Nrg Bal C",
-            "column": "year",
-            "semantic_type": "year"
-          },
-          {
-            "slug": "fao_fertilizer_consumption",
-            "name": "Fao Fertilizer Consumption",
-            "column": "year",
-            "semantic_type": "year"
-          }
-        ],
-        "types": {
-          "year": 4
-        }
-      }
-    },
-    "bridges": []
-  }
+  "checks": [],
+  "codelists": []
 }
